@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.tab-indicator {
+  transition: transform 0.5s ease-in-out;
+  transform-origin: center;
+  transform: perspective(600px) rotateY(0deg);
+}
+
+.tab-indicator.active {
+  transform: perspective(600px) rotateY(360deg);
+}
+/* .ql-snow {
+  border: 1px solid gray !important;
+} */
+.ql-toolbar {
+  /* border: 0px 0px 1px 0px solid #f0f0 !important; */
+  border-top: 0px !important;
+  border-left: 0px !important;
+  border-right: 0px !important;
+  border-bottom: 1px solid #dcfce7 !important;
+  background: white;
+}
+
+.ql-container {
+  height: 15rem;
+  border: none !important;
+}
