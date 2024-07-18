@@ -71,12 +71,12 @@ const CreatBlog = () => {
     subcategory: "",
     subsubcategory: "",
     innercategory: "",
-    title: data?.data?.title || "",
+    title: blogData?.data?.title || "",
     slug: "",
-    thumnail: data?.data?.thumnail || "",
-    content: data?.data?.content || "",
+    thumnail: blogData?.data?.thumnail || "",
+    content: blogData?.data?.content || "",
     imageTitle:
-      data?.data?.thumnail?.slice(67, data?.image?.indexOf("%")) || "",
+    blogData?.data?.thumnail?.slice(67, data?.image?.indexOf("%")) || "",
   });
 
   const [isOpen, setOpen] = useState({
@@ -86,7 +86,7 @@ const CreatBlog = () => {
     innercategory: false,
   });
 
-  const isUpdate = Object.keys(data || [])?.length !== 0;
+  const isUpdate = !!blogData 
 
   useEffect(() => {
     if (isUpdate && !isError) {
@@ -573,12 +573,7 @@ const CreatBlog = () => {
                 className="px-4 py-2 text-white rounded-md bg-[#1f3c88] hover:bg-[#2d56bb] disabled:bg-gray-500"
                 type="submit"
                 disabled={
-                  !state?.thumnail ||
-                  (isUpdate && !isError
-                    ? !state?.maincategory
-                    : !state?.maincategory) ||
-                  !state?.title ||
-                  !state?.content
+                  !state?.thumnail || !state?.title|| !state?.content
                 }
               >
                 {isUpdate && !isError ? "Update" : "Submit"}
