@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useNavigate, useParams } from "react-router-dom";
 import ReactPlayer from "react-player";
@@ -17,6 +16,7 @@ import { TiArrowBackOutline } from "react-icons/ti";
 import { MdOutlineOndemandVideo } from "react-icons/md";
 import { FaCaretDown, FaRegImage } from "react-icons/fa";
 import uploadImage from "../firebase_image/image";
+import TextEditor from "../components/textEditor";
 
 
 interface stateProps{
@@ -307,14 +307,18 @@ const UploadVideo = () => {
               required
             /> */}
               <div className="flex w-full col-span-1 gap-5 md:col-span-2 ">
-                <ReactQuill
+                <TextEditor
+               value={state?.description}
+                OnChangeEditor={(e:string) => HandleChange("description", e)}
+                />
+                {/* <ReactQuill
                   theme="snow"
                   value={state?.description}
                   onChange={(content: string) =>
                     HandleChange("description", content)
                   }
                   className="w-full bg-green-100 border-none rounded-md "
-                />
+                /> */}
               </div>
               {/* <input
                 value={state?.tags}

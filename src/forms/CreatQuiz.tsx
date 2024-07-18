@@ -171,7 +171,7 @@ const CreatQuiz = ({ isQuizForm, setQuizForm }:Props) => {
                 <div className="">
                   <TextEditor
                     value={quizDataForm?.instructions}
-                    OnChangeEditor={(e) =>
+                    OnChangeEditor={(e:string) =>
                       handleEditorChange("instructions", e)
                     }
                   />

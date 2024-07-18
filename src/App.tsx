@@ -1,4 +1,7 @@
 // App.js
+if (typeof global === 'undefined') {
+  window.global = window;
+}
 import "./App.css";
 import {
   RouterProvider,
@@ -15,7 +18,7 @@ import PrivateRoute from "./middleware/privateroute";
 import ForgetPassword from "./pages/ForgetPassword";
 import Authentication from "./pages/Authentication";
 import ResetPassword from "./pages/ResetPassword";
-import ErrorElement from "./pages/ErrorElement";
+
 import Awareness from "./pages/Awareness";
 import CreatAwareness from "./forms/CreatAwareness";
 import AwarenessCategory from "./pages/AwarenessCategory";
@@ -70,7 +73,6 @@ function App() {
         {
           path: "",
           element: <Layout />,
-          errorElement: <ErrorElement />,
           children: [
             {
               path: "creat-blog",

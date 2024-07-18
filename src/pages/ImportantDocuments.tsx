@@ -151,7 +151,7 @@ const ImportantDocuments = () => {
                   Check Internet connection or Contact to Admin
                 </p>
               ) : (
-                data?.map((document:ImpLinkDocs, i:number) => (
+                data?.length>0&& data?.map((document:ImpLinkDocs, i:number) => (
                   <section
                     key={i}
                     className="grid items-center gap-6 py-2 pl-6 pr-4 border-t-2 border-gray-200 grid-cols-customImportand group hover:bg-gray-50"

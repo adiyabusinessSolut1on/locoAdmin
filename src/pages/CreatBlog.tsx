@@ -563,7 +563,7 @@ const CreatBlog = () => {
               <div className="col-span-1 md:col-span-2">
                 <TextEditor
                   value={state?.content}
-                  OnChangeEditor={(e) => handleDropChange("content", e)}
+                  OnChangeEditor={(e:string) => handleDropChange("content", e)}
                 />
               </div>
             </div>

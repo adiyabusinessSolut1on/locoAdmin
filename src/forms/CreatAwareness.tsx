@@ -6,9 +6,9 @@ import {
 import uploadImage from "../firebase_image/image";
 import { useNavigate, useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
-import ReactQuill from "react-quill";
 import { FaCaretDown } from "react-icons/fa";
 import { awarenessCategoryType } from "../types";
+import TextEditor from "../components/textEditor";
 
 
 interface StateProps {
@@ -230,12 +230,11 @@ console.log("Awareness Category>>>>",data)
           )}
         </div>
         <div>
-          <ReactQuill
-            theme="snow"
-            value={state?.content}
-            onChange={(content: string) => HandleChange("content", content)}
-            className="h-60  rounded-[7px]"
-          />
+        <TextEditor
+               value={state?.content}
+                OnChangeEditor={(e:string) => HandleChange("content", e)}
+                />
+      
         </div>
         <button
           //   onClick={HandleCreate}

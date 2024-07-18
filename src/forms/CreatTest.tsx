@@ -176,7 +176,7 @@ const CreatTest = ({ isTestForm, setTestForm }:Props) => {
                 <div className="">
                   <TextEditor
                     value={testDataForm?.instructions}
-                    OnChangeEditor={(e) =>
+                    OnChangeEditor={(e:string) =>
                       handleEditorChange("instructions", e)
                     }
                   />
