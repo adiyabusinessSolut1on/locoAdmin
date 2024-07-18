@@ -41,7 +41,6 @@ import DalyTasks from "./pages/Daily_Task";
 function App() {
   const token = localStorage.getItem("user");
   const isValidToken = token ? true : false;
-  console.log("Tokaen in Storage>>>", isValidToken);
   const route = createBrowserRouter([
     {
       path: "/login",
