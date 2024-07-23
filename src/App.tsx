@@ -23,8 +23,6 @@ import Awareness from "./pages/Awareness";
 import CreatAwareness from "./forms/CreatAwareness";
 import AwarenessCategory from "./pages/AwarenessCategory";
 import ImportantDocuments from "./pages/ImportantDocuments";
-
-import UpdateDocuments from "./pages/update-document";
 import SponserCompany from "./pages/SponserCompany";
 import SponserCompaniesForm from "./forms/SponserCompaniesForm";
 import SponsorCompanyProfile from "./pages/SponsorCompanyProfile";

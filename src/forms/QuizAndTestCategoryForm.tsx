@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { TiArrowBackOutline } from "react-icons/ti";
-import { useUpdatePostMutation } from "../api";
-import { toast, ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 interface CategoryForm {
   creat: boolean;
   updateId: string;
@@ -27,7 +26,6 @@ const QuizAndTestCategoryForm = ({
     categoryName: singleCategory.name ? singleCategory.name : "",
   });
 
-  const [updatePost] = useUpdatePostMutation();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCategoryDataForm((prev) => ({

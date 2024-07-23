@@ -174,7 +174,7 @@ export interface TestQuestionsType {
 export interface Testtypes {
   _id: string;
   title: string;
-  catgeory: string;
+  category: string;
   isComplete: boolean;
   instructions: string;
   score: number;
