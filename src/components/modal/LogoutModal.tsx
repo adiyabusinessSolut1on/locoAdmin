@@ -1,12 +1,10 @@
 import React from "react";
-interface Props{
-  onClose:()=>void,
-  onConfirm:()=>void
+interface Props {
+  onClose: () => void;
+  onConfirm: () => void;
 }
-const LogOutModal = ({ onClose, onConfirm }:Props) => {
-
-
-  const handlingPropogation = (e:React.MouseEvent<HTMLDivElement>) => {
+const LogOutModal = ({ onClose, onConfirm }: Props) => {
+  const handlingPropogation = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
   };
 
@@ -25,7 +23,7 @@ const LogOutModal = ({ onClose, onConfirm }:Props) => {
         <div className="flex justify-end space-x-4">
           <button
             onClick={onClose}
-            className="px-4 py-2 font-semibold bg-gray-400 rounded-md hover:bg-gray-300"
+            className="px-4 py-2 font-semibold text-white bg-blue-400 rounded-md hover:bg-blue-300"
           >
             Cancel
           </button>

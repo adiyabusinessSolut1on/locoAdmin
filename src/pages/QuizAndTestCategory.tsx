@@ -6,12 +6,11 @@ import Loader from "../components/loader";
 import Pagination from "../components/pagination/Pagination";
 import { IoIosSend } from "react-icons/io";
 import ConfirmDeleteModal from "../components/modal/DeleteModal";
+import QuizAndTestCategoryForm from "../forms/QuizAndTestCategoryForm";
 
-import VideoCategoryForm from "../forms/VideoCategoryForm";
-
-const VideoCategory: React.FC = () => {
+const QuizAndTestCategory = () => {
   const { data, isLoading } = useGetDataQuery({
-    url: "/video/get-category",
+    // url: "/video/get-category",
   });
 
   const [isCategoryForm, setCategoryForm] = useState({
@@ -34,9 +33,16 @@ const VideoCategory: React.FC = () => {
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
-  const currentVideoCategory = data?.slice(indexOfFirstItem, indexOfLastItem);
+  //   const currentCategory = data?.slice(indexOfFirstItem, indexOfLastItem);
 
-  console.log(currentVideoCategory, "pagination");
+  const currentCategory = [
+    { category: "hello world", _id: "123456" },
+    { category: "hello state", _id: "123457" },
+    { category: "hello cateogry", _id: "123458" },
+    { category: "hello nothing", _id: "123459" },
+  ];
+
+  console.log(currentCategory, "pagination");
 
   const handleClick = (pageNumber: number) => {
     setCurrentPage(pageNumber);
@@ -113,10 +119,10 @@ const VideoCategory: React.FC = () => {
       <ToastContainer />
       <>
         {(isCategoryForm.creat || isCategoryForm.updateId) && (
-          <VideoCategoryForm
-            singleCategory={updateData}
+          <QuizAndTestCategoryForm
             isCategoryForm={isCategoryForm}
             setCategoryForm={setCategoryForm}
+            singleCategory={updateData}
           />
         )}
 
@@ -131,11 +137,11 @@ const VideoCategory: React.FC = () => {
         >
           <section
             className={` md:p-8 p-6 h-full  text-gray-600  border-gray-200 
-          rounded-md   max-w-full w-full `}
+              rounded-md   max-w-full w-full `}
           >
             <div className="flex items-center mb-2 md:mb-6">
               <h1 className=" text-[28px] font-bold md:text-4xl font-mavenPro ">
-                Video Category
+                Quiz and Test Category
               </h1>
             </div>
             <div className="flex justify-between mb-4">
@@ -143,10 +149,10 @@ const VideoCategory: React.FC = () => {
                 <input
                   type="search"
                   placeholder={` Search
-                `}
+                    `}
                   className={` p-2 text-sm md:text-base  sm:px-4 py-1 border-[2px] border-transparent 
-                 bg-slate-50 focus:border-gray-100
-              shadow-inner rounded-[0.26rem] outline-none `}
+                     bg-slate-50 focus:border-gray-100
+                  shadow-inner rounded-[0.26rem] outline-none `}
                   // value={searchQuery}
                   // onChange={(e) => setSearchQuery(e.target.value)}
                   // onFocus={() => setCurrentPage(1)}
@@ -155,8 +161,8 @@ const VideoCategory: React.FC = () => {
               <div className="relative flex items-center self-end ">
                 <button
                   className={` px-2 py-1 
-                         bg-[#1f3c88] hover:bg-[#2d56bb] text-white
-                    }    rounded shadow-xl md:px-4 md:py-2  sm:self-center`}
+                             bg-[#1f3c88] hover:bg-[#2d56bb] text-white
+                        }    rounded shadow-xl md:px-4 md:py-2  sm:self-center`}
                   onClick={handlingCategory}
                 >
                   <span className="hidden md:inline-block">Creat Category</span>
@@ -186,35 +192,33 @@ const VideoCategory: React.FC = () => {
               </section>
               {/* min-w-[900px] */}
               <div className=" h-[380px] overflow-y-auto [&::-webkit-scrollbar]:hidden min-w-[600px] bg-gray-50">
-                {currentVideoCategory?.map(
-                  (category: VideoCategorys, i: number) => (
-                    <section
-                      key={i}
-                      className="grid items-center gap-6 py-2 pl-6 pr-4 border-t-2 border-gray-200 grid-cols-customeCategory group hover:bg-gray-50"
-                    >
-                      <span>{i + 1}</span>
+                {currentCategory?.map((category: VideoCategorys, i: number) => (
+                  <section
+                    key={i}
+                    className="grid items-center gap-6 py-2 pl-6 pr-4 border-t-2 border-gray-200 grid-cols-customeCategory group hover:bg-gray-50"
+                  >
+                    <span>{i + 1}</span>
 
-                      <span className="ml-2 text-sm font-semibold text-gray-600 md:text-base">
-                        {category?.category}
-                      </span>
+                    <span className="ml-2 text-sm font-semibold text-gray-600 md:text-base">
+                      {category?.category}
+                    </span>
 
-                      <div className="flex justify-center gap-4">
-                        <button
-                          className="px-3 text-sm py-2 text-white  rounded-md bg-[#1f3c88] hover:bg-[#2d56bb]"
-                          onClick={() => updateCategory(category)}
-                        >
-                          Edit
-                        </button>
-                        <button
-                          className="px-3 py-2 text-sm text-white rounded-md bg-rose-600 hover:bg-rose-700"
-                          onClick={() => deletCategory(category?._id)}
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </section>
-                  )
-                )}
+                    <div className="flex justify-center gap-4">
+                      <button
+                        className="px-3 text-sm py-2 text-white  rounded-md bg-[#1f3c88] hover:bg-[#2d56bb]"
+                        onClick={() => updateCategory(category)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="px-3 py-2 text-sm text-white rounded-md bg-rose-600 hover:bg-rose-700"
+                        onClick={() => deletCategory(category?._id)}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </section>
+                ))}
               </div>
             </section>
             <Pagination
@@ -230,4 +234,4 @@ const VideoCategory: React.FC = () => {
   );
 };
 
-export default VideoCategory;
+export default QuizAndTestCategory;

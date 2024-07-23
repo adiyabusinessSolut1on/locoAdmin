@@ -6,7 +6,7 @@ import DeleteICONSVG from "../assets/SVG/deleteICON";
 import EditICONSVG from "../assets/SVG/editICON";
 import { useState } from "react";
 import ConfirmDeleteModal from "../components/modal/DeleteModal";
-import {  toast, ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ImpLinkDocs } from "../types";
 import Pagination from "../components/pagination/Pagination";
@@ -14,12 +14,30 @@ import { IoIosSend } from "react-icons/io";
 
 const ImportantDocuments = () => {
   const navigate = useNavigate();
-  const { data, isLoading,  isError } = useGetDataQuery({
+  const { data, isLoading, isError, error } = useGetDataQuery({
     url: "/important_link",
   });
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
+  //calculation of page
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+
+  // const currentDocuments = data?.slice(indexOfFirstItem, indexOfLastItem);
+  const currentDocuments = Array.isArray(data)
+    ? data.slice(indexOfFirstItem, indexOfLastItem)
+    : data?.mesaage;
+
+  console.log(
+    data,
+    indexOfFirstItem,
+    indexOfLastItem,
+    isError,
+    error,
+    typeof currentDocuments === "string",
+    currentDocuments
+  );
   const handleClick = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
@@ -67,19 +85,17 @@ const ImportantDocuments = () => {
       id: "",
     });
   };
-  const updateHandler = (doc:ImpLinkDocs) => {
+  const updateHandler = (doc: ImpLinkDocs) => {
     navigate(`/important-document/update-documents/${doc?._id}`);
-
   };
   const listHeadingUsers = ["Title", "Downloadable", "Date", "Setting"];
   return (
     <>
-    <ToastContainer/>
+      <ToastContainer />
       {isLoading && <Loader />}
 
       {isModalOpen.condition && (
         <ConfirmDeleteModal
-        
           onClose={handleCloseModal}
           onConfirm={handleConfirmDelete}
         />
@@ -144,14 +160,18 @@ const ImportantDocuments = () => {
             </section>
             <div className=" h-[380px] overflow-y-auto [&::-webkit-scrollbar]:hidden min-w-[800px] bg-gray-50">
               {isLoading ? (
-               
                 <p>Loading...</p>
               ) : isError ? (
                 <p className="flex items-center justify-center w-full h-full font-medium text-center text-rose-800">
                   Check Internet connection or Contact to Admin
                 </p>
+              ) : typeof currentDocuments === "string" ? (
+                <p className="flex items-center justify-center h-full font-bold text-gray-600">
+                  {currentDocuments} "Add Document"
+                </p>
               ) : (
-                data?.length>0&& data?.map((document:ImpLinkDocs, i:number) => (
+                data?.length > 0 &&
+                currentDocuments?.map((document: ImpLinkDocs, i: number) => (
                   <section
                     key={i}
                     className="grid items-center gap-6 py-2 pl-6 pr-4 border-t-2 border-gray-200 grid-cols-customImportand group hover:bg-gray-50"

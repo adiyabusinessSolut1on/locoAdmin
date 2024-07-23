@@ -3,32 +3,30 @@ import { useGetDataQuery, useUpdatePostMutation } from "../api";
 import { toast, ToastContainer } from "react-toastify";
 import { TiArrowBackOutline } from "react-icons/ti";
 import TextEditor from "../components/textEditor";
+import { QuizAndTestCategoryType } from "../types";
+import { FaCaretDown } from "react-icons/fa";
 interface CategoryForm {
   creat: boolean;
   updateId: string;
 }
-interface Props{
-  isTestForm:{
-    creat:boolean,
-    updateId:string
-  },
-  setTestForm:React.Dispatch<React.SetStateAction<CategoryForm>>,
- 
+interface Props {
+  isTestForm: {
+    creat: boolean;
+    updateId: string;
+  };
+  setTestForm: React.Dispatch<React.SetStateAction<CategoryForm>>;
 }
 
-const CreatTest = ({ isTestForm, setTestForm }:Props) => {
- 
-
-  const { data,  isError } = useGetDataQuery({
+const CreatTest = ({ isTestForm, setTestForm }: Props) => {
+  const { data, isError } = useGetDataQuery({
     url: `/test/${isTestForm?.updateId}`,
   });
 
   const isUpdate = Object.keys(data || [])?.length !== 0;
 
- 
-
   const [testDataForm, settestDataForm] = useState({
     title: data?.title ? data?.title : "",
+    category: data?.category ? data?.category : "",
     instructions: data?.instructions ? data?.instructions : "",
     completed: data?.isComplete ? data?.isComplete : false,
   });
@@ -38,15 +36,32 @@ const CreatTest = ({ isTestForm, setTestForm }:Props) => {
       settestDataForm((prev) => ({
         ...prev,
         title: data?.title ? data?.title : "",
+        category: data?.category ? data?.category : "",
         instructions: data?.instructions ? data?.instructions : "",
         completed: data?.isComplete ? data?.isComplete : false,
       }));
     }
   }, [isUpdate, isError, data]);
 
+  const [isOpen, setOpen] = useState({
+    category: false,
+  });
+
+  const selectOption = (field: string, value: string) => {
+    console.log(value);
+    settestDataForm((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+    setOpen((prev) => ({
+      ...prev,
+      [field]: false,
+    }));
+  };
+
   const [updatePost] = useUpdatePostMutation();
 
-  const handleChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     settestDataForm((prev) => ({
       ...prev,
       [e?.target?.name]:
@@ -54,10 +69,9 @@ const CreatTest = ({ isTestForm, setTestForm }:Props) => {
     }));
   };
 
-  const submiteHandler = async (e:React.FormEvent) => {
+  const submiteHandler = async (e: React.FormEvent) => {
     e.preventDefault();
 
-  
     toast.loading("Checking Details");
     try {
       const payload = {
@@ -98,7 +112,7 @@ const CreatTest = ({ isTestForm, setTestForm }:Props) => {
     }
   };
 
-  const handleEditorChange = (name:string, value:string) => {
+  const handleEditorChange = (name: string, value: string) => {
     settestDataForm((prev) => ({
       ...prev,
       [name]: value,
@@ -120,18 +134,34 @@ const CreatTest = ({ isTestForm, setTestForm }:Props) => {
 
     settestDataForm({
       title: "",
+      category: "",
       instructions: "",
       completed: false,
     });
     console.log(testDataForm);
   };
 
+  const categoryData = [
+    {
+      name: "latest",
+      _id: "latest01",
+    },
+    {
+      name: "old",
+      _id: "old01",
+    },
+    {
+      name: "newstes",
+      _id: "newstes01",
+    },
+  ];
+
   return (
     <div
       className="fixed inset-0 z-10 flex items-center justify-center px-4 sm:px-0 bg-black/40"
       onClick={closeHandler}
     >
-      <ToastContainer/>
+      <ToastContainer />
       <div
         className="bg-white rounded-md w-[600px]"
         onClick={(e) => e.stopPropagation()}
@@ -161,6 +191,53 @@ const CreatTest = ({ isTestForm, setTestForm }:Props) => {
                   placeholder={"Add Title"}
                   required
                 />
+                {/* category of Quiz and Test */}
+                <div className="relative">
+                  <div
+                    className="flex justify-between p-2 pl-4 font-medium text-gray-400 border border-gray-400 rounded-md cursor-pointer focus:border-blue-200"
+                    onClick={() =>
+                      setOpen({ ...isOpen, category: !isOpen.category })
+                    }
+                  >
+                    <p
+                      className={`${
+                        testDataForm?.category !== "" && "text-gray-800"
+                      }`}
+                    >
+                      {testDataForm?.category !== ""
+                        ? testDataForm?.category
+                        : "Select Category"}
+                    </p>
+                    <FaCaretDown
+                      className={`m-1 transition-all duration-300 ${
+                        isOpen.category ? "rotate-180 text-blue-400" : ""
+                      }`}
+                    />
+                  </div>
+                  <ul
+                    className={`mt-2 p-2 rounded-md w-32 text-white bg-gray-800 shadow-lg absolute z-10 ${
+                      isOpen.category ? "max-h-60" : "hidden"
+                    } custom-scrollbar`}
+                  >
+                    {categoryData?.map(
+                      (caetory: QuizAndTestCategoryType, i: number) => (
+                        <li
+                          key={i}
+                          className={`p-2 mb-2 text-sm rounded-md cursor-pointer hover:bg-blue-200/60 ${
+                            testDataForm.category === caetory?.name
+                              ? "bg-rose-400"
+                              : ""
+                          }`}
+                          onClick={() =>
+                            selectOption("category", caetory?.name)
+                          }
+                        >
+                          <span>{caetory?.name}</span>
+                        </li>
+                      )
+                    )}
+                  </ul>
+                </div>
                 {/* <input
                 value={testDataForm?.instructions}
                 type="text"
@@ -176,7 +253,7 @@ const CreatTest = ({ isTestForm, setTestForm }:Props) => {
                 <div className="">
                   <TextEditor
                     value={testDataForm?.instructions}
-                    OnChangeEditor={(e:string) =>
+                    OnChangeEditor={(e: string) =>
                       handleEditorChange("instructions", e)
                     }
                   />
