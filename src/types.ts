@@ -15,6 +15,7 @@ export interface innerCategories {
 export interface BlogCategory {
   _id: string;
   name: string;
+  image:string,
   subCategories: [subcategory];
 }
 
