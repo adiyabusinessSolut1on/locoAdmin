@@ -1,12 +1,9 @@
 import { useEffect, useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import {
-  useGetDataQuery,
-  useUpdatePostMutation,
-} from "../api";
+import { useGetDataQuery, useUpdatePostMutation } from "../api";
 import { BlogCategory } from "../types";
-import {  toast, ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import uploadImage from "../firebase_image/image";
 import TextEditor from "../components/textEditor";
@@ -45,14 +42,9 @@ const CreatBlog = () => {
   const [updatePost] = useUpdatePostMutation();
 
   const { id } = useParams();
-  const {
-    data: blogData,
-    isError,
-  } = useGetDataQuery({
+  const { data: blogData, isError } = useGetDataQuery({
     url: `/blog/get-blog-using-Id/${id}`,
   });
-
- 
 
   const { data } = useGetDataQuery({ url: "/get-blog-category" });
   console.log(data, "update Blog");
@@ -76,7 +68,7 @@ const CreatBlog = () => {
     thumnail: blogData?.data?.thumnail || "",
     content: blogData?.data?.content || "",
     imageTitle:
-    blogData?.data?.thumnail?.slice(67, data?.image?.indexOf("%")) || "",
+      blogData?.data?.thumnail?.slice(67, data?.image?.indexOf("%")) || "",
   });
 
   const [isOpen, setOpen] = useState({
@@ -86,7 +78,7 @@ const CreatBlog = () => {
     innercategory: false,
   });
 
-  const isUpdate = !!blogData 
+  const isUpdate = !!blogData;
 
   useEffect(() => {
     if (isUpdate && !isError) {
@@ -115,7 +107,6 @@ const CreatBlog = () => {
   const makeSlug = (value: string) => {
     return value.toLowerCase().replace(/\s+/g, "-");
   };
- 
 
   const handleDropChange = (name: string, value: string) => {
     console.log(name, value, "change text");
@@ -146,7 +137,7 @@ const CreatBlog = () => {
       );
       setCategory((prev) => ({
         ...prev,
-                //@ts-expect-error no error
+        //@ts-expect-error no error
         subsubcategoryData: subCategory ? subCategory?.subSubCategories : [],
         innercategoryData: [],
       }));
@@ -167,8 +158,8 @@ const CreatBlog = () => {
       setCategory((prev) => ({
         ...prev,
         innercategoryData: subSubCategory
-        //@ts-expect-error mooj
-          ? subSubCategory?.innerCategories
+          ? //@ts-expect-error mooj
+            subSubCategory?.innerCategories
           : [],
       }));
       setState((prev) => ({
@@ -279,21 +270,21 @@ const CreatBlog = () => {
   };
 
   const clearhandler = () => {
-    setState({
-      maincategory: "",
-      mainId: "",
-      subid: "",
-      subsubid: "",
-      innerid: "",
-      subcategory: "",
-      subsubcategory: "",
-      innercategory: "",
-      title: "",
-      slug: "",
-      thumnail: "",
-      content: "",
-      imageTitle: "",
-    });
+    // setState({
+    //   maincategory: "",
+    //   mainId: "",
+    //   subid: "",
+    //   subsubid: "",
+    //   innerid: "",
+    //   subcategory: "",
+    //   subsubcategory: "",
+    //   innercategory: "",
+    //   title: "",
+    //   slug: "",
+    //   thumnail: "",
+    //   content: "",
+    //   imageTitle: "",
+    // });
 
     navigate("/creat-blog/blogs-list");
   };
@@ -318,7 +309,7 @@ const CreatBlog = () => {
 
   return (
     <div className="w-full md:px-4 md:ml-4 md:pl-0">
-      <ToastContainer/>
+      <ToastContainer />
       <form
         className="w-full h-[calc(100vh-6rem)] overflow-hidden   rounded-md"
         onSubmit={submitHandler}
@@ -421,23 +412,25 @@ const CreatBlog = () => {
                       isOpen.maincategory ? "max-h-60" : "hidden"
                     } custom-scrollbar`}
                   >
-                    {
-                      data?.data?.length>0?
-                    data?.data?.map((main:BlogCategory, i:number) => (
-                      <li
-                        key={i}
-                        className={`p-2 mb-2 text-sm text-[#DEE1E2]  rounded-md cursor-pointer hover:bg-blue-200/60 ${
-                          state?.maincategory === main?.name ? "bg-rose-600" : ""
-                        }`}
-                        onClick={() =>
-                          handleDropChange("maincategory", main?._id)
-                        }
-                      >
-                        <span>{main?.name}</span>
-                      </li>
-                    )):<div>Data Not Found</div>
-                    
-                    }
+                    {data?.data?.length > 0 ? (
+                      data?.data?.map((main: BlogCategory, i: number) => (
+                        <li
+                          key={i}
+                          className={`p-2 mb-2 text-sm text-[#DEE1E2]  rounded-md cursor-pointer hover:bg-blue-200/60 ${
+                            state?.maincategory === main?.name
+                              ? "bg-rose-600"
+                              : ""
+                          }`}
+                          onClick={() =>
+                            handleDropChange("maincategory", main?._id)
+                          }
+                        >
+                          <span>{main?.name}</span>
+                        </li>
+                      ))
+                    ) : (
+                      <div>Data Not Found</div>
+                    )}
                   </ul>
                 </div>
               )}
@@ -563,7 +556,7 @@ const CreatBlog = () => {
               <div className="col-span-1 md:col-span-2">
                 <TextEditor
                   value={state?.content}
-                  OnChangeEditor={(e:string) => handleDropChange("content", e)}
+                  OnChangeEditor={(e: string) => handleDropChange("content", e)}
                 />
               </div>
             </div>
@@ -572,9 +565,7 @@ const CreatBlog = () => {
               <button
                 className="px-4 py-2 text-white rounded-md bg-[#1f3c88] hover:bg-[#2d56bb] disabled:bg-gray-500"
                 type="submit"
-                disabled={
-                  !state?.thumnail || !state?.title|| !state?.content
-                }
+                disabled={!state?.thumnail || !state?.title || !state?.content}
               >
                 {isUpdate && !isError ? "Update" : "Submit"}
               </button>

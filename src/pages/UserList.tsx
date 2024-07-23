@@ -1,4 +1,4 @@
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDeletePostMutation, useGetDataQuery } from "../api";
 import DeleteICONSVG from "../assets/SVG/deleteICON";
 import EditICONSVG from "../assets/SVG/editICON";
@@ -11,6 +11,8 @@ import ConfirmDeleteModal from "../components/modal/DeleteModal";
 
 import { useState } from "react";
 import Pagination from "../components/pagination/Pagination";
+import CreatUser from "../forms/CreatUser";
+import { IoIosSend } from "react-icons/io";
 
 const UserList = () => {
   const navigate = useNavigate();
@@ -37,6 +39,10 @@ const UserList = () => {
     id: "",
   });
 
+  const [userForm, setUserForm] = useState({
+    isCreat: false,
+  });
+
   const handleCloseModal = () => {
     setModalOpen({
       condition: false,
@@ -52,7 +58,7 @@ const UserList = () => {
       id: id,
     }));
   };
-  const updateuser = (user:UserTypes) => {
+  const updateuser = (user: UserTypes) => {
     navigate(`/users/${user._id}`);
     console.log("under process", user);
   };
@@ -84,18 +90,23 @@ const UserList = () => {
 
   console.log("users data>>", data);
 
+  const creatUserhandler = () => {
+    setUserForm((prev) => ({ ...prev, isCreat: !prev.isCreat }));
+  };
+
   const listHeadingUsers = ["Image", "name", "Email", "Phone", "Setting"];
   return (
     <>
       {isLoading && <Loader />}
-<ToastContainer/>
+      <ToastContainer />
       {isModalOpen.condition && (
         <ConfirmDeleteModal
-       
           onClose={handleCloseModal}
           onConfirm={handleConfirmDelete}
         />
       )}
+
+      {userForm.isCreat && <CreatUser setUserForm={setUserForm} />}
 
       <section
         className={`  md:pl-0 p-4 h-full  w-full rounded-md   mx-auto [&::-webkit-scrollbar]:hidden `}
@@ -121,19 +132,20 @@ const UserList = () => {
                 // onFocus={() => setCurrentPage(1)}
               />
             </div>
-            {/* <div className="relative flex items-center self-end ">
-                  <button
-                    className={` px-2 py-1 
+            <div className="relative flex items-center self-end ">
+              <button
+                className={` px-2 py-1 
                            bg-[#1f3c88] hover:bg-[#2d56bb]  text-[#DEE1E2] font-semibold
                       }    rounded shadow-xl md:px-4 md:py-2  sm:self-center`}
-                  >
-                    <Link to={"/creat-blog"}>
-                      <span className="hidden md:inline-block">Add Blog</span>
-    
-                      <IoIosSend className="w-6 h-6 md:hidden" />
-                    </Link>
-                  </button>
-                </div> */}
+                onClick={creatUserhandler}
+              >
+                {/* <Link to={"/creat-blog"}> */}
+                <span className="hidden md:inline-block">Add Blog</span>
+
+                <IoIosSend className="w-6 h-6 md:hidden" />
+                {/* </Link> */}
+              </button>
+            </div>
           </div>
           <section
             className={`w-full overflow-auto   border-2 [&::-webkit-scrollbar]:hidden rounded-lg border-gray-200 shadow-md bg-white`}
@@ -154,14 +166,13 @@ const UserList = () => {
             </section>
             <div className=" h-[380px] overflow-y-auto [&::-webkit-scrollbar]:hidden min-w-[900px] bg-gray-50">
               {isLoading ? (
-               
                 <p>Loading...</p>
               ) : isError ? (
                 <p className="flex items-center justify-center w-full h-full font-medium text-center text-rose-800">
                   Check Internet connection or Contact to Admin
                 </p>
               ) : (
-                currentUsers?.map((user:UserTypes, i:number) => (
+                currentUsers?.map((user: UserTypes, i: number) => (
                   <section
                     key={i}
                     className="grid items-center gap-6 py-2 pl-6 pr-4 border-t-2 border-gray-200 grid-cols-customUsers group hover:bg-gray-50"

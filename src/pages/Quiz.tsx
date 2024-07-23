@@ -1,4 +1,4 @@
-import  { useState } from "react";
+import { useState } from "react";
 import Pagination from "../components/pagination/Pagination";
 import EditICONSVG from "../assets/SVG/editICON";
 import DeleteICONSVG from "../assets/SVG/deleteICON";
@@ -13,7 +13,7 @@ import QuizQuestion from "../forms/QuizQuestion";
 import { PiEye } from "react-icons/pi";
 import { quiztypes } from "../types";
 interface QuestionData {
-  _id:string
+  _id: string;
   name: string;
   options: string[];
   predicted_result: string;
@@ -26,7 +26,7 @@ interface QuestionFormState {
   quizId: string;
 }
 const Quiz = () => {
-  const { data, isLoading,  isError } = useGetDataQuery({
+  const { data, isLoading, isError } = useGetDataQuery({
     url: "/quiz",
   });
 
@@ -34,6 +34,12 @@ const Quiz = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
+  //calculation of page
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+
+  const currentQuiz = data?.slice(indexOfFirstItem, indexOfLastItem);
+
   const handleClick = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
@@ -43,20 +49,18 @@ const Quiz = () => {
     updateId: "",
   });
 
-
   const [isQuestionForm, setQuestionForm] = useState<QuestionFormState>({
     condition: false,
     isCreat: false,
     data: {
-      _id:"",
-      name:"",
-      options:[],
-      predicted_result:"",
-      answer_description:""
+      _id: "",
+      name: "",
+      options: [],
+      predicted_result: "",
+      answer_description: "",
     },
     quizId: "",
   });
- 
 
   const [isModalOpen, setModalOpen] = useState({
     condition: false,
@@ -70,14 +74,14 @@ const Quiz = () => {
     });
   };
 
-  const updateHandler = (quiz:quiztypes) => {
+  const updateHandler = (quiz: quiztypes) => {
     setQuizForm((prev) => ({
       ...prev,
       updateId: quiz._id,
     }));
   };
 
-  const deletHandler = (id:string) => {
+  const deletHandler = (id: string) => {
     console.log(id, "from handler");
     setModalOpen((prev) => ({
       ...prev,
@@ -109,9 +113,9 @@ const Quiz = () => {
     });
   };
 
-
-  const listHeadingAwarness = [
+  const listHeadingQuiz = [
     "Title",
+    "Category",
     "Instruction",
     "Add Questions",
     "view",
@@ -123,11 +127,9 @@ const Quiz = () => {
       ...prev,
       creat: !prev.creat,
     }));
-  
   };
 
-
-  const questionFormHandler = (quiz:quiztypes) => {
+  const questionFormHandler = (quiz: quiztypes) => {
     setQuestionForm((prev) => ({
       ...prev,
       condition: true,
@@ -142,37 +144,29 @@ const Quiz = () => {
       condition: false,
       isCreat: false,
       data: {
-        _id:"",
-        name:"",
-        options:[],
-        predicted_result:"",
-        answer_description:""
+        _id: "",
+        name: "",
+        options: [],
+        predicted_result: "",
+        answer_description: "",
       },
       quizId: "",
     }));
   };
   return (
     <>
-    <ToastContainer/>
+      <ToastContainer />
       {isLoading && <Loader />}
 
       {(isQuizForm.creat || isQuizForm.updateId) && (
-        <CreatQuiz
-          isQuizForm={isQuizForm}
-          setQuizForm={setQuizForm}
-    
-        />
+        <CreatQuiz isQuizForm={isQuizForm} setQuizForm={setQuizForm} />
       )}
       {isQuestionForm.condition && (
-        <QuizQuestion
-          isQuestionForm={isQuestionForm}
-          close={closeHandler}
-        />
+        <QuizQuestion isQuestionForm={isQuestionForm} close={closeHandler} />
       )}
 
       {isModalOpen.condition && (
         <ConfirmDeleteModal
-         
           onClose={handleCloseModal}
           onConfirm={handleConfirmDelete}
         />
@@ -221,7 +215,7 @@ const Quiz = () => {
             <section className="grid grid-cols-customQuiz pb-2 p-2  gap-4   min-w-[800px] font-medium md:font-semibold bg-white font-mavenPro">
               <p className="pl-2 md:text-lg">SrNo.</p>
 
-              {listHeadingAwarness.map((heading, index) => (
+              {listHeadingQuiz.map((heading, index) => (
                 <p
                   key={index}
                   className={`   md:text-lg ${
@@ -234,15 +228,13 @@ const Quiz = () => {
             </section>
             <div className=" h-[380px] overflow-y-auto [&::-webkit-scrollbar]:hidden min-w-[800px] bg-gray-50">
               {isLoading ? (
-               
                 <p>Loading...</p>
               ) : isError ? (
                 <p className="flex items-center justify-center w-full h-full font-medium text-center text-rose-800">
                   Check Internet connection or Contact to Admin
                 </p>
-              ) : (
-                data?.length>0?
-                data?.map((quiz:quiztypes, i:number) => (
+              ) : data?.length > 0 ? (
+                currentQuiz?.map((quiz: quiztypes, i: number) => (
                   <section
                     key={i}
                     className="grid items-center gap-6 py-2 pl-6 pr-4 border-t-2 border-gray-200 grid-cols-customQuiz group hover:bg-gray-50"
@@ -253,6 +245,11 @@ const Quiz = () => {
                       className={`  font-semibold text-center  rounded-full  `}
                     >
                       {quiz?.title ? quiz?.title : "---"}
+                    </span>
+                    <span
+                      className={`  font-semibold text-center  rounded-full  `}
+                    >
+                      {quiz?.category ? quiz?.category : "---"}
                     </span>
                     <span
                       className={`  font-semibold text-center  rounded-full  `}
@@ -302,7 +299,9 @@ const Quiz = () => {
                       </button>
                     </div>
                   </section>
-                )):<div>Data Not Found</div>
+                ))
+              ) : (
+                <div>Data Not Found</div>
               )}
             </div>
           </section>

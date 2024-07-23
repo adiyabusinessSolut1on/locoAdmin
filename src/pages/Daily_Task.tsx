@@ -6,9 +6,9 @@ import ConfirmDeleteModal from "../components/modal/DeleteModal";
 import Loader from "../components/loader";
 import { toast, ToastContainer } from "react-toastify";
 import { useDeletePostMutation, useGetDataQuery } from "../api";
-import { Link } from "react-router-dom";
+
 import { IoIosSend } from "react-icons/io";
-import { PiEye } from "react-icons/pi";
+
 import { DailyTask } from "../types";
 import Task from "../forms/Task";
 
@@ -23,6 +23,14 @@ const DalyTasks = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
   //calculation of page
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+
+  // const currentTask = data?.slice(indexOfFirstItem, indexOfLastItem);
+
+  const currentTask = Array.isArray(data)
+    ? data.slice(indexOfFirstItem, indexOfLastItem)
+    : data?.mesaage;
   const handleClick = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
@@ -86,7 +94,7 @@ const DalyTasks = () => {
       id: "",
     });
   };
-  const listHeadingAwarness = ["Title", "view", "Setting"];
+  const listHeadingDailyTask = ["Task", "Option", "Setting"];
 
   const handlingCrateQuiz = () => {
     setTaskForm((prev) => ({
@@ -100,13 +108,12 @@ const DalyTasks = () => {
   return (
     <>
       {isLoading && <Loader />}
-      <ToastContainer/>
+      <ToastContainer />
       {(isTakForm.creat || isTakForm.updateId) && (
         <Task isTestForm={isTakForm} setTestForm={setTaskForm} />
       )}
       {isModalOpen.condition && (
         <ConfirmDeleteModal
-          
           onClose={handleCloseModal}
           onConfirm={handleConfirmDelete}
         />
@@ -148,14 +155,14 @@ const DalyTasks = () => {
           <section
             className={`w-full overflow-auto   border-2 [&::-webkit-scrollbar]:hidden rounded-lg border-gray-200 shadow-md bg-white`}
           >
-            <section className="grid grid-cols-customQuiz pb-2 p-2  gap-4   min-w-[800px] font-medium md:font-semibold bg-white font-mavenPro">
+            <section className="grid grid-cols-customDaily pb-2 p-2  gap-4   min-w-[800px] font-medium md:font-semibold bg-white font-mavenPro">
               <p className="pl-2 md:text-lg">SrNo.</p>
 
-              {listHeadingAwarness?.map((heading:string, index:number) => (
+              {listHeadingDailyTask?.map((heading: string, index: number) => (
                 <p
                   key={index}
                   className={`   md:text-lg ${
-                    index !== 0 ? "justify-self-center" : "ml-20"
+                    index !== 0 && index !== 1 ? "justify-self-center" : "ml-20"
                   }`}
                 >
                   {heading.charAt(0).toUpperCase() + heading.slice(1)}
@@ -164,17 +171,20 @@ const DalyTasks = () => {
             </section>
             <div className=" h-[380px] overflow-y-auto [&::-webkit-scrollbar]:hidden min-w-[800px] bg-gray-50">
               {isLoading ? (
-                
                 <p>Loading...</p>
               ) : isError ? (
                 <p className="flex items-center justify-center w-full h-full font-medium text-center text-rose-800">
                   Check Internet connection or Contact to Admin
                 </p>
+              ) : typeof currentTask === "string" ? (
+                <p className="flex items-center justify-center h-full font-bold text-gray-600">
+                  {currentTask} "Add Task"
+                </p>
               ) : data?.length > 0 ? (
-                data?.map((item: DailyTask, i: number) => (
+                currentTask?.map((item: DailyTask, i: number) => (
                   <section
                     key={i}
-                    className="grid items-center gap-6 py-2 pl-6 pr-4 border-t-2 border-gray-200 grid-cols-customQuiz group hover:bg-gray-50"
+                    className="grid items-center gap-6 py-2 pl-6 pr-4 border-t-2 border-gray-200 grid-cols-customDaily group hover:bg-gray-50"
                   >
                     <span>{i + 1}</span>
 
@@ -183,14 +193,19 @@ const DalyTasks = () => {
                     >
                       {item?.title ? item?.title : "---"}
                     </span>
-                    <div className="grid items-center justify-center ">
+                    <span
+                      className={`  font-semibold text-center  rounded-full  `}
+                    >
+                      {item?.option ? item?.option : "---"}
+                    </span>
+                    {/* <div className="grid items-center justify-center ">
                       <Link
                         to={`/test/${item?._id}`}
                         className="px-2 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-500"
                       >
                         <PiEye className="w-5 h-5" />
                       </Link>
-                    </div>
+                    </div> */}
 
                     <div className="grid justify-center gap-2">
                       <button

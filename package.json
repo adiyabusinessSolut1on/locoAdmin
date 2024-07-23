@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.6",
+    "@tinymce/tinymce-react": "^5.1.1",
     "@types/dotenv": "^8.2.0",
     "dotenv": "^16.4.5",
     "firebase": "^10.11.0",

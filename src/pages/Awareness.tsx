@@ -20,6 +20,12 @@ const Awareness = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
+  //calculation of page
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+
+  const currentAwareness = data?.slice(indexOfFirstItem, indexOfLastItem);
+
   const handleClick = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
@@ -36,11 +42,11 @@ const Awareness = () => {
     });
   };
 
-  const updateHandler = (user:AwarenessTypes) => {
-    navigate(`/users/${user?._id}`);
+  const updateHandler = (user: AwarenessTypes) => {
+    navigate(`/awareness/${user?._id}`);
   };
 
-  const deletHandler = (id:string) => {
+  const deletHandler = (id: string) => {
     setModalOpen((prev) => ({
       ...prev,
       condition: !prev.condition,
@@ -74,10 +80,9 @@ const Awareness = () => {
   return (
     <>
       {isLoading && <Loader />}
-      <ToastContainer/>
+      <ToastContainer />
       {isModalOpen.condition && (
         <ConfirmDeleteModal
-         
           onClose={handleCloseModal}
           onConfirm={handleConfirmDelete}
         />
@@ -129,7 +134,7 @@ const Awareness = () => {
             <section className="grid grid-cols-customAwarness pb-2 p-2  gap-4   min-w-[800px] font-medium md:font-semibold bg-white font-mavenPro">
               <p className="pl-2 md:text-lg">SrNo.</p>
 
-              {listHeadingAwarness?.map((heading:string, index:number) => (
+              {listHeadingAwarness?.map((heading: string, index: number) => (
                 <p
                   key={index}
                   className={`   md:text-lg ${
@@ -142,15 +147,13 @@ const Awareness = () => {
             </section>
             <div className=" h-[380px] overflow-y-auto [&::-webkit-scrollbar]:hidden min-w-[800px] bg-gray-50">
               {isLoading ? (
-             
                 <p>Loading...</p>
               ) : isError ? (
                 <p className="flex items-center justify-center w-full h-full font-medium text-center text-rose-800">
                   Check Internet connection or Contact to Admin
                 </p>
-              ) : (
-                data?.length>0?
-                data?.map((awar:AwarenessTypes, i:number) => (
+              ) : data?.length > 0 ? (
+                currentAwareness?.map((awar: AwarenessTypes, i: number) => (
                   <section
                     key={i}
                     className="grid items-center gap-6 py-2 pl-6 pr-4 border-t-2 border-gray-200 grid-cols-customAwarness group hover:bg-gray-50"
@@ -208,7 +211,9 @@ const Awareness = () => {
                       </button>
                     </div>
                   </section>
-                )):<div>No Data Found</div>
+                ))
+              ) : (
+                <div>No Data Found</div>
               )}
             </div>
           </section>

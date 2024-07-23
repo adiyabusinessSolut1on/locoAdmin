@@ -1,5 +1,5 @@
 // App.js
-if (typeof global === 'undefined') {
+if (typeof global === "undefined") {
   window.global = window;
 }
 import "./App.css";
@@ -23,7 +23,7 @@ import Awareness from "./pages/Awareness";
 import CreatAwareness from "./forms/CreatAwareness";
 import AwarenessCategory from "./pages/AwarenessCategory";
 import ImportantDocuments from "./pages/ImportantDocuments";
-import CreatDocuments from "./pages/createDocument";
+
 import UpdateDocuments from "./pages/update-document";
 import SponserCompany from "./pages/SponserCompany";
 import SponserCompaniesForm from "./forms/SponserCompaniesForm";
@@ -37,6 +37,8 @@ import Test from "./pages/Test";
 import TestProfile from "./pages/TestProfile";
 import Video from "./pages/videos";
 import DalyTasks from "./pages/Daily_Task";
+import QuizAndTestCategory from "./pages/QuizAndTestCategory";
+import CreatDocuments from "./pages/CreatDocuments";
 
 function App() {
   const token = localStorage.getItem("user");
@@ -148,7 +150,7 @@ function App() {
             },
             {
               path: "important-document/update-documents/:id",
-              element: <UpdateDocuments />,
+              element: <CreatDocuments />,
             },
             {
               path: "sponsor",
@@ -183,6 +185,10 @@ function App() {
             {
               path: "test/:id",
               element: <TestProfile />,
+            },
+            {
+              path: "qt-category",
+              element: <QuizAndTestCategory />,
             },
           ],
         },
