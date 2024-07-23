@@ -127,8 +127,8 @@ const TextEditor = ({ value, OnChangeEditor }: Props) => {
           plugins: plugins.join(" "),
           toolbar: toolbar.join(" "),
           file_picker_callback: (
-            _callback,
-            _value,
+            _callback:any,
+            _value:any,
             meta
           ) => {
             if (meta && meta.filetype === "image") {
