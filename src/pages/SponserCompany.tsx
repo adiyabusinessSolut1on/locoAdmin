@@ -12,13 +12,19 @@ import { PiEye } from "react-icons/pi";
 import { SponsorCompanytypes } from "../types";
 
 const SponserCompany = () => {
-  const { data, isLoading,  isError } = useGetDataQuery({
+  const { data, isLoading, isError } = useGetDataQuery({
     url: "/sponsor/company",
   });
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
- 
+
+  //calculation of page
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+
+  const currentSponser = data?.slice(indexOfFirstItem, indexOfLastItem);
+
   const handleClick = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
@@ -35,7 +41,7 @@ const SponserCompany = () => {
 
   const navigate = useNavigate();
 
-  const handleLinkClick = (url:string) => {
+  const handleLinkClick = (url: string) => {
     setDialogCrendial((prev) => ({
       ...prev,
       targetUrl: url,
@@ -72,22 +78,21 @@ const SponserCompany = () => {
     });
   };
 
-  const deletcompany = (id:string) => {
-   
+  const deletcompany = (id: string) => {
     setModalOpen((prev) => ({
       ...prev,
       condition: !prev.condition,
       id: id,
     }));
   };
-  const updatecompany = (company:SponsorCompanytypes) => {
+  const updatecompany = (company: SponsorCompanytypes) => {
     navigate(`/sponsor/company_form/${company._id}`);
   };
 
   const handleConfirmDelete = () => {
     // Handle the delete action here
     toast.loading("checking Details");
-      deletPost({
+    deletPost({
       url: `/sponsor/company/${isModalOpen.id}`,
     })
       .then((res) => {
@@ -121,7 +126,7 @@ const SponserCompany = () => {
     "Setting",
   ];
 
-  const handlingVideo = (url:string) => {
+  const handlingVideo = (url: string) => {
     setVideoModal((prev) => ({
       ...prev,
       conditon: true,
@@ -139,11 +144,10 @@ const SponserCompany = () => {
 
   return (
     <>
-    <ToastContainer/>
+      <ToastContainer />
       {isLoading && <Loader />}
       {isModalOpen.condition && (
         <ConfirmDeleteModal
-          
           onClose={handleCloseModal}
           onConfirm={handleConfirmDelete}
         />
@@ -197,7 +201,7 @@ const SponserCompany = () => {
             <section className="grid grid-cols-customCompanies pb-2 p-2  gap-4   min-w-[1260px] font-medium md:font-semibold bg-white font-mavenPro">
               <p className="pl-2 md:text-lg">SrNo.</p>
 
-              {listHeadingCompanies?.map((heading:string, index:number) => (
+              {listHeadingCompanies?.map((heading: string, index: number) => (
                 <p
                   key={index}
                   className={`   md:text-lg ${
@@ -210,103 +214,104 @@ const SponserCompany = () => {
             </section>
             <div className=" h-[380px] overflow-y-auto [&::-webkit-scrollbar]:hidden min-w-[1260px] bg-gray-50">
               {isLoading ? (
-               
-               <p>Loading...</p>
+                <p>Loading...</p>
               ) : isError ? (
                 <p className="flex items-center justify-center w-full h-full font-medium text-center text-rose-800">
                   Check Internet connection or Contact to Admin
                 </p>
               ) : (
-                data?.map((company:SponsorCompanytypes, i:number) => (
-                  <section
-                    key={i}
-                    className="grid items-center gap-6 py-2 pl-6 pr-4 border-t-2 border-gray-200 grid-cols-customCompanies group hover:bg-gray-50"
-                  >
-                    <span>{i + 1}</span>
-
-                    <span
-                      className={`  font-semibold text-center  rounded-full  `}
+                currentSponser?.map(
+                  (company: SponsorCompanytypes, i: number) => (
+                    <section
+                      key={i}
+                      className="grid items-center gap-6 py-2 pl-6 pr-4 border-t-2 border-gray-200 grid-cols-customCompanies group hover:bg-gray-50"
                     >
-                      {company?.name}
-                    </span>
+                      <span>{i + 1}</span>
 
-                    <span className="text-sm font-semibold break-words break-all text-ellipsis">
-                      {company?.type}
-                    </span>
+                      <span
+                        className={`  font-semibold text-center  rounded-full  `}
+                      >
+                        {company?.name}
+                      </span>
 
-                    <div className="flex items-center justify-center">
-                      {company?.image ? (
-                        <img
-                          src={company?.image}
-                          alt="company Logo"
-                          className="object-contain w-full text-sm text-center rounded-lg h-1/2 "
-                        />
-                      ) : (
-                        <span className="text-sm font-bold text-gray-400">
-                          No Image
-                        </span>
-                      )}
-                    </div>
-                    <span
-                      className="flex justify-center ml-2 text-sm font-semibold cursor-pointer hover:underline hover:text-sky-400"
-                      typeof="button"
-                      onClick={() => handlingVideo(company?.video)}
-                    >
-                      {company?.video ? "View Video" : "--"}
-                    </span>
-                    <span className="flex justify-center text-sm font-semibold ">
-                      {company?.description || "--"}
-                    </span>
-                    <span
-                      onClick={() =>
-                        company?.link && handleLinkClick(company.link)
-                      }
-                      className={` text-sm font-semibold text-center ${
-                        company?.link
-                          ? "hover:underline hover:text-sky-400 "
-                          : ""
-                      } break-words break-all cursor-pointer `}
-                    >
-                      {company?.link ? "Official site" : "----"}
-                    </span>
-                    <ConfirmationDialog
-                      show={dialogCrendial?.showDialog}
-                      onClose={handleCloseDialog}
-                      onConfirm={handleConfirmRedirect}
-                    />
-                    <span className="flex justify-center ml-2 text-sm font-semibold ">
-                      {company?.active === true ? "Active" : "not Active"}
-                    </span>
-                    <span className="flex justify-center ml-2 text-sm font-semibold ">
-                      {company?.products.length || 0}
-                    </span>
-                    <div className="flex justify-center">
-                      <button className="px-2 py-2 text-white bg-blue-400 rounded-md hover:bg-blue-500">
-                        <Link
-                          to={`/sponsor/profile/${company._id}`}
-                          className="flex items-center justify-center text-sm font-semibold "
+                      <span className="text-sm font-semibold break-words break-all text-ellipsis">
+                        {company?.type}
+                      </span>
+
+                      <div className="flex items-center justify-center">
+                        {company?.image ? (
+                          <img
+                            src={company?.image}
+                            alt="company Logo"
+                            className="object-contain w-full text-sm text-center rounded-lg h-1/2 "
+                          />
+                        ) : (
+                          <span className="text-sm font-bold text-gray-400">
+                            No Image
+                          </span>
+                        )}
+                      </div>
+                      <span
+                        className="flex justify-center ml-2 text-sm font-semibold cursor-pointer hover:underline hover:text-sky-400"
+                        typeof="button"
+                        onClick={() => handlingVideo(company?.video)}
+                      >
+                        {company?.video ? "View Video" : "--"}
+                      </span>
+                      <span className="flex justify-center text-sm font-semibold ">
+                        {company?.description || "--"}
+                      </span>
+                      <span
+                        onClick={() =>
+                          company?.link && handleLinkClick(company.link)
+                        }
+                        className={` text-sm font-semibold text-center ${
+                          company?.link
+                            ? "hover:underline hover:text-sky-400 "
+                            : ""
+                        } break-words break-all cursor-pointer `}
+                      >
+                        {company?.link ? "Official site" : "----"}
+                      </span>
+                      <ConfirmationDialog
+                        show={dialogCrendial?.showDialog}
+                        onClose={handleCloseDialog}
+                        onConfirm={handleConfirmRedirect}
+                      />
+                      <span className="flex justify-center ml-2 text-sm font-semibold ">
+                        {company?.active === true ? "Active" : "not Active"}
+                      </span>
+                      <span className="flex justify-center ml-2 text-sm font-semibold ">
+                        {company?.products.length || 0}
+                      </span>
+                      <div className="flex justify-center">
+                        <button className="px-2 py-2 text-white bg-blue-400 rounded-md hover:bg-blue-500">
+                          <Link
+                            to={`/sponsor/profile/${company._id}`}
+                            className="flex items-center justify-center text-sm font-semibold "
+                          >
+                            <PiEye className="w-4 h-4" />
+                          </Link>
+                        </button>
+                      </div>
+
+                      <div className="grid justify-center gap-2">
+                        <button
+                          className="px-3 py-2 text-sm font-semibold text-white rounded-md bg-[#1f3c88] hover:bg-[#2d56bb]"
+                          onClick={() => updatecompany(company)}
                         >
-                          <PiEye className="w-4 h-4" />
-                        </Link>
-                      </button>
-                    </div>
-
-                    <div className="grid justify-center gap-2">
-                      <button
-                        className="px-3 py-2 text-sm font-semibold text-white rounded-md bg-[#1f3c88] hover:bg-[#2d56bb]"
-                        onClick={() => updatecompany(company)}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="px-3 py-2 text-sm font-semibold text-white rounded-md bg-rose-600 hover:bg-rose-700"
-                        onClick={() => deletcompany(company._id)}
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </section>
-                ))
+                          Edit
+                        </button>
+                        <button
+                          className="px-3 py-2 text-sm font-semibold text-white rounded-md bg-rose-600 hover:bg-rose-700"
+                          onClick={() => deletcompany(company._id)}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </section>
+                  )
+                )
               )}
             </div>
           </section>

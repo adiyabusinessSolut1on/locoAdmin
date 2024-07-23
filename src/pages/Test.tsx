@@ -1,4 +1,4 @@
-import  { useState } from "react";
+import { useState } from "react";
 import Pagination from "../components/pagination/Pagination";
 import EditICONSVG from "../assets/SVG/editICON";
 import DeleteICONSVG from "../assets/SVG/deleteICON";
@@ -25,6 +25,12 @@ const Test = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
+  //calculation of page
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+
+  const currentTest = data?.slice(indexOfFirstItem, indexOfLastItem);
+
   const handleClick = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
@@ -38,17 +44,16 @@ const Test = () => {
     condition: false,
     isCreat: false,
     data: {
-      _id:"",
-      name:[],
-      options:[],
-      predicted_result:"",
-      actualresult:"",
-      isTrue:false,
-      answer_description:""
+      _id: "",
+      name: [],
+      options: [],
+      predicted_result: "",
+      actualresult: "",
+      isTrue: false,
+      answer_description: "",
     },
     testId: "",
   });
-
 
   const [isModalOpen, setModalOpen] = useState({
     condition: false,
@@ -62,15 +67,14 @@ const Test = () => {
     });
   };
 
-  const updateHandler = (quiz:Testtypes) => {
-
+  const updateHandler = (quiz: Testtypes) => {
     setTestForm((prev) => ({
       ...prev,
       updateId: quiz._id,
     }));
   };
 
-  const deletHandler = (id:string) => {
+  const deletHandler = (id: string) => {
     setModalOpen((prev) => ({
       ...prev,
       condition: !prev.condition,
@@ -103,8 +107,9 @@ const Test = () => {
 
   console.log(data, error, "awareness");
 
-  const listHeadingAwarness = [
+  const listHeadingTest = [
     "Title",
+    "Category",
     "Instruction",
     "Add Questions",
     "view",
@@ -118,7 +123,7 @@ const Test = () => {
     }));
   };
 
-  const questionFormHandler = (test:Testtypes) => {
+  const questionFormHandler = (test: Testtypes) => {
     setQuestionForm((prev) => ({
       ...prev,
       condition: true,
@@ -133,28 +138,24 @@ const Test = () => {
       condition: false,
       isCreat: false,
       data: {
-        _id:"",
-        name:[],
-        options:[],
-        predicted_result:"",
-        actualresult:"",
-        isTrue:false,
-        answer_description:""
+        _id: "",
+        name: [],
+        options: [],
+        predicted_result: "",
+        actualresult: "",
+        isTrue: false,
+        answer_description: "",
       },
       testId: "",
     }));
   };
   return (
     <>
-    <ToastContainer/>
+      <ToastContainer />
       {isLoading && <Loader />}
 
       {(isTestForm.creat || isTestForm.updateId) && (
-        <CreatTest
-          isTestForm={isTestForm}
-          setTestForm={setTestForm}
-         
-        />
+        <CreatTest isTestForm={isTestForm} setTestForm={setTestForm} />
       )}
       {isQuestionForm.condition && (
         <TestQuestion
@@ -167,7 +168,6 @@ const Test = () => {
 
       {isModalOpen.condition && (
         <ConfirmDeleteModal
-        
           onClose={handleCloseModal}
           onConfirm={handleConfirmDelete}
         />
@@ -216,7 +216,7 @@ const Test = () => {
             <section className="grid grid-cols-customQuiz pb-2 p-2  gap-4   min-w-[800px] font-medium md:font-semibold bg-white font-mavenPro">
               <p className="pl-2 md:text-lg">SrNo.</p>
 
-              {listHeadingAwarness.map((heading, index) => (
+              {listHeadingTest.map((heading, index) => (
                 <p
                   key={index}
                   className={`   md:text-lg ${
@@ -229,15 +229,13 @@ const Test = () => {
             </section>
             <div className=" h-[380px] overflow-y-auto [&::-webkit-scrollbar]:hidden min-w-[800px] bg-gray-50">
               {isLoading ? (
-                
                 <p>Loading...</p>
               ) : isError ? (
                 <p className="flex items-center justify-center w-full h-full font-medium text-center text-rose-800">
                   Check Internet connection or Contact to Admin
                 </p>
-              ) : (
-                data?.length>0?
-                data?.map((test:Testtypes, i:number) => (
+              ) : data?.length > 0 ? (
+                currentTest?.map((test: Testtypes, i: number) => (
                   <section
                     key={i}
                     className="grid items-center gap-6 py-2 pl-6 pr-4 border-t-2 border-gray-200 grid-cols-customQuiz group hover:bg-gray-50"
@@ -248,6 +246,11 @@ const Test = () => {
                       className={`  font-semibold text-center  rounded-full  `}
                     >
                       {test?.title ? test?.title : "---"}
+                    </span>
+                    <span
+                      className={`  font-semibold text-center  rounded-full  `}
+                    >
+                      {test?.category ? test?.category : "---"}
                     </span>
                     <span
                       className={`  font-semibold text-center  rounded-full  `}
@@ -297,7 +300,9 @@ const Test = () => {
                       </button>
                     </div>
                   </section>
-                )):<div>Data Not Found</div>
+                ))
+              ) : (
+                <div>Data Not Found</div>
               )}
             </div>
           </section>

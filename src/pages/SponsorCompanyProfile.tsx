@@ -1,6 +1,6 @@
-import  { useState } from "react";
+import { useState } from "react";
 import { TiArrowBackOutline } from "react-icons/ti";
-import { Link,  useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useDeletePostMutation, useGetDataQuery } from "../api";
 import { HiOutlineOfficeBuilding } from "react-icons/hi";
 import { IoIosSend } from "react-icons/io";
@@ -13,18 +13,19 @@ import ConfirmDeleteModal from "../components/modal/DeleteModal";
 import VideoModal from "../components/modal/VideoModal";
 import SponsorCompanyProfileLoading from "../components/loading_animation/SponsorCompanyProfileLoading";
 import { sponsorProductsType } from "../types";
- interface stateProps{
-  condition:boolean,
-  sponsername:string,
-  data:{_id:string,
-  name:string,
-  image:string,
-  description:string,
-  active:boolean,
-  link:string,
-  sponsorname:string,
-  createdAt: string,
-}
+interface stateProps {
+  condition: boolean;
+  sponsername: string;
+  data: {
+    _id: string;
+    name: string;
+    image: string;
+    description: string;
+    active: boolean;
+    link: string;
+    sponsorname: string;
+    createdAt: string;
+  };
 }
 const SponsorCompanyProfile = () => {
   const { id } = useParams();
@@ -92,7 +93,14 @@ const SponsorCompanyProfile = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
+  //calculation of page
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
+  const currentSponsorCompanyProducts = data?.products?.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
 
   const handleClick = (pageNumber: number) => {
     setCurrentPage(pageNumber);
@@ -103,7 +111,7 @@ const SponsorCompanyProfile = () => {
     showDialog: false,
   });
 
-  const handleLinkClick = (url:string) => {
+  const handleLinkClick = (url: string) => {
     setDialogCrendial((prev) => ({
       ...prev,
       targetUrl: url,
@@ -138,7 +146,7 @@ const SponsorCompanyProfile = () => {
     });
   };
 
-  const handlingVideo = (url:string) => {
+  const handlingVideo = (url: string) => {
     setVideoModal((prev) => ({
       ...prev,
       conditon: true,
@@ -153,7 +161,7 @@ const SponsorCompanyProfile = () => {
     }));
   };
 
-  const deletproduct = (id:string) => {
+  const deletproduct = (id: string) => {
     console.log(id, "from handler");
     setModalOpen((prev) => ({
       ...prev,
@@ -161,11 +169,11 @@ const SponsorCompanyProfile = () => {
       id: id,
     }));
   };
-  const updateproduct = (productData:sponsorProductsType) => {
+  const updateproduct = (productData: sponsorProductsType) => {
     setProductForm((prev) => ({
       ...prev,
       condition: true,
-      data:{... productData},
+      data: { ...productData },
     }));
   };
 
@@ -194,10 +202,9 @@ const SponsorCompanyProfile = () => {
   };
   return (
     <>
-    <ToastContainer/>
+      <ToastContainer />
       {isModalOpen.condition && (
         <ConfirmDeleteModal
-         
           onClose={handleCloseModal}
           onConfirm={handleConfirmDelete}
         />
@@ -357,80 +364,82 @@ const SponsorCompanyProfile = () => {
                     <p className="flex items-center justify-center w-full h-full font-medium text-center text-rose-800">
                       Check Internet connection or Contact to Admin
                     </p>
-                  ) : data.products?.length>0 ? (
-                    data?.products?.map((product:sponsorProductsType, i:number) => (
-                      <section
-                        key={i}
-                        className="grid items-center gap-6 py-2 pl-6 pr-4 border-t-2 border-gray-200 grid-cols-customProduct group hover:bg-gray-50"
-                      >
-                        <span>{i + 1}</span>
-
-                        <span
-                          className={`  font-semibold text-center  rounded-full  `}
+                  ) : data.products?.length > 0 ? (
+                    currentSponsorCompanyProducts?.map(
+                      (product: sponsorProductsType, i: number) => (
+                        <section
+                          key={i}
+                          className="grid items-center gap-6 py-2 pl-6 pr-4 border-t-2 border-gray-200 grid-cols-customProduct group hover:bg-gray-50"
                         >
-                          {product?.name}
-                        </span>
+                          <span>{i + 1}</span>
 
-                        <div className="flex items-center justify-center">
-                          {product?.image ? (
-                            <img
-                              src={product?.image}
-                              alt="product Image"
-                              className="object-contain w-24 h-24 rounded-lg"
-                            />
-                          ) : (
-                            <span className="text-sm font-bold text-gray-400">
-                              No Image
-                            </span>
-                          )}
-                        </div>
+                          <span
+                            className={`  font-semibold text-center  rounded-full  `}
+                          >
+                            {product?.name}
+                          </span>
 
-                        <span className="flex justify-center ml-4 text-sm font-semibold ">
-                          {product?.description || "--"}
-                        </span>
-                        <span className="flex justify-center ml-2 text-sm font-semibold ">
-                          {product?.sponsorname || "---"}
-                        </span>
-                        <span
-                          onClick={() =>
-                            product?.link && handleLinkClick(product.link)
-                          }
-                          className={`ml-2 text-sm font-semibold text-center ${
-                            product?.link
-                              ? "hover:underline hover:text-sky-400 "
-                              : ""
-                          } break-words break-all cursor-pointer `}
-                        >
-                          {product?.link ? "Official site" : "----"}
-                        </span>
-                        <ConfirmationDialog
-                          show={dialogCrendial.showDialog}
-                          onClose={handleCloseDialog}
-                          onConfirm={handleConfirmRedirect}
-                        />
-                        <span className="flex justify-center ml-2 text-sm font-semibold ">
-                          {product?.active === true ? "Active" : "not Active"}
-                        </span>
-                        {/* <span className="flex justify-center ml-2 text-sm font-semibold ">
+                          <div className="flex items-center justify-center">
+                            {product?.image ? (
+                              <img
+                                src={product?.image}
+                                alt="product Image"
+                                className="object-contain w-24 h-24 rounded-lg"
+                              />
+                            ) : (
+                              <span className="text-sm font-bold text-gray-400">
+                                No Image
+                              </span>
+                            )}
+                          </div>
+
+                          <span className="flex justify-center ml-4 text-sm font-semibold ">
+                            {product?.description || "--"}
+                          </span>
+                          <span className="flex justify-center ml-2 text-sm font-semibold ">
+                            {product?.sponsorname || "---"}
+                          </span>
+                          <span
+                            onClick={() =>
+                              product?.link && handleLinkClick(product.link)
+                            }
+                            className={`ml-2 text-sm font-semibold text-center ${
+                              product?.link
+                                ? "hover:underline hover:text-sky-400 "
+                                : ""
+                            } break-words break-all cursor-pointer `}
+                          >
+                            {product?.link ? "Official site" : "----"}
+                          </span>
+                          <ConfirmationDialog
+                            show={dialogCrendial.showDialog}
+                            onClose={handleCloseDialog}
+                            onConfirm={handleConfirmRedirect}
+                          />
+                          <span className="flex justify-center ml-2 text-sm font-semibold ">
+                            {product?.active === true ? "Active" : "not Active"}
+                          </span>
+                          {/* <span className="flex justify-center ml-2 text-sm font-semibold ">
                         {product?.products.length || 0}
                       </span> */}
 
-                        <div className="grid justify-center gap-2">
-                          <button
-                            className="px-3 py-2 text-sm font-semibold text-white rounded-md bg-[#1f3c88] hover:bg-[#2d56bb]"
-                            onClick={() => updateproduct(product)}
-                          >
-                            Edit
-                          </button>
-                          <button
-                            className="px-3 py-2 text-sm font-semibold text-white rounded-md bg-rose-600 hover:bg-rose-700"
-                            onClick={() => deletproduct(product._id)}
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      </section>
-                    ))
+                          <div className="grid justify-center gap-2">
+                            <button
+                              className="px-3 py-2 text-sm font-semibold text-white rounded-md bg-[#1f3c88] hover:bg-[#2d56bb]"
+                              onClick={() => updateproduct(product)}
+                            >
+                              Edit
+                            </button>
+                            <button
+                              className="px-3 py-2 text-sm font-semibold text-white rounded-md bg-rose-600 hover:bg-rose-700"
+                              onClick={() => deletproduct(product._id)}
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </section>
+                      )
+                    )
                   ) : (
                     <p className="flex items-center justify-center w-full h-full">
                       Add products

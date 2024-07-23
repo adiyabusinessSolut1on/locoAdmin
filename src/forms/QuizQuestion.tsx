@@ -140,9 +140,7 @@ const QuizQuestion: React.FC<Props> = ({ isQuestionForm, close }: Props) => {
     }));
   };
 
-  const handleQuestionInput = (
-    e: React.KeyboardEvent<HTMLInputElement>
-  ) => {
+  const handleQuestionInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" || e.key === ",") {
       e.preventDefault();
       const newOption = e.currentTarget.value.trim();
@@ -179,7 +177,10 @@ const QuizQuestion: React.FC<Props> = ({ isQuestionForm, close }: Props) => {
       onClick={close}
     >
       <ToastContainer />
-      <div className="md:w-[800px] bg-white rounded-md">
+      <div
+        className="md:w-[800px] bg-white rounded-md"
+        onClick={(e) => e.stopPropagation()}
+      >
         <form
           className="w-full h-full overflow-hidden rounded-md"
           onSubmit={submitHandler}
@@ -238,9 +239,7 @@ const QuizQuestion: React.FC<Props> = ({ isQuestionForm, close }: Props) => {
                       setOpen({ ...isOpen, result: !isOpen.result })
                     }
                   >
-                    {quizData.result !== ""
-                      ? quizData.result
-                      : "Select Result"}
+                    {quizData.result !== "" ? quizData.result : "Select Result"}
                     <FaCaretDown className="m-1" />
                   </div>
                   <ul
@@ -269,9 +268,7 @@ const QuizQuestion: React.FC<Props> = ({ isQuestionForm, close }: Props) => {
                 <div className="col-span-1 md:col-span-2">
                   <TextEditor
                     value={quizData.content}
-                    OnChangeEditor={(e) =>
-                      handleEditorChange("content", e)
-                    }
+                    OnChangeEditor={(e) => handleEditorChange("content", e)}
                   />
                 </div>
               </div>

@@ -6,6 +6,7 @@ import { toast, ToastContainer } from "react-toastify";
 import ConfirmDeleteModal from "../components/modal/DeleteModal";
 import Loader from "../components/loader";
 import Pagination from "../components/pagination/Pagination";
+import { FaCaretDown } from "react-icons/fa";
 
 interface awarenessCategory {
   _id: string;
@@ -20,6 +21,9 @@ const AwarenessCategory = () => {
   const [updateData, setUpdateDate] = useState({
     name: "",
   });
+
+  const [isOpen, setOpen] = useState(false);
+  const [sortElement, setSortElement] = useState("");
 
   const categoryHeading = ["Category Name", "Setting"];
 
@@ -48,6 +52,15 @@ const AwarenessCategory = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
+
+  //calculation of page
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+
+  const currentAwarenessCategory = data?.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
 
   const handleClick = (pageNumber: number) => {
     setCurrentPage(pageNumber);
@@ -103,6 +116,13 @@ const AwarenessCategory = () => {
     });
   };
 
+  const sortElements = ["Oldest", "Latest"];
+
+  const handlingSort = (value: string) => {
+    setSortElement(value);
+    setOpen(false);
+  };
+
   return (
     <>
       {(isCategoryForm.creat || isCategoryForm.updateId) && (
@@ -112,11 +132,10 @@ const AwarenessCategory = () => {
           setCategoryForm={setCategoryForm}
         />
       )}
-      <ToastContainer/>
+      <ToastContainer />
       {isLoading && <Loader />}
       {isModalOpen.condition && (
         <ConfirmDeleteModal
-        
           onClose={handleCloseModal}
           onConfirm={handleConfirmDelete}
         />
@@ -147,6 +166,36 @@ const AwarenessCategory = () => {
                 // onFocus={() => setCurrentPage(1)}
               />
             </div>
+            <div className="relative">
+              <div
+                className="flex justify-between p-2 font-medium text-gray-600 border-transparent rounded-md cursor-pointer hover:bg-gray-200 focus:border-blue-200"
+                onClick={() => setOpen(!isOpen)}
+              >
+                {sortElement !== "" ? sortElement : "Select Sort"}
+                <FaCaretDown
+                  className={`m-1 transition-all duration-300 ${
+                    isOpen ? "rotate-180" : ""
+                  }`}
+                />
+              </div>
+              <ul
+                className={`mt-2 p-2 rounded-md w-32 text-white bg-gray-800 shadow-lg absolute z-10 ${
+                  isOpen ? "max-h-60" : "hidden"
+                } custom-scrollbar`}
+              >
+                {sortElements.map((sortEl: string, i: number) => (
+                  <li
+                    key={i}
+                    className={`p-2 mb-2 text-sm text-white  rounded-md cursor-pointer hover:bg-blue-200/60 ${
+                      sortElement === sortEl ? "bg-rose-400" : ""
+                    }`}
+                    onClick={() => handlingSort(sortEl)}
+                  >
+                    <span>{sortEl}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
             <div className="relative flex items-center self-end ">
               <button
                 className={` px-2 py-1 
@@ -164,7 +213,7 @@ const AwarenessCategory = () => {
             className={`w-full overflow-auto   border-2 [&::-webkit-scrollbar]:hidden rounded-lg  shadow-md bg-white`}
           >
             {/* min-w-[900px] */}
-            <section className="grid gap-4 p-2 pb-2 min-w-[600px] font-medium border-gray-100 grid-cols-customeCategory md:font-semibold font-mavenPro bg-white">
+            <section className="grid gap-4 p-2 pb-2 min-w-[800px] font-medium border-gray-100 grid-cols-customeCategory md:font-semibold font-mavenPro bg-white">
               <p className="pl-2 text-gray-600 md:text-lg">SrNo.</p>
               {/* <p className="pl-10 text-gray-600 md:text-lg">Logo</p> */}
 
@@ -182,40 +231,41 @@ const AwarenessCategory = () => {
             {/* min-w-[900px] */}
             <div className=" h-[380px] overflow-y-auto [&::-webkit-scrollbar]:hidden min-w-[800px] bg-gray-50">
               {isLoading ? (
-           
                 <p>Loading...</p>
               ) : isError ? (
                 <p className="flex items-center justify-center w-full h-full font-medium text-center text-rose-800">
                   Check Internet connection or Contact to Admin
                 </p>
               ) : data?.length > 0 ? (
-                data?.map((category: awarenessCategory, i: number) => (
-                  <section
-                    key={i}
-                    className="grid items-center gap-6 py-2 pl-6 pr-4 border-t-2 border-gray-200 grid-cols-customeCategory group hover:bg-gray-50"
-                  >
-                    <span>{i + 1}</span>
+                currentAwarenessCategory?.map(
+                  (category: awarenessCategory, i: number) => (
+                    <section
+                      key={i}
+                      className="grid items-center gap-6 py-2 pl-6 pr-4 border-t-2 border-gray-200 grid-cols-customeCategory group hover:bg-gray-50"
+                    >
+                      <span>{i + 1}</span>
 
-                    <span className="ml-2 text-sm font-semibold text-gray-600 md:text-base">
-                      {category?.name}
-                    </span>
+                      <span className="ml-2 text-sm font-semibold text-gray-600 md:text-base">
+                        {category?.name}
+                      </span>
 
-                    <div className="flex justify-center gap-4">
-                      <button
-                        className="px-3 text-sm py-2 text-white  rounded-md bg-[#1f3c88] hover:bg-[#2d56bb]"
-                        onClick={() => updateCategory(category)}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="px-3 py-2 text-sm text-white rounded-md bg-rose-600 hover:bg-rose-700"
-                        onClick={() => deletCategory(category?._id)}
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </section>
-                ))
+                      <div className="flex justify-center gap-4">
+                        <button
+                          className="px-3 text-sm py-2 text-white  rounded-md bg-[#1f3c88] hover:bg-[#2d56bb]"
+                          onClick={() => updateCategory(category)}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          className="px-3 py-2 text-sm text-white rounded-md bg-rose-600 hover:bg-rose-700"
+                          onClick={() => deletCategory(category?._id)}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </section>
+                  )
+                )
               ) : (
                 <div>No Data Found</div>
               )}

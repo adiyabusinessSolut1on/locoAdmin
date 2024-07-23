@@ -24,7 +24,7 @@ const Video = () => {
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
-  const currentCompanies = data?.slice(indexOfFirstItem, indexOfLastItem);
+  const currentVideos = data?.slice(indexOfFirstItem, indexOfLastItem);
 
   const [videoModal, setVideoModal] = useState({
     conditon: false,
@@ -64,7 +64,7 @@ const Video = () => {
     });
   };
 
-  const deletvideo = (id:string) => {
+  const deletvideo = (id: string) => {
     console.log(id, "from handler");
     setModalOpen((prev) => ({
       ...prev,
@@ -72,8 +72,7 @@ const Video = () => {
       id: id,
     }));
   };
-  const updatevideo = (video:videosTypes) => {
-   
+  const updatevideo = (video: videosTypes) => {
     navigate(`/videos/${video._id}`);
   };
 
@@ -101,7 +100,7 @@ const Video = () => {
     });
   };
 
-  const handlingVideo = (url:string) => {
+  const handlingVideo = (url: string) => {
     setVideoModal((prev) => ({
       ...prev,
       conditon: true,
@@ -119,10 +118,9 @@ const Video = () => {
   return (
     <>
       {isLoading && <Loader />}
-      <ToastContainer/>
+      <ToastContainer />
       {isModalOpen.condition && (
         <ConfirmDeleteModal
-         
           onClose={handleCloseModal}
           onConfirm={handleConfirmDelete}
         />
@@ -130,7 +128,7 @@ const Video = () => {
       {videoModal.conditon && (
         <VideoModal url={videoModal.url} onClose={handleCloseVideoModal} />
       )}
-      
+
       <section
         className={`  md:pl-0 p-4 h-full  w-full rounded-md   mx-auto [&::-webkit-scrollbar]:hidden `}
       >
@@ -188,14 +186,13 @@ const Video = () => {
             </section>
             <div className=" h-[380px] overflow-y-auto [&::-webkit-scrollbar]:hidden min-w-[1260px] bg-gray-50">
               {isLoading ? (
-               
                 <p>Loading...</p>
               ) : isError ? (
                 <p className="flex items-center justify-center w-full h-full font-medium text-center text-rose-800">
                   Check Internet connection or Contact to Admin
                 </p>
               ) : (
-                currentCompanies?.map((video:videosTypes, i:number) => (
+                currentVideos?.map((video: videosTypes, i: number) => (
                   <section
                     key={i}
                     className="grid items-center gap-6 py-2 pl-6 pr-4 border-t-2 border-gray-200 grid-cols-customVideo group hover:bg-gray-50"
@@ -250,8 +247,8 @@ const Video = () => {
                     </span>
 
                     <span className="flex justify-center text-sm font-semibold ">
-                      {video?.tags.length >0
-                        ? video?.tags.map((tag:string) => (
+                      {video?.tags.length > 0
+                        ? video?.tags.map((tag: string) => (
                             <ul>
                               <li>{tag},</li>
                             </ul>

@@ -7,16 +7,18 @@ import { useNavigate } from "react-router";
 
 import LogOutModal from "../modal/LogoutModal";
 import { MdDirectionsSubway } from "react-icons/md";
-interface Props{
-  isOpen:{
-    small:boolean,
-    large:boolean,
-  }
-  onToggleSidebarSmall:()=>void;
+import { IoMdNotifications } from "react-icons/io";
+interface Props {
+  isOpen: {
+    small: boolean;
+    large: boolean;
+  };
+  onToggleSidebarSmall: () => void;
 }
 
-const Header = ({ onToggleSidebarSmall, isOpen }:Props) => {
+const Header = ({ onToggleSidebarSmall, isOpen }: Props) => {
   const [isLogout, setLogoutModal] = useState(false);
+  const [showNotification, setNotification] = useState(false);
 
   const navigate = useNavigate();
 
@@ -29,8 +31,11 @@ const Header = ({ onToggleSidebarSmall, isOpen }:Props) => {
   };
 
   const profilePannelHanlder = () => {
-    
     handleLogout();
+  };
+
+  const handlingNotification = () => {
+    setNotification((prev) => !prev);
   };
 
   //   const handleUpdatePassword = () => {
@@ -49,21 +54,20 @@ const Header = ({ onToggleSidebarSmall, isOpen }:Props) => {
 
   const getTimeString = (dateString: string) => {
     const date = new Date(dateString);
-  
+
     const options: Intl.DateTimeFormatOptions = {
       hour: "numeric",
       minute: "numeric",
       hour12: true,
     };
-  
+
     return new Intl.DateTimeFormat("en-US", options).format(date);
   };
 
-  const date = new Date().toISOString(); 
+  const date = new Date().toISOString();
 
   const time = getTimeString(date);
   const dateMonth = getDateString(date);
-
 
   const cancelLogout = () => {
     setLogoutModal(false);
@@ -122,6 +126,51 @@ const Header = ({ onToggleSidebarSmall, isOpen }:Props) => {
             </p>
           </div>
           <div className="md:w-1/2 lg:w-[30%]  items-center justify-self-end flex gap-4 lg:gap-8 justify-end  relative">
+            {/* notification */}
+            <div className="relative flex items-center">
+              <IoMdNotifications
+                className={`${
+                  showNotification ? "text-blue-400" : "text-blue-300"
+                } cursor-pointer w-7 h-7 hover:text-blue-400`}
+                onClick={handlingNotification}
+              />
+              <span className="absolute flex w-2 h-2 top-1 right-1">
+                <span className="absolute inline-flex w-full h-full rounded-full opacity-75 animate-ping bg-sky-700"></span>
+                <span className="relative inline-flex w-2 h-2 rounded-full bg-sky-700"></span>
+              </span>
+            </div>
+            {showNotification && (
+              <div
+                className="absolute -left-32 grid  top-[3.7rem] z-[53]"
+                // style={{ width: "170px" }}
+              >
+                {/* <div className="border-t-transparent justify-self-end border-transparent border-t-0 border-b-white border-[12px] h-0 w-0 "></div> */}
+                <div className="w-[170px] md:w-[174.5px] h-[80px] overflow-y-scroll [&::-webkit-scrollbar]:hidden  relative z-50 bg-white rounded-md shadow-lg">
+                  <button
+                    className="flex items-center w-full px-4 pt-2 pb-2 text-sm font-bold hover:bg-blue-50"
+                    onClick={handleLogout}
+                  >
+                    {/* <BiLogOutCircle className="w-5 h-5 " /> */}
+                    <span className="pl-2 text-xs md:text-sm">First</span>
+                  </button>
+
+                  <button
+                    className="flex items-center w-full px-4 pt-2 pb-2 text-sm font-bold border-t border-gray-200 hover:bg-blue-50"
+                    // onClick={handleUpdateProfile}
+                  >
+                    {/* <FaUserCog className="w-5 h-5 " /> */}
+                    <span className="pl-2 text-xs md:text-sm">Second</span>
+                  </button>
+                  <button
+                    className="flex items-center w-full px-4 pt-2 pb-2 text-sm font-bold border-t border-gray-200 hover:bg-blue-50"
+                    // onClick={handleUpdateProfile}
+                  >
+                    {/* <FaUserCog className="w-5 h-5 " /> */}
+                    <span className="pl-2 text-xs md:text-sm">Third</span>
+                  </button>
+                </div>
+              </div>
+            )}
             {/* clock */}
             <div className="flex items-center justify-start font-bold text-green-800 md:w-1/2 font-lato">
               {/* time */}

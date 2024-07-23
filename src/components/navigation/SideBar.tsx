@@ -3,9 +3,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 
 import { RxCross1, RxHamburgerMenu } from "react-icons/rx";
-import { MdDirectionsSubway,  } from "react-icons/md";
-
-
+import { MdDirectionsSubway } from "react-icons/md";
 
 import BlogICONSVG from "../../assets/SVG/blogICON";
 import CategoryICONSVG from "../../assets/SVG/categoryICON";
@@ -86,7 +84,12 @@ const sidebarData: SidebarItem[] = [
     path: "/daily-task",
     icon: QuizIcon,
   },
-  
+  {
+    name: "Quiz & Test Category",
+    path: "/qt-category",
+    icon: TestIcon,
+  },
+
   // {
   //   name: "Railway History",
   //   path: "/history",
@@ -109,19 +112,21 @@ const sidebarData: SidebarItem[] = [
   // },
 ];
 
-interface subProps{ large:boolean,
-    small:boolean}
-
-
-interface Props{
-  isOpen:subProps
-  onToggleSidebarLarge:()=>void,
-  onToggleSidebarSmall:()=>void,
+interface subProps {
+  large: boolean;
+  small: boolean;
 }
-const SideBar = ({ isOpen, onToggleSidebarLarge, onToggleSidebarSmall }:Props) => {
 
-
-
+interface Props {
+  isOpen: subProps;
+  onToggleSidebarLarge: () => void;
+  onToggleSidebarSmall: () => void;
+}
+const SideBar = ({
+  isOpen,
+  onToggleSidebarLarge,
+  onToggleSidebarSmall,
+}: Props) => {
   return (
     <section
       className={` h-screen border-r border-gray-200  ${
