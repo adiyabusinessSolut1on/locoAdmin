@@ -11,10 +11,17 @@ import DeleteICONSVG from "../assets/SVG/deleteICON";
 import EditICONSVG from "../assets/SVG/editICON";
 import { BlogCategory, subSubCategories, subcategory } from "../types";
 import Loader from "./loader";
+import uploadImage from "../firebase_image/image";
 
 interface Props {
   value: string;
 }
+
+interface Image {
+  thumnail: string;
+  imageSrc: string;
+}
+
 const Switches = ({ value }: Props) => {
   const route = React.useMemo(() => {
     switch (value) {
@@ -36,21 +43,32 @@ const Tab1: React.FC = () => {
   const [createPost] = useCreatePostMutation();
   const [updatePost] = useUpdatePostMutation();
   const [deletePost] = useDeletePostMutation();
-  const { data, refetch, isLoading } = useGetDataQuery({ url: "/get-blog-category" });
+  const { data, refetch, isLoading } = useGetDataQuery({
+    url: "/get-blog-category",
+  });
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editingName, setEditingName] = useState<string>("");
   const [createData, setCreateData] = useState<string>("");
 
-  const handleEditClick = (id: string, name: string) => {
+  const [categoryImage, setCategoryImage] = useState<Image>({
+    thumnail: "",
+    imageSrc: "",
+  });
+
+  const handleEditClick = (id: string, name: string, image: string) => {
     setEditingId(id);
     setEditingName(name);
+    setCategoryImage({
+      thumnail: image,
+      imageSrc: image,
+    });
   };
 
   const handleSaveClick = async () => {
     try {
       const response = await updatePost({
         path: `/main-category/${editingId}`,
-        data: { name: editingName },
+        data: { name: editingName, image: categoryImage },
       });
       if (response?.data?.success) {
         toast.success(response?.data?.message, {
@@ -72,10 +90,33 @@ const Tab1: React.FC = () => {
     setEditingName("");
   };
 
+  const [progressStatus, setProgressStatus] = useState<number | null>(null);
+
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target?.files?.[0];
+    if (selectedFile) {
+      try {
+        const imageUrl = await uploadImage(
+          selectedFile.name,
+          selectedFile,
+          setProgressStatus
+        );
+        setCategoryImage({
+          ...categoryImage,
+          thumnail: imageUrl,
+          imageSrc: selectedFile.name,
+        });
+      } catch (error) {
+        console.error("Error uploading image:", error);
+        toast.error("Error uploading image");
+      }
+    }
+  };
+
   const handleClickCreate = async () => {
     try {
       const response = await createPost({
-        data: { name: createData },
+        data: { name: createData, image: categoryImage },
         path: "main-category",
       });
 
@@ -115,16 +156,15 @@ const Tab1: React.FC = () => {
 
   return (
     <React.Fragment>
-  
       <ToastContainer />
-      <div className="flex flex-row gap-2 w-full">
-      {isLoading &&<Loader/>}
-        <div className="flex flex-col gap-5 bg-[#ffffff] p-10 rounded-[7px] w-full">
+      <div className="md:flex flex-row w-full h-[400px] gap-2">
+        {isLoading && <Loader />}
+        <div className="flex flex-col w-full gap-5 p-10 border-b-2 border-gray-200 md:border-r-2">
           <h3 className="text-[18px] font-[600] text-center">
             Create Main Category
           </h3>
-          <div className="flex flex-col gap-1">
-            <label className="text-[#303030] text-[15px] font-[600]">
+          <div className="grid gap-3">
+            <label className="text-gray-600 font-bold text-[15px]">
               Main Category
             </label>
             <input
@@ -132,54 +172,139 @@ const Tab1: React.FC = () => {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setCreateData(e.target.value)
               }
-              className="border border-[#6e6d6d5b] outline-none rounded-[7px] px-2 py-1"
+              // className="border border-[#6e6d6d5b] outline-none rounded-[7px] px-2 py-1"
+              className="w-full h-8 pl-2 font-medium text-gray-700 bg-blue-100 border border-transparent rounded-md outline-none placeholder:pl-2 focus:border-blue-200 "
               type="text"
+              placeholder="Enter Title"
             />
+            <div className="relative w-full h-full">
+              <input
+                type="file"
+                name="image"
+                onChange={handleImageChange}
+                className="hidden"
+                id="file-upload"
+              />
+              <label
+                htmlFor="file-upload"
+                className={`px-4 py-1 pl-24 relative ${
+                  progressStatus ? "pb-1" : ""
+                } w-full text-base bg-blue-100 focus:border-blue-200 border-transparent border rounded-md text-gray-400 cursor-pointer flex items-center justify-between`}
+              >
+                <p
+                  className={`${
+                    categoryImage.imageSrc ? "text-gray-700" : "text-gray-400"
+                  }`}
+                >
+                  {categoryImage.imageSrc || "Choose a file"}
+                </p>
+                <span className="text-gray-400 text-[15px] absolute top-0 h-full flex items-center left-0 rounded-tl-md rounded-bl-md px-3 font-medium bg-blue-200">
+                  Browse
+                </span>
+              </label>
+              {progressStatus !== null && progressStatus !== 0 && (
+                <>
+                  <div className="absolute inset-0 z-10 flex items-end">
+                    <div
+                      className="h-1 bg-blue-400 rounded-md mx-[1px] mb-[1px]"
+                      style={{ width: `${progressStatus}%` }}
+                      // style={{ width: `${100}%` }}
+                    ></div>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
 
-          <button
-            onClick={handleClickCreate}
-            disabled={!createData}
-            className={`${
-              createData ? "bg-[#5a83bd]" : "bg-gray-500"
-            } p-1 rounded-[8px] text-[15px] font-[600] text-[#f8f8f8]`}
-          >
-            Save
-          </button>
+          <div className="flex justify-end">
+            <button
+              onClick={handleClickCreate}
+              disabled={!createData}
+              className={`${
+                createData ? "bg-[#1e40af]" : "bg-gray-500"
+              } px-4 py-2 rounded-[8px] text-[15px] font-[600] text-[#f8f8f8]`}
+            >
+              Save
+            </button>
+          </div>
         </div>
 
-        <div className="w-full rounded-[7px] bg-[#ffffff] max-h-[400px] overflow-auto ">
-          <ul className="list-none p-2">
+        <div className="w-full   max-h-[400px] p-4 overflow-auto ">
+          <ul className="p-2 list-disc">
             {Array.isArray(data?.data) ? (
               data?.data?.map((item: BlogCategory, index: number) => (
                 <li
                   key={index}
-                  className="flex items-center justify-between py-2 gap-3 px-4 border-b border-gray-400 mb-2 "
+                  className="flex items-center justify-between gap-3 py-2 mb-2 font-medium text-gray-600 "
                 >
                   {editingId === item._id ? (
-                    <>
+                    <div className="grid w-full gap-2">
                       <input
                         type="text"
                         value={editingName}
                         onChange={(e) => setEditingName(e.target.value)}
-                        className="flex-1 mr-2 px-2 py-1 border rounded"
+                        // className="flex-1 px-2 py-1 mr-2 border rounded"
+                        className="w-full h-8 pl-2 font-medium text-gray-700 bg-blue-100 border border-transparent rounded-md outline-none focus:border-blue-200 "
                       />
-                      <button
-                        onClick={handleSaveClick}
-                        className="mr-2 px-4 bg-green-500 text-white rounded hover:bg-green-600"
-                      >
-                        Save
-                      </button>
-                      <button
-                        onClick={handleCancelClick}
-                        className="px-4 bg-red-500 text-white rounded hover:bg-red-600"
-                      >
-                        Cancel
-                      </button>
-                    </>
+                      <div className="relative w-full h-full">
+                        <input
+                          type="file"
+                          name="image"
+                          onChange={handleImageChange}
+                          className="hidden"
+                          id="file-upload"
+                        />
+                        <label
+                          htmlFor="file-upload"
+                          className={`px-4 py-1 pl-24 relative ${
+                            progressStatus ? "pb-1" : ""
+                          } w-full text-base bg-blue-100 focus:border-blue-200 border-transparent border rounded-md text-gray-400 cursor-pointer flex items-center justify-between`}
+                        >
+                          <p
+                            className={`${
+                              categoryImage.imageSrc
+                                ? "text-gray-700"
+                                : "text-gray-400"
+                            }`}
+                          >
+                            {categoryImage.imageSrc || "Choose a file"}
+                          </p>
+                          <span className="text-gray-400 text-[15px] absolute top-0 h-full flex items-center left-0 rounded-tl-md rounded-bl-md px-3 font-medium bg-blue-200">
+                            Browse
+                          </span>
+                        </label>
+                        {progressStatus !== null && progressStatus !== 0 && (
+                          <>
+                            <div className="absolute inset-0 z-10 flex items-end">
+                              <div
+                                className="h-1 bg-blue-400 rounded-md mx-[1px] mb-[1px]"
+                                style={{ width: `${progressStatus}%` }}
+                                // style={{ width: `${100}%` }}
+                              ></div>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                      <div className="flex justify-end">
+                        <button
+                          onClick={handleSaveClick}
+                          className="px-3 py-1 mr-2 text-white bg-green-500 rounded hover:bg-green-600"
+                        >
+                          Save
+                        </button>
+                        <button
+                          onClick={handleCancelClick}
+                          className="px-3 py-1 text-white bg-red-500 rounded hover:bg-red-600"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
                   ) : (
                     <>
-                      <span>{item.name}</span>
+                      <span className="text-lg font-medium text-gray-600">
+                        {item.name}
+                      </span>
                       <div className="flex flex-row gap-5">
                         <button onClick={() => handleShowAlert(item?._id)}>
                           <DeleteICONSVG
@@ -189,7 +314,9 @@ const Tab1: React.FC = () => {
                           />
                         </button>
                         <button
-                          onClick={() => handleEditClick(item?._id, item?.name)}
+                          onClick={() =>
+                            handleEditClick(item?._id, item?.name, item?.image)
+                          }
                         >
                           <EditICONSVG
                             height={20}
@@ -225,7 +352,9 @@ const Tab2: React.FC = () => {
   const [createPost] = useCreatePostMutation();
   const [updatePost] = useUpdatePostMutation();
   const [deletePost] = useDeletePostMutation();
-  const { data, refetch, isLoading } = useGetDataQuery({ url: "/get-blog-category" });
+  const { data, refetch, isLoading } = useGetDataQuery({
+    url: "/get-blog-category",
+  });
   const [editId, setEditId] = useState<editprops>({
     mainId: "",
     subId: "",
@@ -234,7 +363,9 @@ const Tab2: React.FC = () => {
   interface ShowSubCategories {
     [key: string]: boolean;
   }
-  const [showSubCategories, setShowSubCategories] = useState<ShowSubCategories>({});
+  const [showSubCategories, setShowSubCategories] = useState<ShowSubCategories>(
+    {}
+  );
   const [createSubCategory, setSubCategory] = useState<StateProp>({
     mainId: "",
     name: "",
@@ -288,7 +419,7 @@ const Tab2: React.FC = () => {
   const handleCancelClick = () => {
     setEditId({ mainId: "", subId: "", name: "" });
   };
-  
+
   const toggleSubCategories = (categoryId: string) => {
     setShowSubCategories((prevState: ShowSubCategories) => ({
       ...prevState,
@@ -316,23 +447,24 @@ const Tab2: React.FC = () => {
     }
   };
   return (
-    <div className="flex flex-row gap-2 w-full ">
-      {isLoading &&<Loader/>}
+    <div className="md:flex flex-row w-full h-[400px] gap-2">
+      {isLoading && <Loader />}
       <ToastContainer />
-      <div className="flex flex-col gap-5 bg-[#ffffff] p-10 rounded-[7px] w-full">
-        <h3 className=" text-[18px] font-[600] text-center">
+      <div className="flex flex-col w-full gap-5 p-10 border-b-2 border-gray-200 md:border-r-2">
+        <h3 className=" text-[18px] font-bold text-gray-600">
           Create Sub-Category
         </h3>
         <div className="flex flex-col gap-1">
-          <label className="text-[#303030] text-[15px] font-[600]">
+          <label className="text-gray-600 font-bold text-[15px] ">
             Main Category
           </label>
           <select
-            className="border border-[#6e6d6d5b] outline-none rounded-[7px] px-2 py-1"
+            // className="border border-[#6e6d6d5b] outline-none rounded-[7px] px-2 py-1"
+            className="w-full h-8 pl-2 font-medium text-gray-700 bg-blue-100 border border-transparent rounded-md outline-none focus:border-blue-200"
             value={createSubCategory?.mainId}
             onChange={(e) => handleChangesValue("mainId", e.target.value)}
           >
-            <option value="">select</option>
+            <option value="">Select</option>
             {data?.data?.map((category: BlogCategory, index: number) => {
               return (
                 <option key={index} value={category?._id}>
@@ -343,80 +475,73 @@ const Tab2: React.FC = () => {
           </select>
         </div>
         <div className="flex flex-col gap-1">
-          <label className="text-[#303030] text-[15px] font-[600]">
+          <label className="text-gray-600 font-bold text-[15px] ">
             Sub-Category
           </label>
           <input
             value={createSubCategory?.name}
             onChange={(e) => handleChangesValue("name", e.target.value)}
-            className="border border-[#6e6d6d5b] outline-none rounded-[7px] px-2 py-1"
+            // className="border border-[#6e6d6d5b] outline-none rounded-[7px] px-2 py-1"
+            className="w-full h-8 pl-4 font-medium text-gray-700 bg-blue-100 border border-transparent rounded-md outline-none focus:border-blue-200"
             type="text"
+            placeholder="Enter Title"
           />
         </div>
 
-        <button
-          onClick={HanldeCreate}
-          disabled={!createSubCategory?.name && !createSubCategory?.mainId}
-          className={` ${
-            createSubCategory?.name && createSubCategory?.mainId
-              ? "bg-[#5a83bd]"
-              : "bg-gray-500"
-          } p-1 rounded-[8px] text-[15px] font-[600] text-[#f8f8f8]`}
-        >
-          save
-        </button>
+        <div className="flex justify-end">
+          <button
+            onClick={HanldeCreate}
+            disabled={!createSubCategory?.name && !createSubCategory?.mainId}
+            className={` ${
+              createSubCategory?.name && createSubCategory?.mainId
+                ? "bg-[#1e40af]"
+                : // ? "bg-[#5a83bd]"
+                  "bg-gray-500"
+            } px-4 py-2 rounded-[8px] text-[15px] font-[600] text-[#f8f8f8]`}
+          >
+            Save
+          </button>
+        </div>
       </div>
-      <div className=" w-full mt-1 max-h-[400px] overflow-auto bg-[#ffffff]">
-        <ul className="list-none w-full ">
+      <div className=" w-full mt-1 max-h-[400px] p-4 overflow-auto ">
+        <ul className="w-full list-none ">
           {data?.data?.map((category: BlogCategory, index: number) => (
             <div key={index} className="mb-4 bg-[#f8f8f8] p-1 rounded-[7px]">
               <div className="flex items-center justify-between ">
-                <h2 className="text-sm font-bold">{category?.name}</h2>
+                <h2 className="text-lg font-bold text-gray-600 ">
+                  {category?.name}
+                </h2>
                 {category?.subCategories?.length > 0 && (
                   <button onClick={() => toggleSubCategories(category?._id)}>
-                    {showSubCategories[category?._id] ? (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-6 w-6"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M5 15l7-7 7 7"
-                        />
-                      </svg>
-                    ) : (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-6 w-6"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M19 9l-7 7-7-7"
-                        />
-                      </svg>
-                    )}
+                    {/* {showSubCategories[category?._id] ? ( */}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className={`w-4 h-4 transition-all duration-500 ${
+                        showSubCategories[category?._id] ? "rotate-180" : ""
+                      }`}
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M5 15l7-7 7 7"
+                      />
+                    </svg>
                   </button>
                 )}
               </div>
               {showSubCategories[category?._id] && (
-                <ul className="list-disc pl-6 mt-2 ">
+                <ul className="pl-6 mt-2 list-disc">
                   {category?.subCategories?.map((sub) => (
                     <li
                       key={sub?._id}
-                      className="mb-2 flex flex-row justify-between"
+                      className="flex flex-row justify-between mb-2"
                     >
                       {editId?.subId === sub?._id ? (
-                        <>
+                        <div className="grid w-full gap-2">
                           <input
                             type="text"
                             value={editId?.name}
@@ -426,27 +551,33 @@ const Tab2: React.FC = () => {
                                 name: e.target.value,
                               }))
                             }
-                            className="border px-2 py-1"
+                            className="px-2 py-1 border rounded-md"
                           />
-                          <button
-                            disabled={
-                              !editId?.mainId && !editId?.subId && !editId?.name
-                            }
-                            onClick={handleSaveClick}
-                            className="bg-green-500 text-white px-4  ml-2 rounded"
-                          >
-                            Save
-                          </button>
-                          <button
-                            onClick={handleCancelClick}
-                            className="bg-red-500 text-white px-4  ml-2 rounded"
-                          >
-                            Cancel
-                          </button>
-                        </>
+                          <div className="flex justify-end">
+                            <button
+                              disabled={
+                                !editId?.mainId &&
+                                !editId?.subId &&
+                                !editId?.name
+                              }
+                              onClick={handleSaveClick}
+                              className="px-3 py-1 ml-2 text-white bg-green-500 rounded"
+                            >
+                              Save
+                            </button>
+                            <button
+                              onClick={handleCancelClick}
+                              className="px-3 py-1 ml-2 text-white bg-red-500 rounded"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
                       ) : (
                         <>
-                          <span className="mr-2">{sub?.name}</span>
+                          <span className="mr-2 text-base font-medium text-gray-600 list-disc">
+                            {sub?.name}
+                          </span>
                           <div className="flex flex-row gap-5">
                             <button
                               onClick={() =>
@@ -504,7 +635,9 @@ const Tab3: React.FC = () => {
   const [createPost] = useCreatePostMutation();
   const [updatePost] = useUpdatePostMutation();
   const [deletePost] = useDeletePostMutation();
-  const { data, refetch, isLoading } = useGetDataQuery({ url: "/get-blog-category" });
+  const { data, refetch, isLoading } = useGetDataQuery({
+    url: "/get-blog-category",
+  });
 
   const [subData, setSubData] = useState<BlogCategory[]>([]);
   const [createSubCategory, setCreateSubCategory] = useState<StateProp>({
@@ -512,7 +645,7 @@ const Tab3: React.FC = () => {
     subId: "",
     name: "",
   });
-  
+
   const [showSubCategories, setShowSubCategories] = useState<
     Record<string, boolean>
   >({});
@@ -630,23 +763,24 @@ const Tab3: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-row gap-2 w-full">
-      {isLoading &&<Loader/>}
+    <div className="md:flex flex-row w-full h-[400px] gap-2">
+      {isLoading && <Loader />}
       <ToastContainer />
-      <div className="flex flex-col gap-5 bg-[#ffffff] p-10 rounded-[7px] w-full">
-        <h3 className="text-[18px] font-[600] text-center">
+      <div className="flex flex-col w-full gap-5 p-10 border-b-2 border-gray-200 md:border-r-2">
+        <h3 className="text-[18px]  font-bold text-gray-600">
           Create Sub Sub-Category
         </h3>
         <div className="flex flex-col gap-1">
-          <label className="text-[#303030] text-[15px] font-[600]">
+          <label className="text-gray-600 text-[15px] font-bold ">
             Main Category
           </label>
           <select
-            className="border border-[#6e6d6d5b] outline-none rounded-[7px] px-2 py-1"
+            // className="border border-[#6e6d6d5b] outline-none rounded-[7px] px-2 py-1"
+            className="w-full h-8 pl-2 font-medium text-gray-700 bg-blue-100 border border-transparent rounded-md outline-none focus:border-blue-200"
             value={createSubCategory.mainId}
             onChange={(e) => handleChangesValue("mainId", e.target.value)}
           >
-            <option value="">select</option>
+            <option value="">Select</option>
             {data?.data?.map((category: BlogCategory, index: number) => (
               <option key={index} value={category?._id}>
                 {category?.name}
@@ -655,15 +789,16 @@ const Tab3: React.FC = () => {
           </select>
         </div>
         <div className="flex flex-col gap-1">
-          <label className="text-[#303030] text-[15px] font-[600]">
+          <label className="text-gray-600 font-bold text-[15px]">
             Sub-Category
           </label>
           <select
-            className="border border-[#6e6d6d5b] outline-none rounded-[7px] px-2 py-1"
+            // className="border border-[#6e6d6d5b] outline-none rounded-[7px] px-2 py-1"
+            className="w-full h-8 pl-2 font-medium text-gray-700 bg-blue-100 border border-transparent rounded-md outline-none focus:border-blue-200"
             value={createSubCategory.subId}
             onChange={(e) => handleChangesValue("subId", e.target.value)}
           >
-            <option value="">select</option>
+            <option value="">Select</option>
             {subData?.map((category: BlogCategory, index: number) => (
               <option key={index} value={category?._id}>
                 {category?.name}
@@ -672,60 +807,69 @@ const Tab3: React.FC = () => {
           </select>
         </div>
         <div className="flex flex-col gap-1">
-          <label className="text-[#303030] text-[15px] font-[600]">
+          <label className="text-gray-600 font-bold text-[15px]">
             Sub Sub-Category
           </label>
           <input
             value={createSubCategory.name}
             onChange={(e) => handleChangesValue("name", e.target.value)}
-            className="border border-[#6e6d6d5b] outline-none rounded-[7px] px-2 py-1"
+            // className="border border-[#6e6d6d5b] outline-none rounded-[7px] px-2 py-1"
+            className="w-full h-8 pl-4 font-medium text-gray-700 bg-blue-100 border border-transparent rounded-md outline-none focus:border-blue-200"
             type="text"
+            placeholder="Enter Title"
           />
         </div>
-        <button
-          onClick={handleCreate}
-          disabled={
-            !createSubCategory.mainId ||
-            !createSubCategory.subId ||
-            !createSubCategory.name
-          }
-          className={`${
-            createSubCategory.mainId &&
-            createSubCategory.subId &&
-            createSubCategory.name
-              ? "bg-[#5a83bd]"
-              : "bg-gray-500"
-          } p-1 rounded-[8px] text-[15px] font-[600] text-[#f8f8f8]`}
-        >
-          Save
-        </button>
+        <div className="flex justify-end">
+          <button
+            onClick={handleCreate}
+            disabled={
+              !createSubCategory.mainId ||
+              !createSubCategory.subId ||
+              !createSubCategory.name
+            }
+            className={`${
+              createSubCategory.mainId &&
+              createSubCategory.subId &&
+              createSubCategory.name
+                ? "bg-[#1e40af]"
+                : // ? "bg-[#5a83bd]"
+                  "bg-gray-500"
+            } px-4 py-2 rounded-[8px] text-[15px] font-[600] text-[#f8f8f8]`}
+          >
+            Save
+          </button>
+        </div>
       </div>
-      <div className="p-4 h-[400px] bg-[#ffffff] rounded-[7px]  overflow-auto w-full">
+      <div className="p-4 max-h-[400px] overflow-auto w-full">
         {data?.data?.map((category: BlogCategory, index: number) => (
-          <div key={index} className="mb-4 bg-[#f8f8f8] p-1 rounded-[7px]">
+          <div key={index} className="mb-4 bg-[#f8f8f8] p-1">
             <div className="flex items-center justify-between">
-              <h2 className="text-sm font-bold">{category.name}</h2>
+              <h2 className="text-lg font-bold text-gray-600">
+                {category.name}
+              </h2>
               {category?.subCategories?.length > 0 && (
                 <button onClick={() => toggleSubCategories(category._id)}>
-                  {showSubCategories[category?._id] ? (
+                  {/* {showSubCategories[category?._id] ? ( */}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className={`w-4 h-4 transition-all duration-500 ${
+                      showSubCategories[category?._id] ? "rotate-180" : ""
+                    }`}
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M5 15l7-7 7 7"
+                    />
+                  </svg>
+                  {/* ) : (
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      className="h-6 w-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M5 15l7-7 7 7"
-                      />
-                    </svg>
-                  ) : (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-6 w-6"
+                      className="w-6 h-6"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -737,7 +881,7 @@ const Tab3: React.FC = () => {
                         d="M19 9l-7 7-7-7"
                       />
                     </svg>
-                  )}
+                  )} */}
                 </button>
               )}
             </div>
@@ -746,30 +890,34 @@ const Tab3: React.FC = () => {
                 {category?.subCategories?.map((sub) => (
                   <li key={sub._id} className="mb-2">
                     <div className="flex items-center justify-between mr-2">
-                      <span>{sub?.name}</span>
+                      <span className="text-base font-bold text-gray-600">
+                        {sub?.name}
+                      </span>
                       {sub?.subSubCategories?.length > 0 && (
                         <button
                           onClick={() => toggleSubSubCategories(sub?._id)}
                         >
-                          {showSubSubCategories[sub?._id] ? (
+                          {/* {showSubSubCategories[sub?._id] ? ( */}
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className={`w-4 h-4 transition-all duration-500 ${
+                              showSubSubCategories[sub?._id] ? "rotate-180" : ""
+                            }`}
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M5 15l7-7 7 7"
+                            />
+                          </svg>
+                          {/* ) : (
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
-                              className="h-6 w-6"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="M5 15l7-7 7 7"
-                              />
-                            </svg>
-                          ) : (
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-6 w-6"
+                              className="w-6 h-6"
                               fill="none"
                               viewBox="0 0 24 24"
                               stroke="currentColor"
@@ -781,17 +929,20 @@ const Tab3: React.FC = () => {
                                 d="M19 9l-7 7-7-7"
                               />
                             </svg>
-                          )}
+                          )} */}
                         </button>
                       )}
                     </div>
                     {showSubSubCategories[sub?._id] && (
-                      <ul className="list-disc pl-6 mr-2 mt-2">
+                      <ul className="pl-6 mt-2 mr-2 list-disc">
                         {sub?.subSubCategories?.map((subSub) => (
-                          <li key={subSub?._id} className="mb-2">
-                            <div className="flex items-center justify-between">
+                          <li
+                            key={subSub?._id}
+                            className="mb-2 text-base font-medium text-gray-600"
+                          >
+                            <div className="flex items-center justify-between w-full">
                               {editData?.subSubId === subSub?._id ? (
-                                <>
+                                <div className="grid w-full gap-2">
                                   <input
                                     type="text"
                                     value={editData.name}
@@ -801,30 +952,34 @@ const Tab3: React.FC = () => {
                                         name: e.target.value,
                                       }))
                                     }
-                                    className="border px-2 py-1"
+                                    className="w-full px-2 py-1 border rounded-md"
                                   />
-                                  <button
-                                    disabled={
-                                      !editData.mainId ||
-                                      !editData.subId ||
-                                      !editData.name ||
-                                      !editData.subSubId
-                                    }
-                                    onClick={handleSaveClick}
-                                    className="bg-green-500 text-white px-4 ml-2 rounded"
-                                  >
-                                    Save
-                                  </button>
-                                  <button
-                                    onClick={handleCancelClick}
-                                    className="bg-red-500 text-white px-4 ml-2 rounded"
-                                  >
-                                    Cancel
-                                  </button>
-                                </>
+                                  <div className="flex justify-end">
+                                    <button
+                                      disabled={
+                                        !editData.mainId ||
+                                        !editData.subId ||
+                                        !editData.name ||
+                                        !editData.subSubId
+                                      }
+                                      onClick={handleSaveClick}
+                                      className="px-3 py-1 ml-2 text-white bg-green-500 rounded"
+                                    >
+                                      Save
+                                    </button>
+                                    <button
+                                      onClick={handleCancelClick}
+                                      className="px-3 py-1 ml-2 text-white bg-red-500 rounded"
+                                    >
+                                      Cancel
+                                    </button>
+                                  </div>
+                                </div>
                               ) : (
                                 <>
-                                  <span className="mr-2">{subSub?.name}</span>
+                                  <span className="mr-2 text-base font-medium text-gray-600">
+                                    {subSub?.name}
+                                  </span>
                                   <div className="flex flex-row gap-5">
                                     <button
                                       onClick={() =>
@@ -892,7 +1047,9 @@ const Tab4: React.FC = () => {
   const [createPost] = useCreatePostMutation();
   const [updatePost] = useUpdatePostMutation();
   const [deletePost] = useDeletePostMutation();
-  const { data, refetch, isLoading } = useGetDataQuery({ url: "/get-blog-category" });
+  const { data, refetch, isLoading } = useGetDataQuery({
+    url: "/get-blog-category",
+  });
 
   const [subData, setSubData] = useState<subcategory[]>([]);
   const [subSubData, setSubSubData] = useState<subSubCategories[]>([]);
@@ -1043,19 +1200,20 @@ const Tab4: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-row gap-2 w-full">
-      {isLoading &&<Loader/>}
+    <div className="md:flex flex-row md:h-[460px] w-full gap-2">
+      {isLoading && <Loader />}
       <ToastContainer />
-      <div className="flex flex-col gap-5 bg-[#ffff] p-10 rounded-[7px] w-full">
-        <h3 className=" text-[18px] font-[600] text-center">
+      <div className="flex flex-col w-full gap-5 p-10 border-b-2 border-gray-200 md:border-r-2">
+        <h3 className=" text-[18px] font-bold text-gray-600">
           Create Inner Category
         </h3>
         <div className="flex flex-col gap-1">
-          <label className="text-[#303030] text-[15px] font-[600]">
+          <label className="text-gray-600 font-bold text-[15px] ">
             Main Category
           </label>
           <select
-            className="p-2 border rounded"
+            className="w-full h-8 pl-2 font-medium text-gray-700 bg-blue-100 border border-transparent rounded-md outline-none focus:border-blue-200"
+            // className="p-2 border rounded"
             value={createInnerCategory?.mainId}
             onChange={(e) => handleChangesValue("mainId", e.target.value)}
           >
@@ -1068,11 +1226,12 @@ const Tab4: React.FC = () => {
           </select>
         </div>
         <div className="flex flex-col gap-1">
-          <label className="text-[#303030] text-[15px] font-[600]">
+          <label className="text-gray-600 font-bold text-[15px] ">
             Sub-Category
           </label>
           <select
-            className="p-2 border rounded"
+            className="w-full h-8 pl-2 font-medium text-gray-700 bg-blue-100 border border-transparent rounded-md outline-none focus:border-blue-200"
+            // className="p-2 border rounded"
             value={createInnerCategory?.subId}
             onChange={(e) => handleChangesValue("subId", e.target.value)}
           >
@@ -1085,11 +1244,12 @@ const Tab4: React.FC = () => {
           </select>
         </div>
         <div className="flex flex-col gap-1">
-          <label className="text-[#303030] text-[15px] font-[600]">
+          <label className="text-gray-600 text-[15px] font-bold">
             Sub Sub-Category
           </label>
           <select
-            className="p-2 border rounded"
+            // className="p-2 border rounded"
+            className="w-full h-8 pl-2 font-medium text-gray-700 bg-blue-100 border border-transparent rounded-md outline-none focus:border-blue-200"
             value={createInnerCategory.subSubId}
             onChange={(e) => handleChangesValue("subSubId", e.target.value)}
           >
@@ -1102,173 +1262,144 @@ const Tab4: React.FC = () => {
           </select>
         </div>
         <div className="flex flex-col gap-1">
-          <label className="text-[#303030] text-[15px] font-[600]">
+          <label className="text-gray-600 font-bold text-[15px]">
             Inner Category
           </label>
           <input
             value={createInnerCategory.name}
             onChange={(e) => handleChangesValue("name", e.target.value)}
-            className="border border-[#6e6d6d5b] outline-none rounded-[7px] px-2 py-1"
+            className="w-full h-8 pl-2 font-medium text-gray-700 bg-blue-100 border border-transparent rounded-md outline-none focus:border-blue-200"
+            // className="border border-[#6e6d6d5b] outline-none  px-2 py-1"
             type="text"
+            placeholder="Enter Title"
           />
         </div>
 
-        <button
-          onClick={handleCreate}
-          disabled={
-            !createInnerCategory?.mainId ||
-            !createInnerCategory?.subId ||
-            !createInnerCategory?.subSubId ||
-            !createInnerCategory?.name
-          }
-          className={`${
-            createInnerCategory?.mainId &&
-            createInnerCategory?.subId &&
-            createInnerCategory?.subSubId &&
-            createInnerCategory?.name
-              ? "bg-[#5a83bd]"
-              : "bg-gray-500"
-          }  p-1 rounded-[8px] text-[15px] font-[600] text-[#f8f8f8]`}
-        >
-          save
-        </button>
+        <div className="flex justify-end">
+          <button
+            onClick={handleCreate}
+            disabled={
+              !createInnerCategory?.mainId ||
+              !createInnerCategory?.subId ||
+              !createInnerCategory?.subSubId ||
+              !createInnerCategory?.name
+            }
+            className={`${
+              createInnerCategory?.mainId &&
+              createInnerCategory?.subId &&
+              createInnerCategory?.subSubId &&
+              createInnerCategory?.name
+                ? "bg-[#1e40af]"
+                : // ? "bg-[#5a83bd]"
+                  "bg-gray-500"
+            }  px-4 py-2 rounded-[8px] text-[15px] font-[600] text-[#f8f8f8]`}
+          >
+            save
+          </button>
+        </div>
       </div>
-      <div className=" h-[400px] overflow-auto  w-full bg-[#ffff] p-3 rounded-[7px]">
+      <div className=" max-h-[460px] overflow-auto  w-full  p-3 ">
         {data?.data?.map((category: BlogCategory, index: number) => (
           <div key={index} className="mb-4 bg-[#f8f8f8] rounded-[7px] p-2">
             <div className="flex items-center justify-between">
-              <h2 className="text-sm font-bold ">{category?.name}</h2>
+              <h2 className="text-lg font-bold text-gray-600">
+                {category?.name}
+              </h2>
               {category?.subCategories?.length > 0 && (
                 <button onClick={() => toggleSubCategories(category?._id)}>
-                  {showSubCategories[category?._id] ? (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-6 w-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M5 15l7-7 7 7"
-                      />
-                    </svg>
-                  ) : (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-6 w-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
-                  )}
+                  {/* {showSubCategories[category?._id] ? ( */}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className={`w-4 h-4 transition-all duration-500 ${
+                      showSubCategories[category?._id] ? "rotate-180" : ""
+                    }`}
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d={`M5 15l7-7 7 7`}
+                    />
+                  </svg>
                 </button>
               )}
             </div>
             {showSubCategories[category?._id] && (
-              <ul className="list-non pl-6 mt-2 px-3">
+              <ul className="px-3 pl-6 mt-2 list-non">
                 {category?.subCategories?.map((sub) => (
                   <li key={sub?._id} className="mb-2">
                     <div className="flex items-center justify-between">
-                      <span className="mr-2">{sub?.name}</span>
+                      <span className="mr-2 text-base font-bold text-gray-600">
+                        {sub?.name}
+                      </span>
                       {sub?.subSubCategories?.length > 0 && (
                         <button onClick={() => toggleSubSubCategories(sub._id)}>
-                          {showSubSubCategories[sub?._id] ? (
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-6 w-6"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="M5 15l7-7 7 7"
-                              />
-                            </svg>
-                          ) : (
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-6 w-6"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="M19 9l-7 7-7-7"
-                              />
-                            </svg>
-                          )}
+                          {/* {showSubSubCategories[sub?._id] ? ( */}
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className={`w-4 h-4 transition-all duration-500 ${
+                              showSubSubCategories[sub?._id] ? "rotate-180" : ""
+                            }`}
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M5 15l7-7 7 7"
+                            />
+                          </svg>
                         </button>
                       )}
                     </div>
                     {showSubSubCategories[sub?._id] && (
-                      <ul className="list-non pl-6 mt-2 p-3">
+                      <ul className="p-3 py-0 pl-6 mt-2 list-none">
                         {sub?.subSubCategories?.map((subSub) => (
                           <li key={subSub._id} className="mb-2">
                             <div className="flex items-center justify-between">
-                              <span className="mr-2">{subSub?.name}</span>
+                              <span className="mr-2 font-bold text-gray-600">
+                                {subSub?.name}
+                              </span>
                               {subSub?.innerCategories?.length > 0 && (
                                 <button
                                   onClick={() =>
                                     toggleInnerCategories(subSub?._id)
                                   }
                                 >
-                                  {showInnerCategories[subSub?._id] ? (
-                                    <svg
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      className="h-6 w-6"
-                                      fill="none"
-                                      viewBox="0 0 24 24"
-                                      stroke="currentColor"
-                                    >
-                                      <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M5 15l7-7 7 7"
-                                      />
-                                    </svg>
-                                  ) : (
-                                    <svg
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      className="h-6 w-6"
-                                      fill="none"
-                                      viewBox="0 0 24 24"
-                                      stroke="currentColor"
-                                    >
-                                      <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M19 9l-7 7-7-7"
-                                      />
-                                    </svg>
-                                  )}
+                                  {/* {showInnerCategories[subSub?._id] ? ( */}
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className={`w-4 h-4 transition-all duration-500 ${
+                                      showInnerCategories[subSub?._id]
+                                        ? "rotate-180"
+                                        : ""
+                                    }`}
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth="2"
+                                      d="M5 15l7-7 7 7"
+                                    />
+                                  </svg>
                                 </button>
                               )}
                             </div>
                             {showInnerCategories[subSub?._id] && (
-                              <ul className="list-disc pl-6 mt-2">
+                              <ul className="pl-6 mt-2 list-disc">
                                 {subSub?.innerCategories?.map((inner) => (
                                   <li key={inner?._id} className="mb-2">
                                     <div className="flex items-center justify-between">
                                       {editData.innerId === inner?._id ? (
-                                        <>
+                                        <div className="grid w-full gap-2">
                                           <input
                                             type="text"
                                             value={editData.name}
@@ -1278,24 +1409,26 @@ const Tab4: React.FC = () => {
                                                 name: e.target.value,
                                               }))
                                             }
-                                            className="border px-2 py-1"
+                                            className="px-2 py-1 border rounded-md"
                                           />
-                                          <button
-                                            onClick={handleSaveClick}
-                                            className="bg-green-500 text-white px-4  ml-2 rounded"
-                                          >
-                                            Save
-                                          </button>
-                                          <button
-                                            onClick={handleCancelClick}
-                                            className="bg-red-500 text-white px-4 ml-2 rounded"
-                                          >
-                                            Cancel
-                                          </button>
-                                        </>
+                                          <div className="flex justify-end">
+                                            <button
+                                              onClick={handleSaveClick}
+                                              className="px-3 py-1 ml-2 text-white bg-green-500 rounded"
+                                            >
+                                              Save
+                                            </button>
+                                            <button
+                                              onClick={handleCancelClick}
+                                              className="px-3 py-1 ml-2 text-white bg-red-500 rounded"
+                                            >
+                                              Cancel
+                                            </button>
+                                          </div>
+                                        </div>
                                       ) : (
                                         <>
-                                          <span className="mr-2">
+                                          <span className="mr-2 text-sm font-bold text-gray-600">
                                             {inner?.name}
                                           </span>
                                           <div className="flex flex-row gap-5">
