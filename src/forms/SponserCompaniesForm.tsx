@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 
 import { FaCaretDown } from "react-icons/fa";
 import { TiArrowBackOutline } from "react-icons/ti";
-import {  useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { toast, ToastContainer } from "react-toastify";
 import { useGetDataQuery, useUpdatePostMutation } from "../api";
@@ -33,7 +33,7 @@ const SponserCompaniesForm = () => {
 
   console.log(id);
 
-  const { data,  isError } = useGetDataQuery({
+  const { data, isError } = useGetDataQuery({
     url: `/sponsor/company/${id}`,
   });
 
@@ -137,17 +137,19 @@ const SponserCompaniesForm = () => {
 
   //for Image Data
 
-  const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const files = event.target.files;
     if (files && files.length > 0) {
       const selectedFile = files[0];
-  
+
       const imageUrl = await uploadImage(
         selectedFile.name,
         selectedFile,
         setProgressStatus
       );
-  
+
       setCompaniesData((prev) => ({
         ...prev,
         image: imageUrl,
@@ -232,7 +234,7 @@ const SponserCompaniesForm = () => {
 
   return (
     <div className="w-full md:px-4 md:ml-4 md:pl-0">
-      <ToastContainer/>
+      <ToastContainer />
       <form
         className="w-full h-[calc(100vh-6rem)] overflow-hidden   rounded-md"
         onSubmit={submitHandler}

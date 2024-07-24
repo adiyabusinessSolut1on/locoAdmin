@@ -15,7 +15,7 @@ export interface innerCategories {
 export interface BlogCategory {
   _id: string;
   name: string;
-  image:string,
+  image: string;
   subCategories: [subcategory];
 }
 
@@ -195,3 +195,11 @@ export type RootState = {
     userToken: string | null;
   };
 };
+
+export interface PostDetails {
+  Mutulpost: string;
+  FeedPost: string;
+  Comments: number;
+  Likes: number;
+  _id: string;
+}

@@ -91,7 +91,7 @@ const QuizAndTestCategory = () => {
     toast.loading("checking Details");
     console.log("Item deleted", isModalOpen.id);
     deletPost({
-      url: `/video/delete-category/${isModalOpen.id}`,
+      // url: `/video/delete-category/${isModalOpen.id}`,
     })
       .then((res) => {
         if (res.data.success) {

@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { FaRegImage } from "react-icons/fa";
 import { MdOutlineGeneratingTokens } from "react-icons/md";
 import { FiEye, FiEyeOff } from "react-icons/fi";
+import { useUpdatePostMutation } from "../api";
 
 interface userForm {
   isCreat: boolean;
@@ -29,6 +30,8 @@ const CreatUser = ({ setUserForm }: Props) => {
     designation: "",
     division: "",
   });
+
+  const [updatePost] = useUpdatePostMutation();
 
   const [progressStatus, setProgressStatus] = useState<number | null>(null);
   const [isVisible, setVisible] = useState<boolean>(false);
@@ -58,44 +61,41 @@ const CreatUser = ({ setUserForm }: Props) => {
     e.preventDefault();
 
     console.log(userDataForm);
-    // toast.loading("Checking Details");
-    // try {
-    //   const payload = {
-    //     title: quizDataForm?.title,
-    //     instructions: quizDataForm?.instructions,
-    //     isComplete: quizDataForm?.completed,
-    //   };
+    toast.loading("Checking Details");
+    try {
+      const payload = {
+        // title: quizDataForm?.title,
+        // instructions: quizDataForm?.instructions,
+        // isComplete: quizDataForm?.completed,
+      };
 
-    //   const response = await updatePost({
-    //     data: payload,
-    //     method: isQuizForm.creat ? "POST" : "PUT",
-    //     path: isQuizForm.creat ? "/quiz" : `/quiz/${isQuizForm.updateId}`,
-    //   });
-    //   console.log(response);
-    //   if (response?.data?.success) {
-    //     toast.dismiss();
-    //     toast.success(response?.data?.message, {
-    //       autoClose: 5000,
-    //     });
-    //     closeHandler();
-    //   } else {
-    //     toast.dismiss();
-    //     toast.error(
-    //       `Failed to  ${isQuizForm.creat ? "Create Quiz" : "Update Quiz"}`
-    //     );
-    //   }
-    // } catch (error) {
-    //   toast.dismiss();
-    //   console.error(
-    //     `Error ${isQuizForm.creat ? "Creating Quiz" : "Updating Quiz"} :`,
-    //     error
-    //   );
-    //   toast.error(
-    //     `Error ${
-    //       isQuizForm.creat ? "Creating Quiz" : "Updating Quiz"
-    //     } : ${error}`
-    //   );
-    // }
+      const response = await updatePost({
+        data: payload,
+        method: "POST",
+        path: "/create-user ",
+      });
+      console.log(response);
+      if (response?.data?.success) {
+        toast.dismiss();
+        toast.success(response?.data?.message, {
+          autoClose: 5000,
+        });
+        closeHandler();
+      } else {
+        toast.dismiss();
+        toast.error(`Failed to  Create User`);
+      }
+    } catch (error) {
+      toast.dismiss();
+      console.error(
+        `Error Creating User:
+        ${error}`
+      );
+      toast.error(
+        `Error Creating User
+         : ${error}`
+      );
+    }
   };
 
   const closeHandler = () => {

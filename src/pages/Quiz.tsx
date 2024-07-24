@@ -62,6 +62,8 @@ const Quiz = () => {
     quizId: "",
   });
 
+  const [isClapm, setClamp] = useState(false);
+
   const [isModalOpen, setModalOpen] = useState({
     condition: false,
     id: "",
@@ -251,19 +253,33 @@ const Quiz = () => {
                     >
                       {quiz?.category ? quiz?.category : "---"}
                     </span>
-                    <span
+                    {/* <div className="flex"> */}
+                    <div
                       className={`  font-semibold text-center  rounded-full  `}
                     >
                       {quiz?.instructions ? (
-                        <div
-                          dangerouslySetInnerHTML={{
-                            __html: quiz?.instructions,
-                          }}
-                        />
+                        // hover:line-clamp-none
+                        <>
+                          <div
+                            className={`line-clamp-3 ${
+                              isClapm && "line-clamp-none"
+                            }`}
+                            dangerouslySetInnerHTML={{
+                              __html: quiz?.instructions,
+                            }}
+                          />
+                          <button
+                            className="font-semibold text-gray-500"
+                            onClick={() => setClamp((prev) => !prev)}
+                          >
+                            {isClapm ? "less" : "more"}
+                          </button>
+                        </>
                       ) : (
                         "--"
                       )}
-                    </span>
+                    </div>
+                    {/* </div> */}
 
                     <div className="grid items-center justify-center">
                       <button

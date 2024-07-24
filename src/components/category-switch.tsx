@@ -46,6 +46,8 @@ const Tab1: React.FC = () => {
   const { data, refetch, isLoading } = useGetDataQuery({
     url: "/get-blog-category",
   });
+
+  console.log(data, "main category");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editingName, setEditingName] = useState<string>("");
   const [createData, setCreateData] = useState<string>("");
@@ -54,15 +56,24 @@ const Tab1: React.FC = () => {
     thumnail: "",
     imageSrc: "",
   });
+  const [editImage, setEditImage] = useState<Image>({
+    thumnail: "",
+    imageSrc: "",
+  });
 
   const handleEditClick = (id: string, name: string, image: string) => {
     setEditingId(id);
     setEditingName(name);
-    setCategoryImage({
+    setEditImage({
       thumnail: image,
-      imageSrc: image,
+      imageSrc: image.substring(
+        image.lastIndexOf("%2"),
+        image.lastIndexOf("/") + 1
+      ),
     });
   };
+
+  console.log(editImage, "main");
 
   const handleSaveClick = async () => {
     try {
@@ -116,7 +127,7 @@ const Tab1: React.FC = () => {
   const handleClickCreate = async () => {
     try {
       const response = await createPost({
-        data: { name: createData, image: categoryImage },
+        data: { name: createData, image: categoryImage.thumnail },
         path: "main-category",
       });
 
@@ -126,6 +137,10 @@ const Tab1: React.FC = () => {
         });
         refetch();
         setCreateData("");
+        setCategoryImage({
+          imageSrc: "",
+          thumnail: "",
+        });
       } else {
         toast.error("Failed to create main category");
       }
@@ -159,7 +174,7 @@ const Tab1: React.FC = () => {
       <ToastContainer />
       <div className="md:flex flex-row w-full h-[400px] gap-2">
         {isLoading && <Loader />}
-        <div className="flex flex-col w-full gap-5 p-10 border-b-2 border-gray-200 md:border-r-2">
+        <div className="flex flex-col w-full gap-5 p-10 border-b-2 border-gray-200 md:border-b-0 md:border-r-2">
           <h3 className="text-[18px] font-[600] text-center">
             Create Main Category
           </h3>
@@ -262,12 +277,12 @@ const Tab1: React.FC = () => {
                         >
                           <p
                             className={`${
-                              categoryImage.imageSrc
+                              editImage.imageSrc
                                 ? "text-gray-700"
                                 : "text-gray-400"
                             }`}
                           >
-                            {categoryImage.imageSrc || "Choose a file"}
+                            {editImage.imageSrc || "Choose a file"}
                           </p>
                           <span className="text-gray-400 text-[15px] absolute top-0 h-full flex items-center left-0 rounded-tl-md rounded-bl-md px-3 font-medium bg-blue-200">
                             Browse
@@ -302,9 +317,25 @@ const Tab1: React.FC = () => {
                     </div>
                   ) : (
                     <>
-                      <span className="text-lg font-medium text-gray-600">
-                        {item.name}
-                      </span>
+                      <div className="flex items-center gap-4">
+                        {/* <span className="text-lg font-medium text-gray-600"> */}
+
+                        {item.image ? (
+                          <img
+                            src={item.image}
+                            alt=""
+                            className="object-contain w-10 h-10"
+                          />
+                        ) : (
+                          <span className="text-xs font-bold text-gray-400 rounded-md bg-gray-50">
+                            No Icon
+                          </span>
+                        )}
+                        {/* </span> */}
+                        <span className="text-lg font-medium text-gray-600">
+                          {item.name}
+                        </span>
+                      </div>
                       <div className="flex flex-row gap-5">
                         <button onClick={() => handleShowAlert(item?._id)}>
                           <DeleteICONSVG
@@ -450,7 +481,7 @@ const Tab2: React.FC = () => {
     <div className="md:flex flex-row w-full h-[400px] gap-2">
       {isLoading && <Loader />}
       <ToastContainer />
-      <div className="flex flex-col w-full gap-5 p-10 border-b-2 border-gray-200 md:border-r-2">
+      <div className="flex flex-col w-full gap-5 p-10 border-b-2 border-gray-200 md:border-b-0 md:border-r-2">
         <h3 className=" text-[18px] font-bold text-gray-600">
           Create Sub-Category
         </h3>
@@ -766,7 +797,7 @@ const Tab3: React.FC = () => {
     <div className="md:flex flex-row w-full h-[400px] gap-2">
       {isLoading && <Loader />}
       <ToastContainer />
-      <div className="flex flex-col w-full gap-5 p-10 border-b-2 border-gray-200 md:border-r-2">
+      <div className="flex flex-col w-full gap-5 p-10 border-b-2 border-gray-200 md:border-b-0 md:border-r-2">
         <h3 className="text-[18px]  font-bold text-gray-600">
           Create Sub Sub-Category
         </h3>
@@ -1203,7 +1234,7 @@ const Tab4: React.FC = () => {
     <div className="md:flex flex-row md:h-[460px] w-full gap-2">
       {isLoading && <Loader />}
       <ToastContainer />
-      <div className="flex flex-col w-full gap-5 p-10 border-b-2 border-gray-200 md:border-r-2">
+      <div className="flex flex-col w-full gap-5 p-10 border-b-2 border-gray-200 md:border-b-0 md:border-r-2">
         <h3 className=" text-[18px] font-bold text-gray-600">
           Create Inner Category
         </h3>
