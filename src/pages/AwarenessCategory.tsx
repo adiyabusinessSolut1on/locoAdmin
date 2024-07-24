@@ -153,48 +153,50 @@ const AwarenessCategory = () => {
             </h1>
           </div>
           <div className="flex justify-between mb-4">
-            <div className={`flex items-center   `}>
-              <input
-                type="search"
-                placeholder={` Search
+            <div className="flex items-center gap-4 ">
+              <div className={`flex items-center   `}>
+                <input
+                  type="search"
+                  placeholder={` Search
                 `}
-                className={` p-2 text-sm md:text-base  sm:px-4 py-1 border-[2px] border-transparent 
+                  className={` p-2 text-sm md:text-base  sm:px-4 py-1 border-[2px] border-transparent 
                  bg-slate-50 focus:border-gray-100
               shadow-inner rounded-[0.26rem] outline-none `}
-                // value={searchQuery}
-                // onChange={(e) => setSearchQuery(e.target.value)}
-                // onFocus={() => setCurrentPage(1)}
-              />
-            </div>
-            <div className="relative">
-              <div
-                className="flex justify-between p-2 font-medium text-gray-600 border-transparent rounded-md cursor-pointer hover:bg-gray-200 focus:border-blue-200"
-                onClick={() => setOpen(!isOpen)}
-              >
-                {sortElement !== "" ? sortElement : "Select Sort"}
-                <FaCaretDown
-                  className={`m-1 transition-all duration-300 ${
-                    isOpen ? "rotate-180" : ""
-                  }`}
+                  // value={searchQuery}
+                  // onChange={(e) => setSearchQuery(e.target.value)}
+                  // onFocus={() => setCurrentPage(1)}
                 />
               </div>
-              <ul
-                className={`mt-2 p-2 rounded-md w-32 text-white bg-gray-800 shadow-lg absolute z-10 ${
-                  isOpen ? "max-h-60" : "hidden"
-                } custom-scrollbar`}
-              >
-                {sortElements.map((sortEl: string, i: number) => (
-                  <li
-                    key={i}
-                    className={`p-2 mb-2 text-sm text-white  rounded-md cursor-pointer hover:bg-blue-200/60 ${
-                      sortElement === sortEl ? "bg-rose-400" : ""
+              <div className="relative">
+                <div
+                  className="flex justify-between p-2 font-medium text-gray-600 border-transparent rounded-md cursor-pointer hover:bg-gray-200 focus:border-blue-200"
+                  onClick={() => setOpen(!isOpen)}
+                >
+                  {sortElement !== "" ? sortElement : "Select Sort"}
+                  <FaCaretDown
+                    className={`m-1 transition-all duration-300 ${
+                      isOpen ? "rotate-180" : ""
                     }`}
-                    onClick={() => handlingSort(sortEl)}
-                  >
-                    <span>{sortEl}</span>
-                  </li>
-                ))}
-              </ul>
+                  />
+                </div>
+                <ul
+                  className={`mt-2 p-2 rounded-md w-32 text-white bg-gray-800 shadow-lg absolute z-10 ${
+                    isOpen ? "max-h-60" : "hidden"
+                  } custom-scrollbar`}
+                >
+                  {sortElements.map((sortEl: string, i: number) => (
+                    <li
+                      key={i}
+                      className={`p-2 mb-2 text-sm text-white  rounded-md cursor-pointer hover:bg-blue-200/60 ${
+                        sortElement === sortEl ? "bg-rose-400" : ""
+                      }`}
+                      onClick={() => handlingSort(sortEl)}
+                    >
+                      <span>{sortEl}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
             <div className="relative flex items-center self-end ">
               <button

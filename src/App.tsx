@@ -37,6 +37,7 @@ import Video from "./pages/videos";
 import DalyTasks from "./pages/Daily_Task";
 import QuizAndTestCategory from "./pages/QuizAndTestCategory";
 import CreatDocuments from "./pages/CreatDocuments";
+import Details from "./pages/Details";
 
 function App() {
   const token = localStorage.getItem("user");
@@ -110,10 +111,7 @@ function App() {
               path: "videos/:id",
               element: <UploadVideo />,
             },
-            // {
-            //   path: "video/:id",
-            //   element: <UpdateVideo />,
-            // },
+
             {
               path: "videos/upload-video",
               element: <UploadVideo />,
@@ -187,6 +185,10 @@ function App() {
             {
               path: "qt-category",
               element: <QuizAndTestCategory />,
+            },
+            {
+              path: "post-details",
+              element: <Details />,
             },
           ],
         },

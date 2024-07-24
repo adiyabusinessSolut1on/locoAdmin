@@ -11,6 +11,8 @@ import { IoIosSend } from "react-icons/io";
 
 import { DailyTask } from "../types";
 import Task from "../forms/Task";
+import ConfirmationDialog from "../components/modal/ConfirmationDialog";
+import NavigateICON from "../assets/SVG/navigateICON";
 
 const DalyTasks = () => {
   const { data, isLoading, isError } = useGetDataQuery({
@@ -19,6 +21,10 @@ const DalyTasks = () => {
 
   console.log("daily task data>>>>", data);
   const [deletPost] = useDeletePostMutation();
+  const [dialogCrendial, setDialogCrendial] = useState({
+    targetUrl: "",
+    showDialog: false,
+  });
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
@@ -94,7 +100,7 @@ const DalyTasks = () => {
       id: "",
     });
   };
-  const listHeadingDailyTask = ["Task", "Option", "Setting"];
+  const listHeadingDailyTask = ["Task", "Content", "Setting"];
 
   const handlingCrateQuiz = () => {
     setTaskForm((prev) => ({
@@ -103,6 +109,27 @@ const DalyTasks = () => {
       title: "",
       content: "",
     }));
+  };
+
+  const handleLinkClick = (url: string) => {
+    setDialogCrendial((prev) => ({
+      ...prev,
+      targetUrl: url,
+      showDialog: true,
+    }));
+  };
+
+  const handleCloseDialog = () => {
+    setDialogCrendial((prev) => ({
+      ...prev,
+      targetUrl: "",
+      showDialog: false,
+    }));
+  };
+
+  const handleConfirmRedirect = () => {
+    window.open(dialogCrendial.targetUrl, "_blank");
+    handleCloseDialog();
   };
 
   return (
@@ -193,11 +220,52 @@ const DalyTasks = () => {
                     >
                       {item?.title ? item?.title : "---"}
                     </span>
-                    <span
+                    {/* <span
                       className={`  font-semibold text-center  rounded-full  `}
                     >
-                      {item?.option ? item?.option : "---"}
+                      {item?.content ? item?.content : "---"}
+                    </span> */}
+                    <span className={`  font-semibold   rounded-full  `}>
+                      {item?.content ? (
+                        item?.content.includes("http") ? (
+                          <span
+                            onClick={() =>
+                              item?.content &&
+                              handleLinkClick(
+                                item?.content.slice(
+                                  item?.content.indexOf(">") + 1,
+                                  item?.content.lastIndexOf("<")
+                                )
+                              )
+                            }
+                            className={`  font-semibold border-b w-fit border-transparent items-center gap-2 flex ml-16 text-center ${
+                              item?.content
+                                ? "hover:border-sky-400 hover:text-sky-400 group"
+                                : ""
+                            } break-words break-all cursor-pointer `}
+                          >
+                            <span>
+                              {item?.content ? "Navigate to site" : "----"}
+                            </span>
+                            <NavigateICON className="w-4 h-4 rotate-90" />
+                          </span>
+                        ) : (
+                          <div
+                            className="ml-16 line-clamp-3 hover:line-clamp-none"
+                            dangerouslySetInnerHTML={{
+                              __html: item?.content,
+                            }}
+                          />
+                        )
+                      ) : (
+                        "--"
+                      )}
                     </span>
+                    <ConfirmationDialog
+                      show={dialogCrendial?.showDialog}
+                      onClose={handleCloseDialog}
+                      onConfirm={handleConfirmRedirect}
+                    />
                     {/* <div className="grid items-center justify-center ">
                       <Link
                         to={`/test/${item?._id}`}

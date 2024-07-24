@@ -270,21 +270,21 @@ const CreatBlog = () => {
   };
 
   const clearhandler = () => {
-    // setState({
-    //   maincategory: "",
-    //   mainId: "",
-    //   subid: "",
-    //   subsubid: "",
-    //   innerid: "",
-    //   subcategory: "",
-    //   subsubcategory: "",
-    //   innercategory: "",
-    //   title: "",
-    //   slug: "",
-    //   thumnail: "",
-    //   content: "",
-    //   imageTitle: "",
-    // });
+    setState({
+      maincategory: "",
+      mainId: "",
+      subid: "",
+      subsubid: "",
+      innerid: "",
+      subcategory: "",
+      subsubcategory: "",
+      innercategory: "",
+      title: "",
+      slug: "",
+      thumnail: "",
+      content: "",
+      imageTitle: "",
+    });
 
     navigate("/creat-blog/blogs-list");
   };
@@ -319,9 +319,6 @@ const CreatBlog = () => {
             <h2 className="md:text-4xl text-[28px] font-bold text-gray-500 font-mavenPro">
               Blog Form
             </h2>
-            {/* <div onClick={clearhandler}>
-              <TiArrowBackOutline className="w-10 h-10 ml-4 text-emerald-600 hover:text-emerald-500" />
-            </div> */}
           </div>
           <div className="flex items-center justify-end w-full pb-2">
             {/* <button> */}

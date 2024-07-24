@@ -15,6 +15,9 @@ import UserSVG from "../../assets/SVG/userICON";
 import QuizIcon from "../../assets/SVG/quizIcon";
 import TestIcon from "../../assets/SVG/testICON";
 
+import DailytaskICON from "../../assets/SVG/dailytaskICON";
+import PostDetails from "../../assets/SVG/postDetails";
+
 interface SidebarItem {
   name: string;
   path: string;
@@ -60,7 +63,7 @@ const sidebarData: SidebarItem[] = [
     icon: SponorSVG,
   },
   {
-    name: "Important Document",
+    name: "Imp Document",
     path: "/important-document",
     icon: DocumentSVG,
   },
@@ -82,12 +85,17 @@ const sidebarData: SidebarItem[] = [
   {
     name: "Daily Task",
     path: "/daily-task",
-    icon: QuizIcon,
+    icon: DailytaskICON,
   },
   {
     name: "Quiz & Test Category",
     path: "/qt-category",
-    icon: TestIcon,
+    icon: CategoryICONSVG,
+  },
+  {
+    name: "Post Details",
+    path: "/post-details",
+    icon: PostDetails,
   },
 
   // {
@@ -136,9 +144,7 @@ const SideBar = ({
               isOpen.large ? "w-24" : "w-60"
             }`
       }  transition-all duration-500   cursor-pointer`}
-      // onClick={onToggleSidebarSmall}
     >
-      {/* <section className="relative w-full" onClick={handlingPropogation}> */}
       <section
         className={`
     cursor-default h-full bg-white shadow-md overflow-clip   ${
@@ -160,14 +166,8 @@ const SideBar = ({
               <RxCross1 className="w-6 h-6 text-gray-400" />
             )}
           </button>
-          {/* <div className={`w-full ml-12 ${isOpen.large ? "hidden" : ""}`}> */}
+
           <div className={`w-full ml-4 ${isOpen.large ? "hidden" : ""}`}>
-            {/* <img
-              src={logo}
-              alt="Logo"
-              className={`w-[2rem] ${isOpen.large ? "hidden" : ""}`}
-              // className={`w-[10rem] `}
-            /> */}
             {/* Loco App Admin */}
             <p className="flex items-center gap-1 text-3xl font-semibold text-gray-800 ">
               {/* Laz<span className="text-emerald-500">y</span>{" "}
@@ -210,18 +210,9 @@ const SideBar = ({
                     isActive
                       ? " border-blue-800 bg-blue-200 text-blue-800 font-semibold"
                       : "hover:bg-blue-200 hover:text-gray-800 text-gray-400 border-transparent"
-                    //   isActive
-                    //     ? "bg-gradient-to-r from-emerald-800  font-semibold"
-                    //     : "hover:from-emerald-700 hover:bg-gradient-to-r  hover:text-gray-800 text-gray-400"
                   }`
                 }
               >
-                {/* {sideData.icon} */}
-                {/* {React.isValidElement(sideData.icon)
-              ? React.cloneElement(sideData.icon, {
-                  fill: isActive ? "blue" : "#9ca3af",
-                })
-              : null} */}
                 <sideData.icon
                   width={20}
                   height={20}
@@ -238,57 +229,6 @@ const SideBar = ({
               </NavLink>
             );
           })}
-
-          {/* <NavLink
-            to={"/category"}
-            className={({ isActive }) =>
-              ` relative group rounded-md flex  font-medium items-center
-                      ${
-                        isOpen.large ? "m-0 p-1 justify-center" : "m-1 p-2 "
-                      } h-[2.7rem]   ${
-                isActive
-                  ? "bg-gradient-to-r from-emerald-800 text-white font-semibold"
-                  : "hover:from-emerald-700 hover:bg-gradient-to-r  hover:text-white text-gray-400"
-              }`
-            }
-            onClick={handlingCategory}
-          >
-            <MdOutlineCategory className="w-6 h-6" />
-            <span
-              className={`mx-1 p-1  text-[15px] font-montserrat ${
-                isOpen.large ? "hidden" : ""
-              } `}
-            >
-              Category
-            </span>
-          </NavLink> */}
-
-          {/* <NavLink
-            to={"/companies"}
-            className={({ isActive }) =>
-              ` relative group rounded-md flex font-medium items-center
-                    ${
-                      isOpen.large
-                        ? "m-0 p-1 justify-center"
-                        : "m-1 p-2 w-[95%]"
-                    } h-[2.7rem]   ${
-                isActive
-                  ? " bg-gradient-to-r from-emerald-800 text-white font-semibold"
-                  : "hover:from-emerald-700 hover:bg-gradient-to-r  hover:text-white text-gray-400"
-              }`
-            }
-            // onClick={() => handleDispatch()}
-          >
-            <RiBuilding2Line className="w-6 h-6" />
-
-            <span
-              className={`mx-1 p-1  text-[15px] font-montserrat ${
-                isOpen.large ? "hidden" : ""
-              } `}
-            >
-              Company
-            </span>
-          </NavLink> */}
         </div>
       </section>
       <button
