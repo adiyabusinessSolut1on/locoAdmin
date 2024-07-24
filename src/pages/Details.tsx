@@ -27,8 +27,8 @@ const Details = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
   //calculation of page
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  // const indexOfLastItem = currentPage * itemsPerPage;
+  // const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
   //   const currentCategory = data?.slice(indexOfFirstItem, indexOfLastItem);
 
