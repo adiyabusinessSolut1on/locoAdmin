@@ -140,7 +140,7 @@ const UserList = () => {
                 onClick={creatUserhandler}
               >
                 {/* <Link to={"/creat-blog"}> */}
-                <span className="hidden md:inline-block">Add Blog</span>
+                <span className="hidden md:inline-block">Add User</span>
 
                 <IoIosSend className="w-6 h-6 md:hidden" />
                 {/* </Link> */}

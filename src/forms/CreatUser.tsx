@@ -64,15 +64,19 @@ const CreatUser = ({ setUserForm }: Props) => {
     toast.loading("Checking Details");
     try {
       const payload = {
-        // title: quizDataForm?.title,
-        // instructions: quizDataForm?.instructions,
-        // isComplete: quizDataForm?.completed,
+        name: userDataForm.name,
+        email: userDataForm.email,
+        mobile: userDataForm.number,
+        image: userDataForm.thumnail,
+        password: userDataForm.password,
+        designation: userDataForm.designation,
+        division: userDataForm.division,
       };
 
       const response = await updatePost({
         data: payload,
         method: "POST",
-        path: "/create-user ",
+        path: "/create-user",
       });
       console.log(response);
       if (response?.data?.success) {
@@ -83,6 +87,7 @@ const CreatUser = ({ setUserForm }: Props) => {
         closeHandler();
       } else {
         toast.dismiss();
+
         toast.error(`Failed to  Create User`);
       }
     } catch (error) {
@@ -247,7 +252,7 @@ const CreatUser = ({ setUserForm }: Props) => {
                 />
                 <input
                   value={userDataForm?.designation || ""}
-                  type="number"
+                  type="text"
                   onChange={handleChange}
                   name="designation"
                   className="w-full h-10 pl-4 font-medium bg-blue-100 border border-transparent rounded-md outline-none focus:border-blue-200 "
@@ -256,7 +261,7 @@ const CreatUser = ({ setUserForm }: Props) => {
                 />
                 <input
                   value={userDataForm?.division || ""}
-                  type="number"
+                  type="text"
                   onChange={handleChange}
                   name="division"
                   className="w-full h-10 pl-4 font-medium bg-blue-100 border border-transparent rounded-md outline-none focus:border-blue-200 "
