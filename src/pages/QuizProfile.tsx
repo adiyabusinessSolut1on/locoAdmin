@@ -1,4 +1,4 @@
-import  { useState } from "react";
+import { useState } from "react";
 import Pagination from "../components/pagination/Pagination";
 import { Link, useParams } from "react-router-dom";
 import { useDeletePostMutation, useGetDataQuery } from "../api";
@@ -10,7 +10,7 @@ import ConfirmDeleteModal from "../components/modal/DeleteModal";
 import QuizQuestion from "../forms/QuizQuestion";
 
 interface QuestionData {
-  _id:string
+  _id: string;
   name: string;
   options: string[];
   predicted_result: string;
@@ -27,21 +27,19 @@ interface QuestionFormState {
 }
 const QuizProfile = () => {
   const { id } = useParams();
-  const { data, isLoading,  isError } = useGetDataQuery({
+  const { data, isLoading, isError } = useGetDataQuery({
     url: `/quiz/${id}`,
   });
-
-
 
   const [isQuestionForm, setQuestionForm] = useState<QuestionFormState>({
     condition: false,
     isCreat: false,
     data: {
-      _id:"",
-      name:"",
-      options:[],
-      predicted_result:"",
-      answer_description:""
+      _id: "",
+      name: "",
+      options: [],
+      predicted_result: "",
+      answer_description: "",
     },
     quizId: "",
   });
@@ -63,11 +61,11 @@ const QuizProfile = () => {
       condition: false,
       isCreat: false,
       data: {
-        _id:"",
-        name:"",
-        options:[],
-        predicted_result:"",
-        answer_description:""
+        _id: "",
+        name: "",
+        options: [],
+        predicted_result: "",
+        answer_description: "",
       },
       quizId: "",
     }));
@@ -102,7 +100,7 @@ const QuizProfile = () => {
     });
   };
 
-  const deletHandler = (id:string) => {
+  const deletHandler = (id: string) => {
     console.log(id, "from handler");
     setModalOpen((prev) => ({
       ...prev,
@@ -111,7 +109,7 @@ const QuizProfile = () => {
     }));
   };
 
-  const updateHandler = (quizData:QuestionsType) => {
+  const updateHandler = (quizData: QuestionsType) => {
     setQuestionForm((prev) => ({
       ...prev,
       condition: true,
@@ -145,10 +143,9 @@ const QuizProfile = () => {
   };
   return (
     <>
-    <ToastContainer/>
+      <ToastContainer />
       {isModalOpen.condition && (
         <ConfirmDeleteModal
-         
           onClose={handleCloseModal}
           onConfirm={handleConfirmDelete}
         />
@@ -186,13 +183,10 @@ const QuizProfile = () => {
                     <h2 className="text-xl font-semibold text-blue-800 md:text-2xl font-mavenPro">
                       {data?.title}
                     </h2>
-                  
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2 ">
-                
-
                   <p className="text-sm font-semibold md:text-base">
                     <span className="pr-2 text-sm text-gray-500 ">
                       instructions
@@ -259,55 +253,57 @@ const QuizProfile = () => {
                       Check Internet connection or Contact to Admin
                     </p>
                   ) : data?.questions.length !== 0 ? (
-                    currentQuestion?.map((question:QuestionsType, i:number) => (
-                      <section
-                        key={i}
-                        className="grid items-center gap-6 py-2 pl-6 pr-4 border-t-2 border-gray-200 grid-cols-customQuizQuestion group hover:bg-gray-50"
-                      >
-                        <span>{i + 1}</span>
-
-                        <span
-                          className={`  font-semibold text-center  rounded-full  `}
+                    currentQuestion?.map(
+                      (question: QuestionsType, i: number) => (
+                        <section
+                          key={i}
+                          className="grid items-center gap-6 py-2 pl-6 pr-4 border-t-2 border-gray-200 grid-cols-customQuizQuestion group hover:bg-gray-50"
                         >
-                          {question?.name}
-                        </span>
-                        <span className="ml-6 font-semibold text-center rounded-full">
-                          <ul className="text-left list-disc list-inside">
-                            {question?.options?.map(
-                              (opt: string, index: number) => (
-                                <li className="text-sm" key={index}>
-                                  {opt}
-                                </li>
-                              )
-                            )}
-                          </ul>
-                        </span>
-                        <span
-                          className={`  font-semibold text-left ml-8 rounded-full  `}
-                        >
-                          {question?.predicted_result}
-                        </span>
+                          <span>{i + 1}</span>
 
-                        {/* <span className="flex justify-center ml-4 text-sm font-semibold ">
+                          <span
+                            className={`  font-semibold text-center  rounded-full  `}
+                          >
+                            {question?.name}
+                          </span>
+                          <span className="ml-6 font-semibold text-center rounded-full">
+                            <ul className="text-left list-disc list-inside">
+                              {question?.options?.map(
+                                (opt: string, index: number) => (
+                                  <li className="text-sm" key={index}>
+                                    {opt}
+                                  </li>
+                                )
+                              )}
+                            </ul>
+                          </span>
+                          <span
+                            className={`  font-semibold text-left ml-8 rounded-full  `}
+                          >
+                            {question?.predicted_result}
+                          </span>
+
+                          {/* <span className="flex justify-center ml-4 text-sm font-semibold ">
                           {question?.answer_description || "--"}
                         </span> */}
 
-                        <div className="grid justify-center gap-2">
-                          <button
-                            className="px-3 py-2 text-sm font-semibold text-white rounded-md bg-[#1f3c88] hover:bg-[#2d56bb]"
-                            onClick={() => updateHandler(question)}
-                          >
-                            Edit
-                          </button>
-                          <button
-                            className="px-3 py-2 text-sm font-semibold text-white rounded-md bg-rose-600 hover:bg-rose-700"
-                            onClick={() => deletHandler(question?._id)}
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      </section>
-                    ))
+                          <div className="grid justify-center gap-2">
+                            <button
+                              className="px-3 py-2 text-sm font-semibold text-white rounded-md bg-[#1f3c88] hover:bg-[#2d56bb]"
+                              onClick={() => updateHandler(question)}
+                            >
+                              Edit
+                            </button>
+                            <button
+                              className="px-3 py-2 text-sm font-semibold text-white rounded-md bg-rose-600 hover:bg-rose-700"
+                              onClick={() => deletHandler(question?._id)}
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </section>
+                      )
+                    )
                   ) : (
                     <p className="flex items-center justify-center w-full h-full font-semibold text-gray-600 font-mavenPro">
                       Add Questions
@@ -315,7 +311,7 @@ const QuizProfile = () => {
                   )}
                 </div>
               </section>
-              <Pagination
+              <Pagination<QuestionsType>
                 currentPage={currentPage}
                 apiData={data?.questions}
                 itemsPerPage={itemsPerPage}

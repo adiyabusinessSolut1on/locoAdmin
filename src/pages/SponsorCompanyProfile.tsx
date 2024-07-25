@@ -447,7 +447,7 @@ const SponsorCompanyProfile = () => {
                   )}
                 </div>
               </section>
-              <Pagination
+              <Pagination<sponsorProductsType>
                 currentPage={currentPage}
                 apiData={data?.products}
                 itemsPerPage={itemsPerPage}

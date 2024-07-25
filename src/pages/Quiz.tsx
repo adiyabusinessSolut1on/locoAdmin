@@ -322,7 +322,7 @@ const Quiz = () => {
             </div>
           </section>
 
-          <Pagination
+          <Pagination<quiztypes>
             currentPage={currentPage}
             apiData={data}
             itemsPerPage={itemsPerPage}

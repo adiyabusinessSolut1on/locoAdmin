@@ -218,7 +218,7 @@ const Awareness = () => {
             </div>
           </section>
 
-          <Pagination
+          <Pagination<AwarenessTypes>
             currentPage={currentPage}
             apiData={data}
             itemsPerPage={itemsPerPage}

@@ -26,6 +26,11 @@ interface SidebarItem {
 
 const sidebarData: SidebarItem[] = [
   {
+    name: "Post Details",
+    path: "/post-details",
+    icon: PostDetails,
+  },
+  {
     name: "Blogs",
     path: "/creat-blog",
     icon: BlogICONSVG,
@@ -91,11 +96,6 @@ const sidebarData: SidebarItem[] = [
     name: "Quiz & Test Category",
     path: "/qt-category",
     icon: CategoryICONSVG,
-  },
-  {
-    name: "Post Details",
-    path: "/post-details",
-    icon: PostDetails,
   },
 
   // {
@@ -199,6 +199,7 @@ const SideBar = ({
 
             return (
               <NavLink
+                key={sideData.path}
                 to={`${sideData.path}`}
                 className={({ isActive }) =>
                   ` relative group rounded-md border-l-4 transition-all duration-500  flex font-medium items-center

@@ -24,7 +24,6 @@ const ImportantDocuments = () => {
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
-  // const currentDocuments = data?.slice(indexOfFirstItem, indexOfLastItem);
   const currentDocuments = Array.isArray(data)
     ? data.slice(indexOfFirstItem, indexOfLastItem)
     : data?.mesaage;
@@ -232,7 +231,7 @@ const ImportantDocuments = () => {
             </div>
           </section>
 
-          <Pagination
+          <Pagination<ImpLinkDocs>
             currentPage={currentPage}
             apiData={data}
             itemsPerPage={itemsPerPage}

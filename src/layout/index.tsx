@@ -26,7 +26,7 @@ const Layout = () => {
   };
 
   useEffect(() => {
-    if (location.pathname === "/") navigate("/creat-blog");
+    if (location.pathname === "/") navigate("/post-details");
   }, [navigate]);
 
   return (

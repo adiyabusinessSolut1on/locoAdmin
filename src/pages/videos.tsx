@@ -278,7 +278,7 @@ const Video = () => {
             </div>
           </section>
 
-          <Pagination
+          <Pagination<videosTypes>
             currentPage={currentPage}
             apiData={data}
             itemsPerPage={itemsPerPage}

@@ -235,7 +235,7 @@ const UserList = () => {
             </div>
           </section>
 
-          <Pagination
+          <Pagination<UserTypes>
             currentPage={currentPage}
             apiData={data}
             itemsPerPage={itemsPerPage}

@@ -207,8 +207,11 @@ const QuizAndTestCategoryForm = ({
 
             <div className="flex ">
               <button
-                className="px-4 py-2 text-white bg-[#1f3c88] rounded hover:bg-[#2950b1]"
+                className="px-4 py-2 text-white bg-[#1f3c88] rounded hover:bg-[#2950b1] disabled:bg-gray-500"
                 type="submit"
+                disabled={
+                  !categoryDataForm.categoryName || !categoryDataForm.thumnail
+                }
               >
                 {/* Save Changes */}
                 {isCategoryForm.creat ? "Submit" : "Update"}
