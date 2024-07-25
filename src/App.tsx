@@ -37,7 +37,7 @@ import Video from "./pages/videos";
 import DalyTasks from "./pages/Daily_Task";
 import QuizAndTestCategory from "./pages/QuizAndTestCategory";
 import CreatDocuments from "./pages/CreatDocuments";
-import Details from "./pages/Details";
+
 import Dashboard from "./pages/Dashboard";
 
 function App() {
@@ -191,10 +191,6 @@ function App() {
               path: "qt-category",
               element: <QuizAndTestCategory />,
             },
-            // {
-            //   path: "post-details",
-            //   element: <Details />,
-            // },
           ],
         },
       ],
