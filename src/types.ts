@@ -203,3 +203,9 @@ export interface PostDetails {
   Likes: number;
   _id: string;
 }
+
+export interface QuizTestCategorys {
+  _id: string;
+  name: string;
+  image: string;
+}
