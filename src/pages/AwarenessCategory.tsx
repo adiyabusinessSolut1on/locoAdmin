@@ -57,10 +57,12 @@ const AwarenessCategory = () => {
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
-  const currentAwarenessCategory = data?.slice(
-    indexOfFirstItem,
-    indexOfLastItem
-  );
+  console.log(data, data?.length, isLoading, isError, "awarnace");
+
+  const currentAwarenessCategory =
+    !isLoading && data?.data?.length > 0
+      ? data?.data?.slice(indexOfFirstItem, indexOfLastItem)
+      : [];
 
   const handleClick = (pageNumber: number) => {
     setCurrentPage(pageNumber);
@@ -232,13 +234,13 @@ const AwarenessCategory = () => {
             </section>
             {/* min-w-[900px] */}
             <div className=" h-[380px] overflow-y-auto [&::-webkit-scrollbar]:hidden min-w-[800px] bg-gray-50">
-              {isLoading ? (
-                <p>Loading...</p>
-              ) : isError ? (
+              {isError ? (
                 <p className="flex items-center justify-center w-full h-full font-medium text-center text-rose-800">
                   Check Internet connection or Contact to Admin
                 </p>
-              ) : data?.length > 0 ? (
+              ) : isLoading ? (
+                <p>Loading...</p>
+              ) : data?.data?.length > 0 ? (
                 currentAwarenessCategory?.map(
                   (category: awarenessCategory, i: number) => (
                     <section
@@ -269,7 +271,9 @@ const AwarenessCategory = () => {
                   )
                 )
               ) : (
-                <div>No Data Found</div>
+                <div className="flex items-center justify-center w-full h-full font-bold text-gray-600">
+                  Add New Category
+                </div>
               )}
             </div>
           </section>
