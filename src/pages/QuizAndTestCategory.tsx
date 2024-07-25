@@ -70,7 +70,7 @@ const QuizAndTestCategory = () => {
       id: id,
     }));
   };
-  const updateCategory = (category: VideoCategorys) => {
+  const updateCategory = (category: QuizTestCategorys) => {
     setCategoryForm((prev) => ({
       ...prev,
       updateId: category?._id,
@@ -78,7 +78,8 @@ const QuizAndTestCategory = () => {
 
     setUpdateDate((prev) => ({
       ...prev,
-      name: category.category,
+      name: category.name,
+      image: category.image,
     }));
   };
 

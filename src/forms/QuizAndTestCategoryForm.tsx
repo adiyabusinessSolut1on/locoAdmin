@@ -26,10 +26,14 @@ const QuizAndTestCategoryForm = ({
 }: Props) => {
   const [categoryDataForm, setCategoryDataForm] = useState({
     categoryName: singleCategory.name ? singleCategory.name : "",
-    // image: singleCategory?.image ? singleCategory?.image : "",
-    // imageSrc: singleCategory?.image ? singleCategory?.image : "",
-    thumnail: "",
-    imageTitle: "",
+
+    thumnail: singleCategory?.image ? singleCategory?.image : "",
+    imageTitle: singleCategory?.image
+      ? singleCategory?.image.substring(
+          singleCategory?.image.lastIndexOf("%2"),
+          singleCategory?.image.lastIndexOf("/") + 1
+        )
+      : "",
   });
 
   const [progressStatus, setProgressStatus] = useState<number | null>(null);
