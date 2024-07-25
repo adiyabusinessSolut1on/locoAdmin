@@ -127,7 +127,13 @@ const UserUpdate = () => {
                   progressStatus ? "pb-2" : ""
                 } w-full text-base bg-blue-100 focus:border-blue-200 border-transparent border rounded-md text-gray-400 cursor-pointer flex items-center justify-between`}
               >
-                {user.imageTitle || "Choose a file"}
+                <p
+                  className={`font-medium ${
+                    user.imageTitle && "text-gray-700"
+                  }`}
+                >
+                  {user.imageTitle || "Choose a file"}
+                </p>
                 <span className="text-gray-400 text-[15px] absolute top-0 h-full flex items-center left-0 rounded-tl-md rounded-bl-md px-3 font-medium bg-blue-200">
                   Browse
                 </span>

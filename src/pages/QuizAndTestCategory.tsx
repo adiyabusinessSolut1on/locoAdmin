@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import { useGetDataQuery, useDeletePostMutation } from "../api";
-import { VideoCategorys } from "../types";
+import { QuizTestCategorys, VideoCategorys } from "../types";
 import Loader from "../components/loader";
 import Pagination from "../components/pagination/Pagination";
 import { IoIosSend } from "react-icons/io";
@@ -10,7 +10,7 @@ import QuizAndTestCategoryForm from "../forms/QuizAndTestCategoryForm";
 
 const QuizAndTestCategory = () => {
   const { data, isLoading } = useGetDataQuery({
-    // url: "/video/get-category",
+    url: "/quiztest/category",
   });
 
   const [isCategoryForm, setCategoryForm] = useState({
@@ -29,18 +29,14 @@ const QuizAndTestCategory = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
+
   //calculation of page
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
-  //   const currentCategory = data?.slice(indexOfFirstItem, indexOfLastItem);
+  const currentCategory = data?.slice(indexOfFirstItem, indexOfLastItem);
 
-  const currentCategory = [
-    { category: "hello world", _id: "123456" },
-    { category: "hello state", _id: "123457" },
-    { category: "hello cateogry", _id: "123458" },
-    { category: "hello nothing", _id: "123459" },
-  ];
-
-  console.log(currentCategory, "pagination");
+  console.log(data, "pagination");
 
   const handleClick = (pageNumber: number) => {
     setCurrentPage(pageNumber);
@@ -91,7 +87,7 @@ const QuizAndTestCategory = () => {
     toast.loading("checking Details");
     console.log("Item deleted", isModalOpen.id);
     deletPost({
-      // url: `/video/delete-category/${isModalOpen.id}`,
+      url: `/quiztest/category/${isModalOpen.id}`,
     })
       .then((res) => {
         if (res.data.success) {
@@ -114,7 +110,7 @@ const QuizAndTestCategory = () => {
   return (
     <React.Fragment>
       {isLoading && <Loader />}
-      <ToastContainer />
+      {/* <ToastContainer /> */}
       <>
         {(isCategoryForm.creat || isCategoryForm.updateId) && (
           <QuizAndTestCategoryForm
@@ -143,7 +139,7 @@ const QuizAndTestCategory = () => {
               </h1>
             </div>
             <div className="flex justify-between mb-4">
-              <div className={`flex items-center   `}>
+              <div className={`flex items-center`}>
                 <input
                   type="search"
                   placeholder={` Search
@@ -190,33 +186,35 @@ const QuizAndTestCategory = () => {
               </section>
               {/* min-w-[900px] */}
               <div className=" h-[380px] overflow-y-auto [&::-webkit-scrollbar]:hidden min-w-[600px] bg-gray-50">
-                {currentCategory?.map((category: VideoCategorys, i: number) => (
-                  <section
-                    key={i}
-                    className="grid items-center gap-6 py-2 pl-6 pr-4 border-t-2 border-gray-200 grid-cols-customeCategory group hover:bg-gray-50"
-                  >
-                    <span>{i + 1}</span>
+                {currentCategory?.map(
+                  (category: QuizTestCategorys, i: number) => (
+                    <section
+                      key={i}
+                      className="grid items-center gap-6 py-2 pl-6 pr-4 border-t-2 border-gray-200 grid-cols-customeCategory group hover:bg-gray-50"
+                    >
+                      <span>{i + 1}</span>
 
-                    <span className="ml-2 text-sm font-semibold text-gray-600 md:text-base">
-                      {category?.category}
-                    </span>
+                      <span className="ml-2 text-sm font-semibold text-gray-600 md:text-base">
+                        {category?.name}
+                      </span>
 
-                    <div className="flex justify-center gap-4">
-                      <button
-                        className="px-3 text-sm py-2 text-white  rounded-md bg-[#1f3c88] hover:bg-[#2d56bb]"
-                        onClick={() => updateCategory(category)}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="px-3 py-2 text-sm text-white rounded-md bg-rose-600 hover:bg-rose-700"
-                        onClick={() => deletCategory(category?._id)}
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </section>
-                ))}
+                      <div className="flex justify-center gap-4">
+                        <button
+                          className="px-3 text-sm py-2 text-white  rounded-md bg-[#1f3c88] hover:bg-[#2d56bb]"
+                          onClick={() => updateCategory(category)}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          className="px-3 py-2 text-sm text-white rounded-md bg-rose-600 hover:bg-rose-700"
+                          onClick={() => deletCategory(category?._id)}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </section>
+                  )
+                )}
               </div>
             </section>
             <Pagination
