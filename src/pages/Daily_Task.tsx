@@ -304,7 +304,7 @@ const DalyTasks = () => {
           </section>
 
           {data?.length > 0 && (
-            <Pagination
+            <Pagination<DailyTask>
               currentPage={currentPage}
               apiData={data}
               itemsPerPage={itemsPerPage}

@@ -6,12 +6,10 @@ import { toast, ToastContainer } from "react-toastify";
 import ConfirmDeleteModal from "../components/modal/DeleteModal";
 import Loader from "../components/loader";
 import Pagination from "../components/pagination/Pagination";
-import { FaCaretDown } from "react-icons/fa";
 
 interface awarenessCategory {
   _id: string;
   name: string;
-  image: string;
 }
 const AwarenessCategory = () => {
   const [isCategoryForm, setCategoryForm] = useState({
@@ -21,9 +19,6 @@ const AwarenessCategory = () => {
   const [updateData, setUpdateDate] = useState({
     name: "",
   });
-
-  const [isOpen, setOpen] = useState(false);
-  const [sortElement, setSortElement] = useState("");
 
   const categoryHeading = ["Category Name", "Setting"];
 
@@ -36,8 +31,6 @@ const AwarenessCategory = () => {
       name: "",
     });
   };
-
-  //   console.log(categorysData);
 
   const { data, isLoading, isError } = useGetDataQuery({
     url: "/awareness/category",
@@ -118,13 +111,6 @@ const AwarenessCategory = () => {
     });
   };
 
-  const sortElements = ["Oldest", "Latest"];
-
-  const handlingSort = (value: string) => {
-    setSortElement(value);
-    setOpen(false);
-  };
-
   return (
     <>
       {(isCategoryForm.creat || isCategoryForm.updateId) && (
@@ -169,36 +155,6 @@ const AwarenessCategory = () => {
                   // onFocus={() => setCurrentPage(1)}
                 />
               </div>
-              <div className="relative">
-                <div
-                  className="flex justify-between p-2 font-medium text-gray-600 border-transparent rounded-md cursor-pointer hover:bg-gray-200 focus:border-blue-200"
-                  onClick={() => setOpen(!isOpen)}
-                >
-                  {sortElement !== "" ? sortElement : "Select Sort"}
-                  <FaCaretDown
-                    className={`m-1 transition-all duration-300 ${
-                      isOpen ? "rotate-180" : ""
-                    }`}
-                  />
-                </div>
-                <ul
-                  className={`mt-2 p-2 rounded-md w-32 text-white bg-gray-800 shadow-lg absolute z-10 ${
-                    isOpen ? "max-h-60" : "hidden"
-                  } custom-scrollbar`}
-                >
-                  {sortElements.map((sortEl: string, i: number) => (
-                    <li
-                      key={i}
-                      className={`p-2 mb-2 text-sm text-white  rounded-md cursor-pointer hover:bg-blue-200/60 ${
-                        sortElement === sortEl ? "bg-rose-400" : ""
-                      }`}
-                      onClick={() => handlingSort(sortEl)}
-                    >
-                      <span>{sortEl}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
             </div>
             <div className="relative flex items-center self-end ">
               <button
@@ -216,7 +172,6 @@ const AwarenessCategory = () => {
           <section
             className={`w-full overflow-auto   border-2 [&::-webkit-scrollbar]:hidden rounded-lg  shadow-md bg-white`}
           >
-            {/* min-w-[900px] */}
             <section className="grid gap-4 p-2 pb-2 min-w-[800px] font-medium border-gray-100 grid-cols-customeCategory md:font-semibold font-mavenPro bg-white">
               <p className="pl-2 text-gray-600 md:text-lg">SrNo.</p>
               {/* <p className="pl-10 text-gray-600 md:text-lg">Logo</p> */}
@@ -232,7 +187,7 @@ const AwarenessCategory = () => {
                 </p>
               ))}
             </section>
-            {/* min-w-[900px] */}
+
             <div className=" h-[380px] overflow-y-auto [&::-webkit-scrollbar]:hidden min-w-[800px] bg-gray-50">
               {isError ? (
                 <p className="flex items-center justify-center w-full h-full font-medium text-center text-rose-800">
@@ -277,9 +232,9 @@ const AwarenessCategory = () => {
               )}
             </div>
           </section>
-          <Pagination
+          <Pagination<awarenessCategory>
             currentPage={currentPage}
-            apiData={data}
+            apiData={data?.data}
             itemsPerPage={itemsPerPage}
             handleClick={handleClick}
           />

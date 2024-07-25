@@ -218,7 +218,7 @@ const QuizAndTestCategory = () => {
                 )}
               </div>
             </section>
-            <Pagination
+            <Pagination<QuizTestCategorys>
               currentPage={currentPage}
               apiData={data}
               itemsPerPage={itemsPerPage}

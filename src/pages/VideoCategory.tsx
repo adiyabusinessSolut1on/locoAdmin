@@ -225,7 +225,7 @@ const VideoCategory: React.FC = () => {
                 )}
               </div>
             </section>
-            <Pagination
+            <Pagination<VideoCategorys>
               currentPage={currentPage}
               apiData={data}
               itemsPerPage={itemsPerPage}

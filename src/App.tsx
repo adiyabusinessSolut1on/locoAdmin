@@ -38,6 +38,7 @@ import DalyTasks from "./pages/Daily_Task";
 import QuizAndTestCategory from "./pages/QuizAndTestCategory";
 import CreatDocuments from "./pages/CreatDocuments";
 import Details from "./pages/Details";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   const token = localStorage.getItem("user");
@@ -74,6 +75,10 @@ function App() {
           path: "",
           element: <Layout />,
           children: [
+            {
+              path: "post-details",
+              element: <Dashboard />,
+            },
             {
               path: "creat-blog",
               element: <CreatBlog />,
@@ -186,10 +191,10 @@ function App() {
               path: "qt-category",
               element: <QuizAndTestCategory />,
             },
-            {
-              path: "post-details",
-              element: <Details />,
-            },
+            // {
+            //   path: "post-details",
+            //   element: <Details />,
+            // },
           ],
         },
       ],

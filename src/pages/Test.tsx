@@ -60,6 +60,8 @@ const Test = () => {
     id: "",
   });
 
+  const [isClapm, setClamp] = useState(false);
+
   const handleCloseModal = () => {
     setModalOpen({
       condition: false,
@@ -252,7 +254,7 @@ const Test = () => {
                     >
                       {test?.category ? test?.category : "---"}
                     </span>
-                    <span
+                    {/* <span
                       className={`  font-semibold text-center  rounded-full  `}
                     >
                       {test?.instructions ? (
@@ -264,7 +266,32 @@ const Test = () => {
                       ) : (
                         "--"
                       )}
-                    </span>
+                    </span> */}
+                    <div
+                      className={`  font-semibold text-center  rounded-full  `}
+                    >
+                      {test?.instructions ? (
+                        // hover:line-clamp-none
+                        <>
+                          <div
+                            className={`line-clamp-3 ${
+                              isClapm && "line-clamp-none"
+                            }`}
+                            dangerouslySetInnerHTML={{
+                              __html: test?.instructions,
+                            }}
+                          />
+                          <button
+                            className="font-semibold text-gray-500"
+                            onClick={() => setClamp((prev) => !prev)}
+                          >
+                            {isClapm ? "less" : "more"}
+                          </button>
+                        </>
+                      ) : (
+                        "--"
+                      )}
+                    </div>
 
                     <div className="grid items-center justify-center">
                       <button
@@ -307,7 +334,7 @@ const Test = () => {
             </div>
           </section>
 
-          <Pagination
+          <Pagination<Testtypes>
             currentPage={currentPage}
             apiData={data}
             itemsPerPage={itemsPerPage}
