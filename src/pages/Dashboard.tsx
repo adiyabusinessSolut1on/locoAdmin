@@ -4,6 +4,8 @@ import { useGetDataQuery } from "../api";
 import {
   BlogDataType,
   BlogDataTypes,
+  DataType,
+  GroupedDataType,
   MutaulDataType,
   MutualPostDataTypes,
   PostDataType,
