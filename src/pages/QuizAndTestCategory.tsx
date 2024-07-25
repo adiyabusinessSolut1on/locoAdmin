@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { useGetDataQuery, useDeletePostMutation } from "../api";
-import { QuizTestCategorys, VideoCategorys } from "../types";
+import { QuizTestCategorys } from "../types";
 import Loader from "../components/loader";
 import Pagination from "../components/pagination/Pagination";
 import { IoIosSend } from "react-icons/io";
