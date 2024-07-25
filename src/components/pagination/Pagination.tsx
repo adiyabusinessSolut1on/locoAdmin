@@ -1,50 +1,17 @@
-import React from "react";
-
-// Define the type for a product
-interface Product {
-  _id: string;
-  name: string;
-  image: string;
-  description: string;
-  active: boolean;
-  link: string;
-  sponsorname: string;
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
-}
-
-// Define the type for the API data
-interface ApiData {
-  _id: string;
-  name: string;
-  type: string;
-  image: string;
-  link: string;
-  video: string;
-  description: string;
-  active: boolean;
-  products: Product[];
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
-}
-
 // Define the type for the props
-interface PaginationProps {
+interface PaginationProps<T> {
   currentPage: number;
-  apiData: ApiData[];
+  apiData: T[];
   itemsPerPage: number;
   handleClick: (pageNumber: number) => void;
 }
 
-const Pagination: React.FC<PaginationProps> = ({
+const Pagination = <T,>({
   currentPage,
   apiData,
   itemsPerPage,
   handleClick,
-}) => {
-
+}: PaginationProps<T>) => {
   const totalPages = Math.ceil(apiData?.length / itemsPerPage);
   return (
     <div className="flex items-center justify-center w-full mt-4">
