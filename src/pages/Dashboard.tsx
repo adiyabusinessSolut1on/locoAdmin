@@ -305,7 +305,7 @@ const Dashboard = () => {
                 className={`w-full overflow-auto   border-2 [&::-webkit-scrollbar]:hidden rounded-lg  shadow-md bg-white`}
               >
                 {/* min-w-[900px] */}
-                <section className="grid gap-4 p-2 pb-2 min-w-[600px] font-medium border-gray-100 grid-cols-customBlog md:font-semibold font-mavenPro bg-white">
+                <section className="grid gap-4 p-2 pb-2 min-w-[600px] font-medium border-gray-100 grid-cols-customBlogDahsbord md:font-semibold font-mavenPro bg-white">
                   <p className="pl-2 text-gray-600 md:text-lg">SrNo.</p>
                   {/* <p className="pl-10 text-gray-600 md:text-lg">Logo</p> */}
 
@@ -330,7 +330,7 @@ const Dashboard = () => {
                     currentBlogData?.map((detail: BlogDataTypes, i: number) => (
                       <section
                         key={i}
-                        className="grid items-center gap-6 py-2 pl-6 pr-4 border-t-2 border-gray-200 grid-cols-customBlog group hover:bg-gray-50"
+                        className="grid items-center gap-6 py-2 pl-6 pr-4 border-t-2 border-gray-200 grid-cols-customBlogDahsbord group hover:bg-gray-50"
                       >
                         <span>{i + 1}</span>
 

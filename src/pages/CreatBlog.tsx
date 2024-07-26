@@ -316,7 +316,7 @@ const CreatBlog = () => {
       >
         <div className="flex-1 h-full p-6 rounded font-montserrat">
           <div className="flex pb-2">
-            <h2 className="md:text-4xl text-[28px] font-bold text-gray-500 font-mavenPro">
+            <h2 className="md:text-4xl text-[28px] font-bold text-gray-600 font-mavenPro">
               Blog Form
             </h2>
           </div>
