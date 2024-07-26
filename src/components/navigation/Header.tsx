@@ -8,6 +8,7 @@ import { useNavigate } from "react-router";
 import LogOutModal from "../modal/LogoutModal";
 import { MdDirectionsSubway } from "react-icons/md";
 import { IoMdNotifications } from "react-icons/io";
+import CreatNotification from "../../forms/CreatNotification";
 interface Props {
   isOpen: {
     small: boolean;
@@ -83,7 +84,10 @@ const Header = ({ onToggleSidebarSmall, isOpen }: Props) => {
       {isLogout && (
         <LogOutModal onClose={cancelLogout} onConfirm={confirmLogout} />
       )}
-      {/* bg-[#EFF6FF] */}
+      {showNotification && (
+        <CreatNotification setCategoryForm={setNotification} />
+      )}
+
       <header
         className={`fixed top-0 flex items-center justify-between border-b bg-[#FAFAFA] border-gray-200 w-full  ${
           // !isOpen.large ? "lg:w-[calc(100%-15.4rem)]" : "lg:w-[calc(100%-5.4rem)]"
@@ -139,18 +143,18 @@ const Header = ({ onToggleSidebarSmall, isOpen }: Props) => {
                 <span className="relative inline-flex w-2 h-2 rounded-full bg-sky-700"></span>
               </span>
             </div>
-            {showNotification && (
+            {/* {showNotification && (
               <div
                 className="absolute -left-32 grid  top-[3.7rem] z-[53]"
                 // style={{ width: "170px" }}
               >
-                {/* <div className="border-t-transparent justify-self-end border-transparent border-t-0 border-b-white border-[12px] h-0 w-0 "></div> */}
+               
                 <div className="w-[170px] md:w-[174.5px] h-[80px] overflow-y-scroll [&::-webkit-scrollbar]:hidden  relative z-50 bg-white rounded-md shadow-lg">
                   <button
                     className="flex items-center w-full px-4 pt-2 pb-2 text-sm font-bold hover:bg-blue-50"
                     onClick={handleLogout}
                   >
-                    {/* <BiLogOutCircle className="w-5 h-5 " /> */}
+                   
                     <span className="pl-2 text-xs md:text-sm">First</span>
                   </button>
 
@@ -158,19 +162,19 @@ const Header = ({ onToggleSidebarSmall, isOpen }: Props) => {
                     className="flex items-center w-full px-4 pt-2 pb-2 text-sm font-bold border-t border-gray-200 hover:bg-blue-50"
                     // onClick={handleUpdateProfile}
                   >
-                    {/* <FaUserCog className="w-5 h-5 " /> */}
+                   
                     <span className="pl-2 text-xs md:text-sm">Second</span>
                   </button>
                   <button
                     className="flex items-center w-full px-4 pt-2 pb-2 text-sm font-bold border-t border-gray-200 hover:bg-blue-50"
                     // onClick={handleUpdateProfile}
                   >
-                    {/* <FaUserCog className="w-5 h-5 " /> */}
+                    
                     <span className="pl-2 text-xs md:text-sm">Third</span>
                   </button>
                 </div>
               </div>
-            )}
+            )} */}
             {/* clock */}
             <div className="flex items-center justify-start font-bold text-green-800 md:w-1/2 font-lato">
               {/* time */}

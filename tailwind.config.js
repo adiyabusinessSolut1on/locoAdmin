@@ -27,7 +27,7 @@ export default {
         customDetails: "40px 1fr 1fr 1fr 1fr",
         customAllPost: "40px 1fr 1fr",
         customPost: "40px 1fr 1fr 1fr 1fr",
-        customBlog: "40px 1fr 1fr 1fr",
+        customBlogDahsbord: "40px 1fr 1fr 1fr",
       },
     },
   },

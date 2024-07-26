@@ -23,6 +23,12 @@ const BlogList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
+  //calculation of page
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+
+  const currentBlog = response?.data?.slice(indexOfFirstItem, indexOfLastItem);
+
   const handleClick = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
@@ -148,7 +154,7 @@ const BlogList = () => {
                   Check Internet connection or Contact to Admin
                 </p>
               ) : response?.data?.length > 0 ? (
-                response?.data?.map((blog: BlogSTyepes, i: number) => (
+                currentBlog?.map((blog: BlogSTyepes, i: number) => (
                   <section
                     key={i}
                     className="grid items-center gap-6 py-2 pl-6 pr-4 border-t-2 border-gray-200 grid-cols-customBlog group hover:bg-gray-50"
