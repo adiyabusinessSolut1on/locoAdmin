@@ -17,12 +17,16 @@ const UserUpdate = () => {
     email: "",
     mobile: "",
     imageTitle: "",
+    designation:"",
+    division:""
   });
   useEffect(() => {
     setCurrentUser({
       image: data?.image,
       name: data?.name,
       email: data?.email,
+      designation:data?.designation,
+      division:data?.division,
       mobile: data?.mobile,
       imageTitle: data?.image?.slice(72, data?.image?.indexOf("%2F")),
     });
@@ -170,7 +174,6 @@ const UserUpdate = () => {
               placeholder="Enter Email"
               required
             />
-
             <input
               value={user?.mobile}
               type="text"
@@ -180,7 +183,38 @@ const UserUpdate = () => {
               placeholder="Enter Mobile Number"
               required
             />
+            
+            <input
+              value={user?.designation}
+              type="text"
+              onChange={handleInputChange}
+              name="designation"
+              className="w-full h-10 pl-4 font-medium bg-blue-100 border border-transparent rounded-md outline-none focus:border-blue-200 "
+              placeholder="Enter Designation"
+              required
+            />
+              <input
+              value={user?.division}
+              type="text"
+              onChange={handleInputChange}
+              name="division"
+              className="w-full h-10 pl-4 font-medium bg-blue-100 border border-transparent rounded-md outline-none focus:border-blue-200 "
+              placeholder="Enter Division"
+              required
+            />
+            {/* <div className="flex justify-end w-full col-span-1 md:col-span-2">
+            <input
+              // value={user?.email}
+              type="text"
+              onChange={handleInputChange}
+              name="password"
+              className="w-full h-10 pl-4 font-medium bg-blue-100 border border-transparent rounded-md outline-none focus:border-blue-200 "
+              placeholder="Enter Password"
+              required
+            />
+            </div> */}
             <div className="flex justify-end w-full col-span-1 md:col-span-2">
+              
               <button
                 type="submit"
                 className="px-6 py-3 text-white transition duration-500 transform rounded-lg shadow-lg bg-gradient-to-r from-blue-500 to-purple-600 hover:shadow-2xl "

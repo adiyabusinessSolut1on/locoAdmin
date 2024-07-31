@@ -24,6 +24,8 @@ interface StateProps {
   subcategory?: string;
   subsubcategory?: string;
   innercategory?: string;
+  categoryId:string;
+  categoryName:string;
   title: string;
   slug: string;
   thumnail: string;
@@ -54,11 +56,17 @@ const CreatBlog = () => {
     subsubcategoryData: [],
     innercategoryData: [],
   });
+  interface blogACt{
+    _id:string,
+    name:string
+  }
   const [state, setState] = useState<StateProps>({
     maincategory: "",
     mainId: "",
     subid: "",
     subsubid: "",
+    categoryId:blogData?.data?.categoryId||"",
+     categoryName:blogData?.data?.categoryName||"",
     innerid: "",
     subcategory: "",
     subsubcategory: "",
@@ -70,6 +78,10 @@ const CreatBlog = () => {
     imageTitle:
       blogData?.data?.thumnail?.slice(67, data?.image?.indexOf("%")) || "",
   });
+
+  const handleBlogcat=(category:blogACt)=>{
+    setState((prev)=>({...prev,categoryId:category?._id,categoryName:category?.name}))
+      }
 
   const [isOpen, setOpen] = useState({
     maincategory: false,
@@ -87,6 +99,8 @@ const CreatBlog = () => {
         thumnail: blogData?.data?.thumnail,
         slug: blogData?.data?.slug,
         content: blogData?.data?.content,
+        categoryId:blogData?.data?.categoryId,
+        categoryName:blogData?.data?.categoryName,
         imageTitle:
           blogData?.data?.thumnail?.slice(
             72,
@@ -220,14 +234,12 @@ const CreatBlog = () => {
   const submitHandler = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    console.log(state, "hello");
+    console.log(state, "hello>>>");
     try {
       toast.loading("Checking Details");
       const payload = {
-        maincategory: state?.maincategory,
-        subcategory: state?.subcategory,
-        subsubcategory: state?.subsubcategory,
-        innercategory: state?.innercategory,
+        categoryId:state?.categoryId,
+        categoryName:state?.categoryName,
         title: state?.title,
         slug: state?.slug,
         thumnail: state?.thumnail,
@@ -240,7 +252,7 @@ const CreatBlog = () => {
         path:
           isUpdate && !isError
             ? `/blog/update-blog/${id}`
-            : "/blog/create-blogs",
+            : "/blog/create",
       });
 
       console.log(response);
@@ -276,6 +288,8 @@ const CreatBlog = () => {
       subid: "",
       subsubid: "",
       innerid: "",
+      categoryId:"",
+      categoryName:"",
       subcategory: "",
       subsubcategory: "",
       innercategory: "",
@@ -418,8 +432,10 @@ const CreatBlog = () => {
                               ? "bg-rose-600"
                               : ""
                           }`}
-                          onClick={() =>
+                          onClick={() =>{
                             handleDropChange("maincategory", main?._id)
+                            handleBlogcat({_id:main?._id,name:main?.name})
+                          }
                           }
                         >
                           <span>{main?.name}</span>
@@ -457,8 +473,10 @@ const CreatBlog = () => {
                         className={`p-2 mb-2 text-sm text-[#DEE1E2]  rounded-md cursor-pointer hover:bg-blue-200/60 ${
                           state.subcategory === sub?.name ? "bg-rose-600" : ""
                         }`}
-                        onClick={() =>
+                        onClick={() =>{
                           handleDropChange("subcategory", sub?._id)
+                          handleBlogcat({_id:sub?._id,name:sub?.name})
+                        }
                         }
                       >
                         <span>{sub?.name}</span>
@@ -498,8 +516,10 @@ const CreatBlog = () => {
                             ? "bg-rose-600"
                             : ""
                         }`}
-                        onClick={() =>
+                        onClick={() =>{
                           handleDropChange("subsubcategory", subsub?._id)
+                          handleBlogcat({_id:subsub?._id,name:subsub?.name})
+                        }
                         }
                       >
                         <span>{subsub?.name}</span>
@@ -539,8 +559,10 @@ const CreatBlog = () => {
                             ? "bg-rose-600"
                             : ""
                         }`}
-                        onClick={() =>
+                        onClick={() =>{
                           handleDropChange("innercategory", iner?._id)
+                          handleBlogcat({_id:iner?._id,name:iner?.name})
+                        }
                         }
                       >
                         <span>{iner?.name}</span>

@@ -246,7 +246,7 @@ const CreatAwareness = () => {
                     isOpen ? "max-h-60" : "hidden"
                   } custom-scrollbar`}
                 >
-                  {data?.map((category: awarenessCategoryType, i: number) => (
+                  {data?.length>0?data?.map((category: awarenessCategoryType, i: number) => (
                     <li
                       key={i}
                       className={`p-2 ${
@@ -265,7 +265,7 @@ const CreatAwareness = () => {
                     >
                       {category?.name}
                     </li>
-                  ))}
+                  )):<li> Category not Found</li>}
                 </ul>
               </div>
               {/* <div className="md:col-span-2">

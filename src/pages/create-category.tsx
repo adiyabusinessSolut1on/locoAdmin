@@ -74,3 +74,6 @@ const tablist: tablistprops[] = [
     value: "tab4",
   },
 ];
+
+
+

@@ -17,10 +17,7 @@ interface Props {
   value: string;
 }
 
-interface Image {
-  thumnail: string;
-  imageSrc: string;
-}
+
 
 const Switches = ({ value }: Props) => {
   const route = React.useMemo(() => {
@@ -49,37 +46,31 @@ const Tab1: React.FC = () => {
 
   console.log(data, "main category");
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [editingName, setEditingName] = useState<string>("");
-  const [createData, setCreateData] = useState<string>("");
-
-  const [categoryImage, setCategoryImage] = useState<Image>({
-    thumnail: "",
-    imageSrc: "",
+  const [editing, setEditing] = useState({
+editname:"",
+editimage:""
   });
-  const [editImage, setEditImage] = useState<Image>({
-    thumnail: "",
-    imageSrc: "",
+  const [createData, setCreateData] = useState({
+    name:"",
+    image:""
   });
 
   const handleEditClick = (id: string, name: string, image: string) => {
+   
     setEditingId(id);
-    setEditingName(name);
-    setEditImage({
-      thumnail: image,
-      imageSrc: image.substring(
-        image.lastIndexOf("%2"),
-        image.lastIndexOf("/") + 1
-      ),
-    });
+    setEditing({
+      editname:name,
+      editimage:image
+    })
   };
+ 
 
-  console.log(editImage, "main");
 
   const handleSaveClick = async () => {
     try {
       const response = await updatePost({
         path: `/main-category/${editingId}`,
-        data: { name: editingName, image: categoryImage },
+        data: { name: editing?.editname, image: editing?.editimage },
       });
       if (response?.data?.success) {
         toast.success(response?.data?.message, {
@@ -87,7 +78,10 @@ const Tab1: React.FC = () => {
         });
         refetch();
         setEditingId(null);
-        setEditingName("");
+        setEditing({
+          editname:"",
+          editimage:""
+        });
       } else {
         toast.error("Failed to Update main category");
       }
@@ -98,12 +92,17 @@ const Tab1: React.FC = () => {
 
   const handleCancelClick = () => {
     setEditingId(null);
-    setEditingName("");
+    setEditing({
+      editname:"",
+      editimage:""
+    });
   };
 
   const [progressStatus, setProgressStatus] = useState<number | null>(null);
-
-  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const [progressStatus1, setProgressStatus1] = useState<number | null>(null);
+ 
+  const handleImageCreate = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("handle Image in Create")
     const selectedFile = e.target?.files?.[0];
     if (selectedFile) {
       try {
@@ -112,10 +111,9 @@ const Tab1: React.FC = () => {
           selectedFile,
           setProgressStatus
         );
-        setCategoryImage({
-          ...categoryImage,
-          thumnail: imageUrl,
-          imageSrc: selectedFile.name,
+        setCreateData({
+          ...createData,
+          image: imageUrl,
         });
       } catch (error) {
         console.error("Error uploading image:", error);
@@ -123,11 +121,30 @@ const Tab1: React.FC = () => {
       }
     }
   };
-
+   const handleImageEdit = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("handle Image in Edit")
+    const selectedFile = e.target?.files?.[0];
+    if (selectedFile) {
+      try {
+        const imageUrl = await uploadImage(
+          selectedFile.name,
+          selectedFile,
+          setProgressStatus1
+        );
+        setEditing({
+          ...editing,
+          editimage: imageUrl,
+        });
+      } catch (error) {
+        console.error("Error uploading image:", error);
+        toast.error("Error uploading image");
+      }
+    }
+  };
   const handleClickCreate = async () => {
     try {
       const response = await createPost({
-        data: { name: createData, image: categoryImage.thumnail },
+        data: { name: createData?.name, image: createData.image },
         path: "main-category",
       });
 
@@ -136,10 +153,9 @@ const Tab1: React.FC = () => {
           autoClose: 5000,
         });
         refetch();
-        setCreateData("");
-        setCategoryImage({
-          imageSrc: "",
-          thumnail: "",
+        setCreateData({
+          name:"",
+          image:""
         });
       } else {
         toast.error("Failed to create main category");
@@ -183,20 +199,22 @@ const Tab1: React.FC = () => {
               Main Category
             </label>
             <input
-              value={createData}
+              value={createData?.name}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setCreateData(e.target.value)
+                setCreateData((prev)=>({...prev,name:e.target.value}))
               }
               // className="border border-[#6e6d6d5b] outline-none rounded-[7px] px-2 py-1"
               className="w-full h-8 pl-2 font-medium text-gray-700 bg-blue-100 border border-transparent rounded-md outline-none placeholder:pl-2 focus:border-blue-200 "
               type="text"
               placeholder="Enter Title"
             />
+            <div className="flex flex-row gap-4">
+              {createData?.image&&<img src={createData?.image} alt="main Image" className="h-20 w-20"/>}
             <div className="relative w-full h-full">
               <input
                 type="file"
                 name="image"
-                onChange={handleImageChange}
+                onChange={handleImageCreate}
                 className="hidden"
                 id="file-upload"
               />
@@ -208,10 +226,10 @@ const Tab1: React.FC = () => {
               >
                 <p
                   className={`${
-                    categoryImage.imageSrc ? "text-gray-700" : "text-gray-400"
+                    createData.image ? "text-gray-700" : "text-gray-400"
                   }`}
                 >
-                  {categoryImage.imageSrc || "Choose a file"}
+                  { "Choose a file"}
                 </p>
                 <span className="text-gray-400 text-[15px] absolute top-0 h-full flex items-center left-0 rounded-tl-md rounded-bl-md px-3 font-medium bg-blue-200">
                   Browse
@@ -228,6 +246,7 @@ const Tab1: React.FC = () => {
                   </div>
                 </>
               )}
+            </div>
             </div>
           </div>
 
@@ -256,49 +275,51 @@ const Tab1: React.FC = () => {
                     <div className="grid w-full gap-2">
                       <input
                         type="text"
-                        value={editingName}
-                        onChange={(e) => setEditingName(e.target.value)}
-                        // className="flex-1 px-2 py-1 mr-2 border rounded"
+                        value={editing?.editname}
+                        onChange={(e) => setEditing((prev)=>({...prev, editname:e.target.value}))}
                         className="w-full h-8 pl-2 font-medium text-gray-700 bg-blue-100 border border-transparent rounded-md outline-none focus:border-blue-200 "
                       />
+                      <div className="flex flex-row gap-3">
+                        {editing?.editimage&&<img src={editing?.editimage} className="h-10 w-10" alt="imageg"/>}
                       <div className="relative w-full h-full">
                         <input
                           type="file"
                           name="image"
-                          onChange={handleImageChange}
+                          onChange={handleImageEdit}
                           className="hidden"
-                          id="file-upload"
+                          id="Image-upload"
                         />
                         <label
-                          htmlFor="file-upload"
+                          htmlFor="Image-upload"
                           className={`px-4 py-1 pl-24 relative ${
-                            progressStatus ? "pb-1" : ""
+                            progressStatus1 ? "pb-1" : ""
                           } w-full text-base bg-blue-100 focus:border-blue-200 border-transparent border rounded-md text-gray-400 cursor-pointer flex items-center justify-between`}
                         >
                           <p
                             className={`${
-                              editImage.imageSrc
+                              editing?.editimage
                                 ? "text-gray-700"
                                 : "text-gray-400"
                             }`}
                           >
-                            {editImage.imageSrc || "Choose a file"}
+                            { "Choose a file"}
                           </p>
                           <span className="text-gray-400 text-[15px] absolute top-0 h-full flex items-center left-0 rounded-tl-md rounded-bl-md px-3 font-medium bg-blue-200">
                             Browse
                           </span>
                         </label>
-                        {progressStatus !== null && progressStatus !== 0 && (
+                        {progressStatus1 !== null && progressStatus1 !== 0 && (
                           <>
                             <div className="absolute inset-0 z-10 flex items-end">
                               <div
                                 className="h-1 bg-blue-400 rounded-md mx-[1px] mb-[1px]"
-                                style={{ width: `${progressStatus}%` }}
+                                style={{ width: `${progressStatus1}%` }}
                                 // style={{ width: `${100}%` }}
                               ></div>
                             </div>
                           </>
                         )}
+                      </div>
                       </div>
                       <div className="flex justify-end">
                         <button

@@ -10,6 +10,7 @@ import Pagination from "../components/pagination/Pagination";
 interface awarenessCategory {
   _id: string;
   name: string;
+  image:string;
 }
 const AwarenessCategory = () => {
   const [isCategoryForm, setCategoryForm] = useState({
@@ -18,6 +19,7 @@ const AwarenessCategory = () => {
   });
   const [updateData, setUpdateDate] = useState({
     name: "",
+    image:""
   });
 
   const categoryHeading = ["Category Name", "Setting"];
@@ -29,6 +31,7 @@ const AwarenessCategory = () => {
     }));
     setUpdateDate({
       name: "",
+      image:""
     });
   };
 
@@ -83,6 +86,7 @@ const AwarenessCategory = () => {
 
     setUpdateDate((prev) => ({
       ...prev,
+      image:category?.image,
       name: category?.name,
     }));
   };
@@ -175,8 +179,8 @@ const AwarenessCategory = () => {
             <section className="grid gap-4 p-2 pb-2 min-w-[800px] font-medium border-gray-100 grid-cols-customeCategory md:font-semibold font-mavenPro bg-white">
               <p className="pl-2 text-gray-600 md:text-lg">SrNo.</p>
               {/* <p className="pl-10 text-gray-600 md:text-lg">Logo</p> */}
-
-              {categoryHeading.map((heading, index) => (
+              <p className="pl-2 text-gray-600 md:text-lg">Image</p>
+              {categoryHeading?.map((heading, index) => (
                 <p
                   key={index}
                   className={`  text-gray-600 md:text-lg ${
@@ -203,11 +207,11 @@ const AwarenessCategory = () => {
                       className="grid items-center gap-6 py-2 pl-6 pr-4 border-t-2 border-gray-200 grid-cols-customeCategory group hover:bg-gray-50"
                     >
                       <span>{i + 1}</span>
-
+                      <img src={category?.image} className="h-20 w-20 rounded-full" alt="ICON"/>
                       <span className="ml-2 text-sm font-semibold text-gray-600 md:text-base">
                         {category?.name}
                       </span>
-
+                    
                       <div className="flex justify-center gap-4">
                         <button
                           className="px-3 text-sm py-2 text-white  rounded-md bg-[#1f3c88] hover:bg-[#2d56bb]"
