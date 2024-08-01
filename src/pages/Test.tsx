@@ -45,7 +45,8 @@ const Test = () => {
     isCreat: false,
     data: {
       _id: "",
-      name: [],
+      name: "",
+      image:[],
       options: [],
       predicted_result: "",
       actualresult: "",
@@ -141,7 +142,8 @@ const Test = () => {
       isCreat: false,
       data: {
         _id: "",
-        name: [],
+        name: "",
+        image:[],
         options: [],
         predicted_result: "",
         actualresult: "",

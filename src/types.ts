@@ -166,7 +166,8 @@ export interface SponsorCompanytypes {
 }
 export interface TestQuestionsType {
   _id: string;
-  name: string[];
+  name: string,
+  image:string[],
   options: string[];
   predicted_result: string;
   actualresult: string;

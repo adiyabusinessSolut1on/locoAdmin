@@ -11,7 +11,6 @@ import { TiArrowBackOutline } from "react-icons/ti";
 interface StateProps {
   category: CategoryType;
   title: string;
-
   thumnail: string;
   imageSrc: string;
   content: string;
@@ -30,13 +29,13 @@ const CreatAwareness = () => {
   const { data: updateAwar, isError: isErrorAwar } = useGetDataQuery({
     url: `/awareness/${id}`,
   });
-
+console.log("data descrtiption>>>",updateAwar)
   const isUpdate = Object.keys(updateAwar || [])?.length !== 0;
 
   const { data } = useGetDataQuery({
     url: "/awareness/category",
   });
-  console.log("Awareness Category>>>>", data);
+
 
   const [state, setState] = useState<StateProps>({
     category: {
@@ -51,13 +50,11 @@ const CreatAwareness = () => {
         updateAwar?.image?.lastIndexOf("%"),
         updateAwar?.image?.lastIndexOf("/") + 1
       ) || "",
-    content: updateAwar?.description || "",
+    content:updateAwar?.description||"",
   });
 
   useEffect(() => {
-    console.log("i am running");
-
-    if (isUpdate && isErrorAwar) {
+    if (isUpdate && !isErrorAwar) {
       setState({
         category: {
           name: updateAwar?.category,
@@ -246,7 +243,7 @@ const CreatAwareness = () => {
                     isOpen ? "max-h-60" : "hidden"
                   } custom-scrollbar`}
                 >
-                  {data?.length>0?data?.map((category: awarenessCategoryType, i: number) => (
+                  {data?.data?.length>0?data?.data?.map((category: awarenessCategoryType, i: number) => (
                     <li
                       key={i}
                       className={`p-2 ${

@@ -181,17 +181,22 @@ const QuizProfile = () => {
                   <div className="flex items-center gap-4">
                     {/* <div> */}
                     <h2 className="text-xl font-semibold text-blue-800 md:text-2xl font-mavenPro">
-                      {data?.title}
+                     <span className="text-gray-800">Quiz Name: </span> {data?.title}
                     </h2>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2 ">
                   <p className="text-sm font-semibold md:text-base">
-                    <span className="pr-2 text-sm text-gray-500 ">
-                      instructions
+                    <span className="pr-2 text-sm text-red-400">
+                      Instructions:
                     </span>
-                    {data?.instructions}
+                    <div
+                           
+                            dangerouslySetInnerHTML={{
+                              __html: data?.instructions,
+                            }}
+                          />
                   </p>
                 </div>
               </div>
@@ -200,18 +205,7 @@ const QuizProfile = () => {
               className={`  h-full rounded-md  font-philosopher max-w-full w-full `}
             >
               <div className="flex justify-between mb-4">
-                <div className={`flex items-center   `}>
-                  <input
-                    type="search"
-                    placeholder={`Search`}
-                    className={` p-2 text-sm md:text-base  sm:px-4 py-1 border-[2px] border-transparent 
-                 bg-slate-50 focus:border-gray-100
-              shadow-inner rounded-[0.26rem] outline-none `}
-                    // value={searchQuery}
-                    // onChange={(e) => setSearchQuery(e.target.value)}
-                    // onFocus={() => setCurrentPage(1)}
-                  />
-                </div>
+              
                 <div className="relative flex items-center self-end ">
                   <button
                     className={` px-2 py-1 

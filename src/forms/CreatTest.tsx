@@ -5,6 +5,7 @@ import { TiArrowBackOutline } from "react-icons/ti";
 import TextEditor from "../components/textEditor";
 import { QuizAndTestCategoryType } from "../types";
 import { FaCaretDown } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 interface CategoryForm {
   creat: boolean;
   updateId: string;
@@ -21,14 +22,15 @@ const CreatTest = ({ isTestForm, setTestForm }: Props) => {
   const { data, isError } = useGetDataQuery({
     url: `/test/${isTestForm?.updateId}`,
   });
-
+  const { data:testcategory } = useGetDataQuery({
+    url: "/quiztest/category",
+  });
   const isUpdate = Object.keys(data || [])?.length !== 0;
 
   const [testDataForm, settestDataForm] = useState({
     title: data?.title ? data?.title : "",
     category: data?.category ? data?.category : "",
     instructions: data?.instructions ? data?.instructions : "",
-    completed: data?.isComplete ? data?.isComplete : false,
   });
 
   useEffect(() => {
@@ -38,7 +40,6 @@ const CreatTest = ({ isTestForm, setTestForm }: Props) => {
         title: data?.title ? data?.title : "",
         category: data?.category ? data?.category : "",
         instructions: data?.instructions ? data?.instructions : "",
-        completed: data?.isComplete ? data?.isComplete : false,
       }));
     }
   }, [isUpdate, isError, data]);
@@ -68,7 +69,7 @@ const CreatTest = ({ isTestForm, setTestForm }: Props) => {
         e?.target?.type === "checkbox" ? e?.target?.checked : e?.target?.value,
     }));
   };
-
+  const navigate = useNavigate();
   const submiteHandler = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -77,7 +78,7 @@ const CreatTest = ({ isTestForm, setTestForm }: Props) => {
       const payload = {
         title: testDataForm?.title,
         instructions: testDataForm?.instructions,
-        isComplete: testDataForm?.completed,
+        category: testDataForm?.category
       };
 
       const response = await updatePost({
@@ -85,8 +86,9 @@ const CreatTest = ({ isTestForm, setTestForm }: Props) => {
         method: isTestForm.creat ? "POST" : "PUT",
         path: isTestForm.creat ? "/test" : `/test/${isTestForm.updateId}`,
       });
-      console.log(response);
+   
       if (response?.data?.success) {
+        if(isTestForm.creat) navigate(`/test/${response?.data?.data?._id}`);
         toast.dismiss();
         toast.success(response?.data?.message, {
           autoClose: 5000,
@@ -136,25 +138,11 @@ const CreatTest = ({ isTestForm, setTestForm }: Props) => {
       title: "",
       category: "",
       instructions: "",
-      completed: false,
     });
-    console.log(testDataForm);
+
   };
 
-  const categoryData = [
-    {
-      name: "latest",
-      _id: "latest01",
-    },
-    {
-      name: "old",
-      _id: "old01",
-    },
-    {
-      name: "newstes",
-      _id: "newstes01",
-    },
-  ];
+  
 
   return (
     <div
@@ -179,7 +167,7 @@ const CreatTest = ({ isTestForm, setTestForm }: Props) => {
             </div>
             <div className="h-[calc(100vh-12rem)] w-full overflow-y-auto  [&::-webkit-scrollbar]:hidden font-mavenPro">
               <div className="grid gap-2 py-4 md:gap-4 ">
-                {/* <div className="w-full font-mavenPro"> */}
+                <label className="font-medium text-[18px]">Test Title:</label>
                 <input
                   value={testDataForm?.title}
                   type="text"
@@ -193,6 +181,7 @@ const CreatTest = ({ isTestForm, setTestForm }: Props) => {
                 />
                 {/* category of Quiz and Test */}
                 <div className="relative">
+                <label className="font-medium text-[18px]">Test Category:</label>
                   <div
                     className="flex justify-between p-2 pl-4 font-medium text-gray-400 border border-gray-400 rounded-md cursor-pointer focus:border-blue-200"
                     onClick={() =>
@@ -219,7 +208,8 @@ const CreatTest = ({ isTestForm, setTestForm }: Props) => {
                       isOpen.category ? "max-h-60" : "hidden"
                     } custom-scrollbar`}
                   >
-                    {categoryData?.map(
+                    {testcategory?.length>0?
+                    testcategory?.map(
                       (caetory: QuizAndTestCategoryType, i: number) => (
                         <li
                           key={i}
@@ -235,7 +225,7 @@ const CreatTest = ({ isTestForm, setTestForm }: Props) => {
                           <span>{caetory?.name}</span>
                         </li>
                       )
-                    )}
+                    ):"No Category Found"}
                   </ul>
                 </div>
                 {/* <input
@@ -251,6 +241,7 @@ const CreatTest = ({ isTestForm, setTestForm }: Props) => {
               /> */}
 
                 <div className="">
+                <label className="font-medium text-[18px]">Test Instructions! :</label>
                   <TextEditor
                     value={testDataForm?.instructions}
                     OnChangeEditor={(e: string) =>
@@ -258,25 +249,7 @@ const CreatTest = ({ isTestForm, setTestForm }: Props) => {
                     }
                   />
                 </div>
-                <div className="flex gap-2">
-                  <input
-                    type="checkbox"
-                    checked={testDataForm.completed}
-                    onChange={handleChange}
-                    name="completed"
-                    className={
-                      " font-medium outline-none   border border-gray-400 rounded-md pl-4 focus-within:border-blue-400  "
-                    }
-                    required
-                  />
-                  <span
-                    className={`text-sm font-semibold ${
-                      testDataForm.completed ? "text-black" : "text-gray-500"
-                    } `}
-                  >
-                    Completed
-                  </span>
-                </div>
+               
               </div>
 
               <div className="flex ">

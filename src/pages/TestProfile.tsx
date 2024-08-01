@@ -14,7 +14,8 @@ interface stateProps {
   isCreat: boolean;
   data: {
     _id: string;
-    name: string[];
+    name: string;
+    image: string[];
     options: string[];
     predicted_result: string;
     actualresult: string;
@@ -36,7 +37,8 @@ const TestProfile = () => {
     isCreat: false,
     data: {
       _id: "",
-      name: [],
+      name: "",
+      image: [],
       options: [],
       predicted_result: "",
       actualresult: "",
@@ -64,7 +66,8 @@ const TestProfile = () => {
       isCreat: false,
       data: {
         _id: "",
-        name: [],
+        name: "",
+        image: [],
         options: [],
         predicted_result: "",
         actualresult: "",
@@ -184,6 +187,7 @@ const TestProfile = () => {
                 <div className="relative flex items-center justify-between w-full mb-8">
                   <div className="flex items-center gap-4">
                     {/* <div> */}
+                    <label className="font-bold">Test Name:</label>
                     <h2 className="text-xl font-semibold text-blue-800 md:text-2xl font-mavenPro">
                       {data?.title}
                     </h2>
@@ -192,10 +196,15 @@ const TestProfile = () => {
 
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2 ">
                   <p className="text-sm font-semibold md:text-base">
-                    <span className="pr-2 text-sm text-gray-500 ">
-                      instructions
+                  <span className="pr-2 text-sm text-red-400">
+                      Instructions:
                     </span>
-                    {data?.instructions}
+                    <div
+                           
+                            dangerouslySetInnerHTML={{
+                              __html: data?.instructions,
+                            }}
+                          />
                   </p>
                 </div>
               </div>
@@ -256,7 +265,7 @@ const TestProfile = () => {
                     <p className="flex items-center justify-center w-full h-full font-medium text-center text-rose-800">
                       Check Internet connection or Contact to Admin
                     </p>
-                  ) : data?.questions.length !== 0 ? (
+                  ) : data?.questions?.length !== 0 ? (
                     currentQuestion?.map(
                       (question: TestQuestionsType, i: number) => (
                         <section
@@ -268,9 +277,7 @@ const TestProfile = () => {
                           <span
                             className={`  font-semibold text-center  rounded-full  `}
                           >
-                            {question?.name.length !== 0
-                              ? "View Image"
-                              : "No Image"}
+                            {question?.name}
                           </span>
                           <span className="ml-6 font-semibold text-center rounded-full">
                             <ul className="text-left list-disc list-inside">
