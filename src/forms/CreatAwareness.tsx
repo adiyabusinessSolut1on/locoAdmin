@@ -239,7 +239,7 @@ console.log("data descrtiption>>>",updateAwar)
                   <FaCaretDown className="m-1" />
                 </div>
                 <ul
-                  className={`mt-2 p-2 rounded-md w-32 text-[#DEE1E2] bg-gray-800 shadow-lg absolute z-10 ${
+                  className={`mt-2 p-2 rounded-md min-w-32 overflow-auto text-[#DEE1E2]  bg-gray-800 shadow-lg absolute z-10 ${
                     isOpen ? "max-h-60" : "hidden"
                   } custom-scrollbar`}
                 >
