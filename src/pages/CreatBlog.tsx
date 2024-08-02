@@ -419,7 +419,7 @@ const CreatBlog = () => {
                     <FaCaretDown className="m-1" />
                   </div>
                   <ul
-                    className={`mt-2 p-2 rounded-md w-32 text-[#DEE1E2] bg-gray-800 shadow-lg absolute z-10 ${
+                    className={`mt-2 p-2  overflow-auto rounded-md w-32 text-[#DEE1E2] bg-gray-800 shadow-lg absolute z-10 ${
                       isOpen.maincategory ? "max-h-60" : "hidden"
                     } custom-scrollbar`}
                   >
@@ -463,7 +463,7 @@ const CreatBlog = () => {
                     <FaCaretDown className="m-1" />
                   </div>
                   <ul
-                    className={`mt-2 p-2 rounded-md w-32 text-[#DEE1E2] bg-gray-800 shadow-lg absolute z-10 ${
+                    className={`mt-2 p-2 overflow-auto rounded-md w-32 text-[#DEE1E2] bg-gray-800 shadow-lg absolute z-10 ${
                       isOpen?.subcategory ? "max-h-60" : "hidden"
                     } custom-scrollbar`}
                   >
@@ -504,7 +504,7 @@ const CreatBlog = () => {
                     <FaCaretDown className="m-1" />
                   </div>
                   <ul
-                    className={`mt-2 p-2 rounded-md w-32 text-[#DEE1E2] bg-gray-800 shadow-lg absolute z-10 ${
+                    className={`mt-2 p-2 rounded-md overflow-auto w-32 text-[#DEE1E2] bg-gray-800 shadow-lg absolute z-10 ${
                       isOpen.subsubcategory ? "max-h-60" : "hidden"
                     } custom-scrollbar`}
                   >
@@ -547,7 +547,7 @@ const CreatBlog = () => {
                     <FaCaretDown className="m-1" />
                   </div>
                   <ul
-                    className={`mt-2 p-2 rounded-md w-32 text-[#DEE1E2] bg-gray-800 shadow-lg absolute z-10 ${
+                    className={`mt-2 p-2 rounded-md overflow-auto w-32 text-[#DEE1E2] bg-gray-800 shadow-lg absolute z-10 ${
                       isOpen?.innercategory ? "max-h-60" : "hidden"
                     } custom-scrollbar`}
                   >
