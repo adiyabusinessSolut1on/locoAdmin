@@ -33,10 +33,10 @@ const QuizAndTestCategory = () => {
   //calculation of page
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-
+  console.log(data, "pagination>>>>>?>>>?>");
   const currentCategory = data?.slice(indexOfFirstItem, indexOfLastItem);
 
-  console.log(data, "pagination");
+  
 
   const handleClick = (pageNumber: number) => {
     setCurrentPage(pageNumber);
@@ -187,7 +187,7 @@ const QuizAndTestCategory = () => {
               </section>
               {/* min-w-[900px] */}
               <div className=" h-[380px] overflow-y-auto [&::-webkit-scrollbar]:hidden min-w-[600px] bg-gray-50">
-                {currentCategory?.map(
+                {currentCategory?.length>0&&currentCategory?.map(
                   (category: QuizTestCategorys, i: number) => (
                     <section
                       key={i}
