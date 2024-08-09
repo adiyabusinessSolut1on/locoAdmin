@@ -7,6 +7,7 @@ import { FaCaretDown } from "react-icons/fa";
 import { awarenessCategoryType } from "../types";
 import TextEditor from "../components/textEditor";
 import { TiArrowBackOutline } from "react-icons/ti";
+import NewEditor from "../components/editorNew";
 
 interface StateProps {
   category: CategoryType;
@@ -243,26 +244,32 @@ console.log("data descrtiption>>>",updateAwar)
                     isOpen ? "max-h-60" : "hidden"
                   } custom-scrollbar`}
                 >
-                  {data?.data?.length>0?data?.data?.map((category: awarenessCategoryType, i: number) => (
-                    <li
-                      key={i}
-                      className={`p-2 ${
-                        data.length > 1 ? "mb-2" : ""
-                      } text-sm font-medium rounded-md cursor-pointer flex items-center gap-2 hover:bg-blue-200/60 ${
-                        state?.category?.name === category?.name
-                          ? "bg-rose-600"
-                          : ""
-                      }`}
-                      onClick={() =>
-                        handleChange("category", {
-                          name: category?.name,
-                          id: category?._id,
-                        })
-                      }
-                    >
-                      {category?.name}
-                    </li>
-                  )):<li> Category not Found</li>}
+                  {data?.data?.length > 0 ? (
+                    data?.data?.map(
+                      (category: awarenessCategoryType, i: number) => (
+                        <li
+                          key={i}
+                          className={`p-2 ${
+                            data.length > 1 ? "mb-2" : ""
+                          } text-sm font-medium rounded-md cursor-pointer flex items-center gap-2 hover:bg-blue-200/60 ${
+                            state?.category?.name === category?.name
+                              ? "bg-rose-600"
+                              : ""
+                          }`}
+                          onClick={() =>
+                            handleChange("category", {
+                              name: category?.name,
+                              id: category?._id,
+                            })
+                          }
+                        >
+                          {category?.name}
+                        </li>
+                      )
+                    )
+                  ) : (
+                    <li> Category not Found</li>
+                  )}
                 </ul>
               </div>
               {/* <div className="md:col-span-2">
@@ -276,10 +283,14 @@ console.log("data descrtiption>>>",updateAwar)
                 />
               </div> */}
               <div className="md:col-span-2">
-                <TextEditor
+                <NewEditor
                   value={state?.content}
                   OnChangeEditor={(e: string) => handleChange("content", e)}
                 />
+                {/* <TextEditor
+                  value={state?.content}
+                  OnChangeEditor={(e: string) => handleChange("content", e)}
+                /> */}
               </div>
             </div>
 
