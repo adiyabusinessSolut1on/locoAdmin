@@ -5,7 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { FaCaretDown } from "react-icons/fa";
 import { awarenessCategoryType } from "../types";
-import TextEditor from "../components/textEditor";
+// import TextEditor from "../components/textEditor";
 import { TiArrowBackOutline } from "react-icons/ti";
 import NewEditor from "../components/editorNew";
 
