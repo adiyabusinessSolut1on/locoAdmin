@@ -38,7 +38,7 @@ const AwarenessCategory = () => {
   const { data, isLoading, isError } = useGetDataQuery({
     url: "/awareness/category",
   });
-
+console.log("data in awareness>>>",data);
   const [deletPost] = useDeletePostMutation();
 
   const [isModalOpen, setModalOpen] = useState({

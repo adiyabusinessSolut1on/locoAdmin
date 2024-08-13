@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useGetDataQuery, useUpdatePostMutation } from "../api";
 import { toast } from "react-toastify";
 import { TiArrowBackOutline } from "react-icons/ti";
-import TextEditor from "../components/textEditor";
+import JoditTextEditor from "../components/editorNew";
 import { FaCaretDown } from "react-icons/fa";
 import { QuizAndTestCategoryType } from "../types";
 import { useNavigate } from "react-router-dom";
@@ -241,12 +241,13 @@ const CreatQuiz = ({ isQuizForm, setQuizForm }: Props) => {
               /> */}
                 <div className="">
                 <label className="font-medium text-[18px]">Quiz Instruction! :</label>
-                  <TextEditor
-                    value={quizDataForm?.instructions}
-                    OnChangeEditor={(e: string) =>
-                      handleEditorChange("instructions", e)
-                    }
-                  />
+                <JoditTextEditor
+                  value={quizDataForm?.instructions}
+                  OnChangeEditor={(e: string) =>
+                    handleEditorChange("instructions", e)
+                  }
+                />
+                  
                 </div>
               
               </div>

@@ -11,9 +11,8 @@ import uploadVideo from "../firebase_video/video";
 import { TiArrowBackOutline } from "react-icons/ti";
 import { MdOutlineOndemandVideo } from "react-icons/md";
 import { FaCaretDown, FaRegImage } from "react-icons/fa";
+import JoditTextEditor from "../components/editorNew"
 import uploadImage from "../firebase_image/image";
-import TextEditor from "../components/textEditor";
-
 interface stateProps {
   title: string;
   slug: string;
@@ -293,37 +292,15 @@ const UploadVideo = () => {
                 </ul>
               </div>
 
-              {/* <textarea
-              value={companiesData.discription}
-              onChange={handleChange}
-              name="discription"
-              className="w-full h-24 py-4 pl-4 font-medium bg-green-100 border border-transparent border-gray-400 rounded-md outline-none md:col-span-2 focus:border-blue-200 "
-              placeholder="Write Details"
-              required
-            /> */}
+           
               <div className="flex w-full col-span-1 gap-5 md:col-span-2 ">
-                <TextEditor
-                  value={state?.description}
-                  OnChangeEditor={(e: string) => HandleChange("description", e)}
+              <JoditTextEditor
+                 value={state?.description}
+                 OnChangeEditor={(e: string) => HandleChange("description", e)}
                 />
-                {/* <ReactQuill
-                  theme="snow"
-                  value={state?.description}
-                  onChange={(content: string) =>
-                    HandleChange("description", content)
-                  }
-                  className="w-full bg-green-100 border-none rounded-md "
-                /> */}
+             
               </div>
-              {/* <input
-                value={state?.tags}
-                type="text"
-                onChange={handleChange}
-                name="tags"
-                className="w-full h-10 pl-4 font-medium bg-green-100 border border-transparent rounded-md outline-none focus:border-blue-200 "
-                placeholder="Add Tags"
-                required
-              /> */}
+            
 
               {/* add tags */}
               <div className="">

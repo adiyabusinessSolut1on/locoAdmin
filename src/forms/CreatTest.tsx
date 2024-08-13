@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useGetDataQuery, useUpdatePostMutation } from "../api";
 import { toast, ToastContainer } from "react-toastify";
 import { TiArrowBackOutline } from "react-icons/ti";
-import TextEditor from "../components/textEditor";
+import JoditTextEditor from "../components/editorNew";
 import { QuizAndTestCategoryType } from "../types";
 import { FaCaretDown } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
@@ -242,12 +242,13 @@ const CreatTest = ({ isTestForm, setTestForm }: Props) => {
 
                 <div className="">
                 <label className="font-medium text-[18px]">Test Instructions! :</label>
-                  <TextEditor
-                    value={testDataForm?.instructions}
-                    OnChangeEditor={(e: string) =>
-                      handleEditorChange("instructions", e)
-                    }
-                  />
+                <JoditTextEditor
+                     value={testDataForm?.instructions}
+                     OnChangeEditor={(e: string) =>
+                       handleEditorChange("instructions", e)
+                     }
+                />
+                 
                 </div>
                
               </div>

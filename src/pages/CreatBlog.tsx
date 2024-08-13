@@ -6,7 +6,7 @@ import { BlogCategory } from "../types";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import uploadImage from "../firebase_image/image";
-import TextEditor from "../components/textEditor";
+import JoditTextEditor from "../components/editorNew"
 
 import { FaBloggerB, FaCaretDown } from "react-icons/fa";
 
@@ -573,10 +573,11 @@ const CreatBlog = () => {
               )}
 
               <div className="col-span-1 md:col-span-2">
-                <TextEditor
-                  value={state?.content}
-                  OnChangeEditor={(e: string) => handleDropChange("content", e)}
+              <JoditTextEditor
+                 value={state?.content}
+                 OnChangeEditor={(e: string) => handleDropChange("content", e)}
                 />
+               
               </div>
             </div>
 

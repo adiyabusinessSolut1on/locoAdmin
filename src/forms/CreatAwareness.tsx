@@ -7,7 +7,7 @@ import { FaCaretDown } from "react-icons/fa";
 import { awarenessCategoryType } from "../types";
 // import TextEditor from "../components/textEditor";
 import { TiArrowBackOutline } from "react-icons/ti";
-import NewEditor from "../components/editorNew";
+import JoditTextEditor from "../components/editorNew";
 
 interface StateProps {
   category: CategoryType;
@@ -283,14 +283,11 @@ console.log("data descrtiption>>>",updateAwar)
                 />
               </div> */}
               <div className="md:col-span-2">
-                <NewEditor
+                <JoditTextEditor
                   value={state?.content}
                   OnChangeEditor={(e: string) => handleChange("content", e)}
                 />
-                {/* <TextEditor
-                  value={state?.content}
-                  OnChangeEditor={(e: string) => handleChange("content", e)}
-                /> */}
+               
               </div>
             </div>
 
