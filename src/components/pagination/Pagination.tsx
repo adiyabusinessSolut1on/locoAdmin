@@ -16,8 +16,6 @@ const Pagination = <T,>({
 }: PaginationProps<T>) => {
   const totalPages = Math.ceil(apiData?.length / itemsPerPage);
 
-  console.log(apiData?.length, itemsPerPage, totalPages);
-
   const firstPage = currentPage === 1 ? 1 : currentPage - 1;
   const secondPage = currentPage === 1 ? 2 : currentPage;
   const thirdPage = currentPage === 1 ? 3 : currentPage + 1;
