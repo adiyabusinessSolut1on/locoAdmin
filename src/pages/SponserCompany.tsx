@@ -258,9 +258,13 @@ const SponserCompany = () => {
                       >
                         {company?.video ? "View Video" : "--"}
                       </span>
-                      <span className="flex justify-center text-sm font-semibold ">
-                        {company?.description || "--"}
-                      </span>
+                     
+                      <div
+                            className={`line-clamp-5 `}
+                            dangerouslySetInnerHTML={{
+                              __html: company?.description,
+                            }}
+                          />
                       <span
                         onClick={() =>
                           company?.link && handleLinkClick(company.link)

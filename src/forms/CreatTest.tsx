@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useGetDataQuery, useUpdatePostMutation } from "../api";
 import { toast, ToastContainer } from "react-toastify";
 import { TiArrowBackOutline } from "react-icons/ti";
-import JoditTextEditor from "../components/editorNew";
 import { QuizAndTestCategoryType } from "../types";
 import { FaCaretDown } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
@@ -114,12 +113,12 @@ const CreatTest = ({ isTestForm, setTestForm }: Props) => {
     }
   };
 
-  const handleEditorChange = (name: string, value: string) => {
-    settestDataForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  // const handleEditorChange = (name: string, value: string) => {
+  //   settestDataForm((prev) => ({
+  //     ...prev,
+  //     [name]: value,
+  //   }));
+  // };
 
   const closeHandler = () => {
     if (isTestForm.creat) {
@@ -228,19 +227,9 @@ const CreatTest = ({ isTestForm, setTestForm }: Props) => {
                     ):"No Category Found"}
                   </ul>
                 </div>
-                {/* <input
-                value={testDataForm?.instructions}
-                type="text"
-                onChange={handleChange}
-                name="instructions"
-                className={
-                  " font-medium outline-none w-full  border h-10 border-gray-400 rounded-md pl-4 focus-within:border-blue-400  "
-                }
-                placeholder={"Add Instruction here"}
-                required
-              /> */}
 
-                <div className="">
+
+                {/* <div className="">
                 <label className="font-medium text-[18px]">Test Instructions! :</label>
                 <JoditTextEditor
                      value={testDataForm?.instructions}
@@ -249,7 +238,7 @@ const CreatTest = ({ isTestForm, setTestForm }: Props) => {
                      }
                 />
                  
-                </div>
+                </div> */}
                
               </div>
 

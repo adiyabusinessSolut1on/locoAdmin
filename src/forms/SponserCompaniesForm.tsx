@@ -10,6 +10,7 @@ import uploadImage from "../firebase_image/image";
 import uploadVideo from "../firebase_video/video";
 import ReactPlayer from "react-player";
 import { MdOutlineOndemandVideo } from "react-icons/md";
+import NewEditor from "../components/editorNew";
 
 interface CompaniesType {
   name: string;
@@ -362,15 +363,16 @@ const SponserCompaniesForm = () => {
                 placeholder="Company Phone No."
                 required
               /> */}
-
-              <textarea
+              <div className="w-full outline-none md:col-span-2 ">
+              <NewEditor value={companiesData?.discription} OnChangeEditor={(e:string)=>setCompaniesData((prev)=>({...prev,discription:e}))} />
+              </div>{/* <textarea
                 value={companiesData.discription}
                 onChange={handleChange}
                 name="discription"
                 className="w-full h-24 py-4 pl-4 font-medium bg-green-100 border border-transparent border-gray-400 rounded-md outline-none md:col-span-2 focus:border-blue-200 "
                 placeholder="Write Details"
                 required
-              />
+              /> */}
               <div className="w-full col-span-1 md:col-span-2">
                 <div className="flex w-full gap-2 mb-2">
                   <label htmlFor="" className="mb-1 font-medium text-gray-500">
