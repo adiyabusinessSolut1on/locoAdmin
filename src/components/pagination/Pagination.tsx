@@ -16,6 +16,8 @@ const Pagination = <T,>({
 }: PaginationProps<T>) => {
   const totalPages = Math.ceil(apiData?.length / itemsPerPage);
 
+  console.log(apiData?.length, itemsPerPage, totalPages);
+
   const firstPage = currentPage === 1 ? 1 : currentPage - 1;
   const secondPage = currentPage === 1 ? 2 : currentPage;
   const thirdPage = currentPage === 1 ? 3 : currentPage + 1;
@@ -40,7 +42,7 @@ const Pagination = <T,>({
           </button>
         )}
 
-        {totalPages > 1 && (
+        {totalPages >= 1 && (
           <>
             <button
               className={`mx-1 px-3 py-1 rounded ${
@@ -52,7 +54,7 @@ const Pagination = <T,>({
             >
               {firstPage}
             </button>
-            {totalPages > 2 && (
+            {totalPages >= 2 && (
               <button
                 className={`mx-1 px-3 py-1 rounded ${
                   currentPage === secondPage
@@ -64,7 +66,7 @@ const Pagination = <T,>({
                 {secondPage}
               </button>
             )}
-            {totalPages > 3 && thirdPage <= totalPages && (
+            {totalPages >= 3 && thirdPage <= totalPages && (
               <button
                 className={`mx-1 px-3 py-1 rounded ${
                   currentPage === thirdPage
