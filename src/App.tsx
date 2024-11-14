@@ -39,6 +39,7 @@ import QuizAndTestCategory from "./pages/QuizAndTestCategory";
 import CreatDocuments from "./pages/CreatDocuments";
 
 import Dashboard from "./pages/Dashboard";
+import ReportUserList from "./pages/ReportUserList";
 
 function App() {
   const token = localStorage.getItem("user");
@@ -190,6 +191,10 @@ function App() {
             {
               path: "qt-category",
               element: <QuizAndTestCategory />,
+            },
+            {
+              path: "user-report",
+              element: <ReportUserList />,
             },
           ],
         },

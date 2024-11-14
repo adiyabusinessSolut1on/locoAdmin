@@ -97,6 +97,11 @@ const sidebarData: SidebarItem[] = [
     path: "/qt-category",
     icon: CategoryICONSVG,
   },
+  {
+    name: "Report",
+    path: "/user-report",
+    icon: CategoryICONSVG,
+  },
 
   // {
   //   name: "Railway History",
