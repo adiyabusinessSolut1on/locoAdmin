@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDeletePostMutation, useGetDataQuery } from "../api";
 import DeleteICONSVG from "../assets/SVG/deleteICON";
 import EditICONSVG from "../assets/SVG/editICON";
@@ -11,8 +11,8 @@ import ConfirmDeleteModal from "../components/modal/DeleteModal";
 
 import { useState } from "react";
 import Pagination from "../components/pagination/Pagination";
-import CreatUser from "../forms/CreatUser";
 import { IoIosSend } from "react-icons/io";
+import CreatUser from "../forms/CreatUser";
 
 const UserList = () => {
   const navigate = useNavigate();
@@ -38,7 +38,6 @@ const UserList = () => {
     condition: false,
     id: "",
   });
-
   const [userForm, setUserForm] = useState({
     isCreat: false,
   });
@@ -98,14 +97,14 @@ const UserList = () => {
   return (
     <>
       {isLoading && <Loader />}
-      <ToastContainer />
+      {/* <ToastContainer /> */}
+
       {isModalOpen.condition && (
         <ConfirmDeleteModal
           onClose={handleCloseModal}
           onConfirm={handleConfirmDelete}
         />
       )}
-
       {userForm.isCreat && <CreatUser setUserForm={setUserForm} />}
 
       <section
@@ -235,7 +234,7 @@ const UserList = () => {
             </div>
           </section>
 
-          <Pagination<UserTypes>
+          <Pagination
             currentPage={currentPage}
             apiData={data}
             itemsPerPage={itemsPerPage}

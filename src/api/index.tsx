@@ -1,7 +1,4 @@
-import {
-  createApi,
-  fetchBaseQuery,
-} from "@reduxjs/toolkit/query/react";
+import { createApi, fetchBaseQuery, } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../store/store";
 
 export interface NewPost {
@@ -18,9 +15,7 @@ export const adminAPIS = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: import.meta.env.VITE_API_BASE_URL,
     prepareHeaders: (headers, { getState }) => {
-      const token =
-        (getState() as RootState).authToken.userToken ||
-        localStorage.getItem("user");
+      const token = (getState() as RootState).authToken.userToken || localStorage.getItem("user");
       console.log("from post", token);
       if (token) {
         headers.set("authorization", `${token}`);
@@ -99,13 +94,7 @@ export const {
   useDeletePostMutation,
 } = adminAPIS;
 
-export type UseCreatePostMutationType = ReturnType<
-  typeof useCreatePostMutation
->;
-export type useUpdatePostMutationType = ReturnType<
-  typeof useUpdatePostMutation
->;
+export type UseCreatePostMutationType = ReturnType<typeof useCreatePostMutation>;
+export type useUpdatePostMutationType = ReturnType<typeof useUpdatePostMutation>;
 export type useGetDataQueryType = ReturnType<typeof useGetDataQuery>;
-export type useDeletePostMutationType = ReturnType<
-  typeof useDeletePostMutation
->;
+export type useDeletePostMutationType = ReturnType<typeof useDeletePostMutation>;

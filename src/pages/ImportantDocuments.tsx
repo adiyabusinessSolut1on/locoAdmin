@@ -6,7 +6,7 @@ import DeleteICONSVG from "../assets/SVG/deleteICON";
 import EditICONSVG from "../assets/SVG/editICON";
 import { useState } from "react";
 import ConfirmDeleteModal from "../components/modal/DeleteModal";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ImpLinkDocs } from "../types";
 import Pagination from "../components/pagination/Pagination";
@@ -14,7 +14,7 @@ import { IoIosSend } from "react-icons/io";
 
 const ImportantDocuments = () => {
   const navigate = useNavigate();
-  const { data, isLoading, isError, error } = useGetDataQuery({
+  const { data, isLoading, isError } = useGetDataQuery({
     url: "/important_link",
   });
 
@@ -26,17 +26,7 @@ const ImportantDocuments = () => {
 
   const currentDocuments = Array.isArray(data)
     ? data.slice(indexOfFirstItem, indexOfLastItem)
-    : data?.mesaage;
-
-  console.log(
-    data,
-    indexOfFirstItem,
-    indexOfLastItem,
-    isError,
-    error,
-    typeof currentDocuments === "string",
-    currentDocuments
-  );
+    : data.mesaage;
   const handleClick = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
@@ -90,7 +80,6 @@ const ImportantDocuments = () => {
   const listHeadingUsers = ["Title", "Downloadable", "Date", "Setting"];
   return (
     <>
-      <ToastContainer />
       {isLoading && <Loader />}
 
       {isModalOpen.condition && (
@@ -166,7 +155,7 @@ const ImportantDocuments = () => {
                 </p>
               ) : typeof currentDocuments === "string" ? (
                 <p className="flex items-center justify-center h-full font-bold text-gray-600">
-                  {currentDocuments} "Add Document"
+                  {currentDocuments} "Add More Document"
                 </p>
               ) : (
                 data?.length > 0 &&
@@ -231,7 +220,7 @@ const ImportantDocuments = () => {
             </div>
           </section>
 
-          <Pagination<ImpLinkDocs>
+          <Pagination
             currentPage={currentPage}
             apiData={data}
             itemsPerPage={itemsPerPage}

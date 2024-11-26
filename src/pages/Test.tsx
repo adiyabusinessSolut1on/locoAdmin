@@ -20,6 +20,9 @@ const Test = () => {
     url: "/test",
   });
 
+  // console.log("data: ", data);
+
+
   const [deletPost] = useDeletePostMutation();
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -45,8 +48,7 @@ const Test = () => {
     isCreat: false,
     data: {
       _id: "",
-      name: "",
-      image:[],
+      name: [],
       options: [],
       predicted_result: "",
       actualresult: "",
@@ -60,8 +62,6 @@ const Test = () => {
     condition: false,
     id: "",
   });
-
-  const [isClapm, setClamp] = useState(false);
 
   const handleCloseModal = () => {
     setModalOpen({
@@ -142,8 +142,7 @@ const Test = () => {
       isCreat: false,
       data: {
         _id: "",
-        name: "",
-        image:[],
+        name: [],
         options: [],
         predicted_result: "",
         actualresult: "",
@@ -166,7 +165,7 @@ const Test = () => {
           isQuestionForm={isQuestionForm}
           //   setQuestionForm={setQuestionForm}
           close={closeHandler}
-          //   singleQuestionData={updateData}
+        //   singleQuestionData={updateData}
         />
       )}
 
@@ -196,9 +195,9 @@ const Test = () => {
                 className={` p-2 text-sm md:text-base  sm:px-4 py-1 border-[2px] border-transparent 
                              bg-slate-50 focus:border-gray-100
                           shadow-inner rounded-[0.26rem] outline-none `}
-                // value={searchQuery}
-                // onChange={(e) => setSearchQuery(e.target.value)}
-                // onFocus={() => setCurrentPage(1)}
+              // value={searchQuery}
+              // onChange={(e) => setSearchQuery(e.target.value)}
+              // onFocus={() => setCurrentPage(1)}
               />
             </div>
             <div className="relative flex items-center self-end ">
@@ -223,9 +222,8 @@ const Test = () => {
               {listHeadingTest.map((heading, index) => (
                 <p
                   key={index}
-                  className={`   md:text-lg ${
-                    index !== 0 ? "justify-self-center" : "ml-20"
-                  }`}
+                  className={`   md:text-lg ${index !== 0 ? "justify-self-center" : "ml-20"
+                    }`}
                 >
                   {heading.charAt(0).toUpperCase() + heading.slice(1)}
                 </p>
@@ -256,7 +254,7 @@ const Test = () => {
                     >
                       {test?.category ? test?.category : "---"}
                     </span>
-                    {/* <span
+                    <span
                       className={`  font-semibold text-center  rounded-full  `}
                     >
                       {test?.instructions ? (
@@ -268,32 +266,7 @@ const Test = () => {
                       ) : (
                         "--"
                       )}
-                    </span> */}
-                    <div
-                      className={`  font-semibold text-center  rounded-full  `}
-                    >
-                      {test?.instructions ? (
-                        // hover:line-clamp-none
-                        <>
-                          <div
-                            className={`line-clamp-3 ${
-                              isClapm && "line-clamp-none"
-                            }`}
-                            dangerouslySetInnerHTML={{
-                              __html: test?.instructions,
-                            }}
-                          />
-                          <button
-                            className="font-semibold text-gray-500"
-                            onClick={() => setClamp((prev) => !prev)}
-                          >
-                            {isClapm ? "less" : "more"}
-                          </button>
-                        </>
-                      ) : (
-                        "--"
-                      )}
-                    </div>
+                    </span>
 
                     <div className="grid items-center justify-center">
                       <button
@@ -336,7 +309,7 @@ const Test = () => {
             </div>
           </section>
 
-          <Pagination<Testtypes>
+          <Pagination
             currentPage={currentPage}
             apiData={data}
             itemsPerPage={itemsPerPage}

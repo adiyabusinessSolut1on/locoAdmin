@@ -10,27 +10,25 @@ export default {
         montserrat: ["Montserrat", "sans-serif"],
       },
       gridTemplateColumns: {
+        // custom: "40px repeat(6, 1fr)",
         customAwarness: "40px 1fr 1fr 1fr 0.4fr 0.6fr",
-        customQuiz: "40px 1fr 1fr 1fr 1fr  0.6fr 0.6fr",
+        customQuiz: "40px 1fr 1fr 1fr 1fr 0.6fr 0.6fr",
         customQuizQuestion: "40px 1fr 1.6fr 1.6fr  0.6fr",
         customImportand: "40px 0.8fr 1fr 1fr 0.6fr",
         customUsers: "40px 0.4fr 1fr 1.2fr 1fr 0.6fr",
-
+        // customCategoryDishes:
+        //   "40px 1fr 0.8fr 1fr 1.4fr 2fr 180px 0.8fr 0.8fr  ",
         customBlog: "40px 0.4fr 1fr 1fr 0.6fr",
+        customSetting: "40px 1fr 0.4fr 0.4fr 1.5fr 1.5fr 0.8fr 0.6fr",
         customVideo: "40px  1fr 1fr 0.4fr 1fr  1fr 0.8fr 0.6fr ",
         customProduct: "40px  1fr 1fr 2fr 1fr 1fr 0.8fr 0.6fr",
-
+        // // customOrderItem: "40px  repeat(3, fr)",
         customCompanies:
           "40px 1.4fr 1fr 0.6fr 1fr 2fr 1fr 1fr 1fr 0.8fr 0.8fr ",
-        customeCategory: "40px 2fr 1fr 1.2fr",
-        customDaily: "40px 1fr  4fr  0.6fr",
-        customDetails: "40px 1fr 1fr 1fr 1fr",
-        customAllPost: "40px 1fr 1fr",
-        customPost: "40px 1fr 1fr 1fr 1fr",
-        customBlogDahsbord: "40px 1fr 1fr 1fr",
+        customeCategory: "40px 3fr  0.8fr",
+        customDaily: "40px 4fr 1.5fr  0.6fr",
       },
     },
   },
-
-  plugins: [require("@tailwindcss/line-clamp")],
+  plugins: [],
 };

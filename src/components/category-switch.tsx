@@ -16,9 +16,10 @@ import uploadImage from "../firebase_image/image";
 interface Props {
   value: string;
 }
-
-
-
+interface Image {
+  thumnail: string;
+  imageSrc: string;
+}
 const Switches = ({ value }: Props) => {
   const route = React.useMemo(() => {
     switch (value) {
@@ -43,34 +44,30 @@ const Tab1: React.FC = () => {
   const { data, refetch, isLoading } = useGetDataQuery({
     url: "/get-blog-category",
   });
-
-  console.log(data, "main category");
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [editing, setEditing] = useState({
-editname:"",
-editimage:""
-  });
-  const [createData, setCreateData] = useState({
-    name:"",
-    image:""
+  const [editingName, setEditingName] = useState<string>("");
+  const [createData, setCreateData] = useState<string>("");
+  const [categoryImage, setCategoryImage] = useState<Image>({
+    thumnail: "",
+    imageSrc: "",
   });
 
   const handleEditClick = (id: string, name: string, image: string) => {
-   
     setEditingId(id);
-    setEditing({
-      editname:name,
-      editimage:image
-    })
+    setEditingName(name);
+    setCategoryImage({
+      thumnail: image,
+      imageSrc: image,
+    });
   };
- 
 
+  const [progressStatus, setProgressStatus] = useState<number | null>(null);
 
   const handleSaveClick = async () => {
     try {
       const response = await updatePost({
         path: `/main-category/${editingId}`,
-        data: { name: editing?.editname, image: editing?.editimage },
+        data: { name: editingName },
       });
       if (response?.data?.success) {
         toast.success(response?.data?.message, {
@@ -78,10 +75,7 @@ editimage:""
         });
         refetch();
         setEditingId(null);
-        setEditing({
-          editname:"",
-          editimage:""
-        });
+        setEditingName("");
       } else {
         toast.error("Failed to Update main category");
       }
@@ -92,17 +86,10 @@ editimage:""
 
   const handleCancelClick = () => {
     setEditingId(null);
-    setEditing({
-      editname:"",
-      editimage:""
-    });
+    setEditingName("");
   };
 
-  const [progressStatus, setProgressStatus] = useState<number | null>(null);
-  const [progressStatus1, setProgressStatus1] = useState<number | null>(null);
- 
-  const handleImageCreate = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("handle Image in Create")
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target?.files?.[0];
     if (selectedFile) {
       try {
@@ -111,9 +98,10 @@ editimage:""
           selectedFile,
           setProgressStatus
         );
-        setCreateData({
-          ...createData,
-          image: imageUrl,
+        setCategoryImage({
+          ...categoryImage,
+          thumnail: imageUrl,
+          imageSrc: selectedFile.name,
         });
       } catch (error) {
         console.error("Error uploading image:", error);
@@ -121,30 +109,12 @@ editimage:""
       }
     }
   };
-   const handleImageEdit = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("handle Image in Edit")
-    const selectedFile = e.target?.files?.[0];
-    if (selectedFile) {
-      try {
-        const imageUrl = await uploadImage(
-          selectedFile.name,
-          selectedFile,
-          setProgressStatus1
-        );
-        setEditing({
-          ...editing,
-          editimage: imageUrl,
-        });
-      } catch (error) {
-        console.error("Error uploading image:", error);
-        toast.error("Error uploading image");
-      }
-    }
-  };
+
   const handleClickCreate = async () => {
     try {
       const response = await createPost({
-        data: { name: createData?.name, image: createData.image },
+        data: { name: createData },
+        // data: { name: createData, image: categoryImage },
         path: "main-category",
       });
 
@@ -153,10 +123,7 @@ editimage:""
           autoClose: 5000,
         });
         refetch();
-        setCreateData({
-          name:"",
-          image:""
-        });
+        setCreateData("");
       } else {
         toast.error("Failed to create main category");
       }
@@ -188,33 +155,32 @@ editimage:""
   return (
     <React.Fragment>
       <ToastContainer />
-      <div className="md:flex flex-row w-full h-[400px] gap-2">
+      <div className="flex flex-row w-full gap-2">
         {isLoading && <Loader />}
-        <div className="flex flex-col w-full gap-5 p-10 border-b-2 border-gray-200 md:border-b-0 md:border-r-2">
-          <h3 className="text-[18px] font-[600] text-center">
+        <div className="flex flex-col w-full gap-5 p-10 border-r-2 border-gray-200 ">
+          <h3 className="text-[18px] font-bold text-gray-600">
             Create Main Category
           </h3>
+
           <div className="grid gap-3">
             <label className="text-gray-600 font-bold text-[15px]">
               Main Category
             </label>
             <input
-              value={createData?.name}
+              value={createData}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setCreateData((prev)=>({...prev,name:e.target.value}))
+                setCreateData(e.target.value)
               }
               // className="border border-[#6e6d6d5b] outline-none rounded-[7px] px-2 py-1"
               className="w-full h-8 pl-2 font-medium text-gray-700 bg-blue-100 border border-transparent rounded-md outline-none placeholder:pl-2 focus:border-blue-200 "
               type="text"
               placeholder="Enter Title"
             />
-            <div className="flex flex-row gap-4">
-              {createData?.image&&<img src={createData?.image} alt="main Image" className="h-20 w-20"/>}
             <div className="relative w-full h-full">
               <input
                 type="file"
                 name="image"
-                onChange={handleImageCreate}
+                onChange={handleImageChange}
                 className="hidden"
                 id="file-upload"
               />
@@ -226,10 +192,10 @@ editimage:""
               >
                 <p
                   className={`${
-                    createData.image ? "text-gray-700" : "text-gray-400"
+                    categoryImage.imageSrc ? "text-gray-700" : "text-gray-400"
                   }`}
                 >
-                  { "Choose a file"}
+                  {categoryImage.imageSrc || "Choose a file"}
                 </p>
                 <span className="text-gray-400 text-[15px] absolute top-0 h-full flex items-center left-0 rounded-tl-md rounded-bl-md px-3 font-medium bg-blue-200">
                   Browse
@@ -246,7 +212,6 @@ editimage:""
                   </div>
                 </>
               )}
-            </div>
             </div>
           </div>
 
@@ -275,51 +240,49 @@ editimage:""
                     <div className="grid w-full gap-2">
                       <input
                         type="text"
-                        value={editing?.editname}
-                        onChange={(e) => setEditing((prev)=>({...prev, editname:e.target.value}))}
+                        value={editingName}
+                        onChange={(e) => setEditingName(e.target.value)}
+                        // className="flex-1 px-2 py-1 mr-2 border rounded"
                         className="w-full h-8 pl-2 font-medium text-gray-700 bg-blue-100 border border-transparent rounded-md outline-none focus:border-blue-200 "
                       />
-                      <div className="flex flex-row gap-3">
-                        {editing?.editimage&&<img src={editing?.editimage} className="h-10 w-10" alt="imageg"/>}
                       <div className="relative w-full h-full">
                         <input
                           type="file"
                           name="image"
-                          onChange={handleImageEdit}
+                          onChange={handleImageChange}
                           className="hidden"
-                          id="Image-upload"
+                          id="file-upload"
                         />
                         <label
-                          htmlFor="Image-upload"
+                          htmlFor="file-upload"
                           className={`px-4 py-1 pl-24 relative ${
-                            progressStatus1 ? "pb-1" : ""
+                            progressStatus ? "pb-1" : ""
                           } w-full text-base bg-blue-100 focus:border-blue-200 border-transparent border rounded-md text-gray-400 cursor-pointer flex items-center justify-between`}
                         >
                           <p
                             className={`${
-                              editing?.editimage
+                              categoryImage.imageSrc
                                 ? "text-gray-700"
                                 : "text-gray-400"
                             }`}
                           >
-                            { "Choose a file"}
+                            {categoryImage.imageSrc || "Choose a file"}
                           </p>
                           <span className="text-gray-400 text-[15px] absolute top-0 h-full flex items-center left-0 rounded-tl-md rounded-bl-md px-3 font-medium bg-blue-200">
                             Browse
                           </span>
                         </label>
-                        {progressStatus1 !== null && progressStatus1 !== 0 && (
+                        {progressStatus !== null && progressStatus !== 0 && (
                           <>
                             <div className="absolute inset-0 z-10 flex items-end">
                               <div
                                 className="h-1 bg-blue-400 rounded-md mx-[1px] mb-[1px]"
-                                style={{ width: `${progressStatus1}%` }}
+                                style={{ width: `${progressStatus}%` }}
                                 // style={{ width: `${100}%` }}
                               ></div>
                             </div>
                           </>
                         )}
-                      </div>
                       </div>
                       <div className="flex justify-end">
                         <button
@@ -338,25 +301,9 @@ editimage:""
                     </div>
                   ) : (
                     <>
-                      <div className="flex items-center gap-4">
-                        {/* <span className="text-lg font-medium text-gray-600"> */}
-
-                        {item.image ? (
-                          <img
-                            src={item.image}
-                            alt=""
-                            className="object-contain w-10 h-10"
-                          />
-                        ) : (
-                          <span className="text-xs font-bold text-gray-400 rounded-md bg-gray-50">
-                            No Icon
-                          </span>
-                        )}
-                        {/* </span> */}
-                        <span className="text-lg font-medium text-gray-600">
-                          {item.name}
-                        </span>
-                      </div>
+                      <span className="text-lg font-medium text-gray-600">
+                        {item.name}
+                      </span>
                       <div className="flex flex-row gap-5">
                         <button onClick={() => handleShowAlert(item?._id)}>
                           <DeleteICONSVG
@@ -499,10 +446,10 @@ const Tab2: React.FC = () => {
     }
   };
   return (
-    <div className="md:flex flex-row w-full h-[400px] gap-2">
+    <div className="flex flex-row w-full gap-2 ">
       {isLoading && <Loader />}
       <ToastContainer />
-      <div className="flex flex-col w-full gap-5 p-10 border-b-2 border-gray-200 md:border-b-0 md:border-r-2">
+      <div className="flex flex-col w-full gap-5 p-10 border-r-2 border-gray-200">
         <h3 className=" text-[18px] font-bold text-gray-600">
           Create Sub-Category
         </h3>
@@ -582,6 +529,22 @@ const Tab2: React.FC = () => {
                         d="M5 15l7-7 7 7"
                       />
                     </svg>
+                    {/* // ) : (
+                    //   <svg
+                    //     xmlns="http://www.w3.org/2000/svg"
+                    //     className="w-6 h-6"
+                    //     fill="none"
+                    //     viewBox="0 0 24 24"
+                    //     stroke="currentColor"
+                    //   >
+                    //     <path
+                    //       strokeLinecap="round"
+                    //       strokeLinejoin="round"
+                    //       strokeWidth="2"
+                    //       d="M19 9l-7 7-7-7"
+                    //     />
+                    //   </svg>
+                    // )} */}
                   </button>
                 )}
               </div>
@@ -815,10 +778,10 @@ const Tab3: React.FC = () => {
   };
 
   return (
-    <div className="md:flex flex-row w-full h-[400px] gap-2">
+    <div className="flex flex-row w-full gap-2">
       {isLoading && <Loader />}
       <ToastContainer />
-      <div className="flex flex-col w-full gap-5 p-10 border-b-2 border-gray-200 md:border-b-0 md:border-r-2">
+      <div className="flex flex-col w-full gap-5 p-10 border-r-2 border-gray-200">
         <h3 className="text-[18px]  font-bold text-gray-600">
           Create Sub Sub-Category
         </h3>
@@ -892,7 +855,7 @@ const Tab3: React.FC = () => {
           </button>
         </div>
       </div>
-      <div className="p-4 max-h-[400px] overflow-auto w-full">
+      <div className="p-4 h-[400px] overflow-auto w-full">
         {data?.data?.map((category: BlogCategory, index: number) => (
           <div key={index} className="mb-4 bg-[#f8f8f8] p-1">
             <div className="flex items-center justify-between">
@@ -1252,10 +1215,10 @@ const Tab4: React.FC = () => {
   };
 
   return (
-    <div className="md:flex flex-row md:h-[460px] w-full gap-2">
+    <div className="flex flex-row w-full gap-2">
       {isLoading && <Loader />}
       <ToastContainer />
-      <div className="flex flex-col w-full gap-5 p-10 border-b-2 border-gray-200 md:border-b-0 md:border-r-2">
+      <div className="flex flex-col w-full gap-5 p-10 border-r-2 border-gray-200">
         <h3 className=" text-[18px] font-bold text-gray-600">
           Create Inner Category
         </h3>
@@ -1350,7 +1313,7 @@ const Tab4: React.FC = () => {
           </button>
         </div>
       </div>
-      <div className=" max-h-[460px] overflow-auto  w-full  p-3 ">
+      <div className=" h-[400px] overflow-auto  w-full  p-3 ">
         {data?.data?.map((category: BlogCategory, index: number) => (
           <div key={index} className="mb-4 bg-[#f8f8f8] rounded-[7px] p-2">
             <div className="flex items-center justify-between">
@@ -1373,9 +1336,30 @@ const Tab4: React.FC = () => {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth="2"
+                      // d={`${
+                      //   showSubCategories[category?._id]
+                      //     ? "M5 15l7-7 7 7"
+                      //     : "M19 9l-7 7-7-7"
+                      // }`}
                       d={`M5 15l7-7 7 7`}
                     />
                   </svg>
+                  {/* ) : ( */}
+                  {/* <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="w-6 h-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg> */}
+                  {/* )} */}
                 </button>
               )}
             </div>
@@ -1406,6 +1390,22 @@ const Tab4: React.FC = () => {
                               d="M5 15l7-7 7 7"
                             />
                           </svg>
+                          {/* // ) : (
+                          //   <svg
+                          //     xmlns="http://www.w3.org/2000/svg"
+                          //     className="w-6 h-6"
+                          //     fill="none"
+                          //     viewBox="0 0 24 24"
+                          //     stroke="currentColor"
+                          //   >
+                          //     <path
+                          //       strokeLinecap="round"
+                          //       strokeLinejoin="round"
+                          //       strokeWidth="2"
+                          //       d="M19 9l-7 7-7-7"
+                          //     />
+                          //   </svg>
+                          // )} */}
                         </button>
                       )}
                     </div>
@@ -1442,6 +1442,22 @@ const Tab4: React.FC = () => {
                                       d="M5 15l7-7 7 7"
                                     />
                                   </svg>
+                                  {/* ) : (
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      className="w-6 h-6"
+                                      fill="none"
+                                      viewBox="0 0 24 24"
+                                      stroke="currentColor"
+                                    >
+                                      <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
+                                        d="M19 9l-7 7-7-7"
+                                      />
+                                    </svg>
+                                  )} */}
                                 </button>
                               )}
                             </div>

@@ -34,6 +34,7 @@ const Quiz = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
+
   //calculation of page
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -61,8 +62,6 @@ const Quiz = () => {
     },
     quizId: "",
   });
-
-  const [isClapm, setClamp] = useState(false);
 
   const [isModalOpen, setModalOpen] = useState({
     condition: false,
@@ -253,33 +252,19 @@ const Quiz = () => {
                     >
                       {quiz?.category ? quiz?.category : "---"}
                     </span>
-                    {/* <div className="flex"> */}
-                    <div
+                    <span
                       className={`  font-semibold text-center  rounded-full  `}
                     >
                       {quiz?.instructions ? (
-                        // hover:line-clamp-none
-                        <>
-                          <div
-                            className={`line-clamp-3 ${
-                              isClapm && "line-clamp-none"
-                            }`}
-                            dangerouslySetInnerHTML={{
-                              __html: quiz?.instructions,
-                            }}
-                          />
-                          <button
-                            className="font-semibold text-gray-500"
-                            onClick={() => setClamp((prev) => !prev)}
-                          >
-                            {isClapm ? "less" : "more"}
-                          </button>
-                        </>
+                        <div
+                          dangerouslySetInnerHTML={{
+                            __html: quiz?.instructions,
+                          }}
+                        />
                       ) : (
                         "--"
                       )}
-                    </div>
-                    {/* </div> */}
+                    </span>
 
                     <div className="grid items-center justify-center">
                       <button
@@ -322,7 +307,7 @@ const Quiz = () => {
             </div>
           </section>
 
-          <Pagination<quiztypes>
+          <Pagination
             currentPage={currentPage}
             apiData={data}
             itemsPerPage={itemsPerPage}

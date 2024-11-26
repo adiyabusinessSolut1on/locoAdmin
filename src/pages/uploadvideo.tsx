@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useNavigate, useParams } from "react-router-dom";
 import ReactPlayer from "react-player";
@@ -11,8 +12,8 @@ import uploadVideo from "../firebase_video/video";
 import { TiArrowBackOutline } from "react-icons/ti";
 import { MdOutlineOndemandVideo } from "react-icons/md";
 import { FaCaretDown, FaRegImage } from "react-icons/fa";
-import JoditTextEditor from "../components/editorNew"
 import uploadImage from "../firebase_image/image";
+
 interface stateProps {
   title: string;
   slug: string;
@@ -22,6 +23,7 @@ interface stateProps {
   description: string;
   thumnail: string;
   imageTitle: string;
+  isYoutube: Boolean;
 }
 const UploadVideo = () => {
   const { id } = useParams();
@@ -38,6 +40,9 @@ const UploadVideo = () => {
     url: "/video/get-category",
   });
 
+  // console.log("data: ", data);
+
+
   const [state, setState] = useState<stateProps>({
     title: "",
     slug: "",
@@ -47,19 +52,17 @@ const UploadVideo = () => {
     description: "",
     thumnail: "",
     imageTitle: "",
+    isYoutube: false,
   });
+
   const navigate = useNavigate();
+
   const makeSlug = (value: string) => {
     return value.toLowerCase().replace(/\s+/g, "-");
   };
 
   const isUpdate = Object.keys(data || [])?.length !== 0;
-  console.log(
-    data,
-    state,
-    "update value",
-    isUpdate && !isError ? "PUT" : "POST"
-  );
+  // console.log(data, state, "update value", isUpdate && !isError ? "PUT" : "POST");
 
   useEffect(() => {
     if (isUpdate && !isError) {
@@ -71,9 +74,10 @@ const UploadVideo = () => {
         tags: data?.tags,
         description: data?.dectription,
         thumnail: data?.thumnail,
-        imageTitle:
-          data?.thumnail?.slice(72, data?.thumnail?.indexOf("%2F")) || "",
+        imageTitle: data?.thumnail?.slice(72, data?.thumnail?.indexOf("%2F")) || "",
+        isYoutube: data?.isYoutube
       });
+      setExternal(data?.isYoutube)
     }
   }, [isUpdate, isError, data]);
 
@@ -90,9 +94,7 @@ const UploadVideo = () => {
     }
   };
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
 
     if (name === "title") {
@@ -141,11 +143,7 @@ const UploadVideo = () => {
     const selectedFile = e.target?.files?.[0];
     if (selectedFile) {
       try {
-        const imageUrl = await uploadImage(
-          selectedFile.name,
-          selectedFile,
-          setProgressStatus
-        );
+        const imageUrl = await uploadImage(selectedFile.name, selectedFile, setProgressStatus);
         setState({
           ...state,
           thumnail: imageUrl,
@@ -171,6 +169,7 @@ const UploadVideo = () => {
         tags: state.tags,
         description: state.description,
         thumnail: state.thumnail,
+        isYoutube: external
       };
       const response = await updatePost({
         data: payload,
@@ -181,9 +180,7 @@ const UploadVideo = () => {
 
       if (response?.data?.success) {
         toast.dismiss();
-        toast.success(response?.data?.message, {
-          autoClose: 3000,
-        });
+        toast.success(response?.data?.message, { autoClose: 3000, });
 
         clearhandler();
       } else {
@@ -206,6 +203,7 @@ const UploadVideo = () => {
       description: "",
       thumnail: "",
       imageTitle: "",
+      isYoutube: false,
     });
 
     navigate("/videos");
@@ -237,93 +235,45 @@ const UploadVideo = () => {
     <div className="w-full md:px-4 md:ml-4 md:pl-0">
       <ToastContainer />
       {isLoadingCategory && <Loader />}
-      <form
-        className="w-full h-[calc(100vh-6rem)] overflow-hidden   rounded-md"
-        onSubmit={submitHandler}
-      >
+      <form className="w-full h-[calc(100vh-6rem)] overflow-hidden   rounded-md" onSubmit={submitHandler}>
         <div className="flex-1 h-full p-6 rounded font-montserrat">
           <div className="flex pb-2">
-            <h2 className="md:text-4xl text-[28px] font-bold text-gray-500 font-mavenPro">
-              Video Form
-            </h2>
-            <div onClick={clearhandler}>
-              <TiArrowBackOutline className="w-10 h-10 ml-4 text-emerald-600 hover:text-emerald-500" />
-            </div>
+            <h2 className="md:text-4xl text-[28px] font-bold text-gray-500 font-mavenPro">Video Form</h2>
+            <div onClick={clearhandler}> <TiArrowBackOutline className="w-10 h-10 ml-4 text-emerald-600 hover:text-emerald-500" /></div>
           </div>
+
           <div className="h-[calc(100vh-12rem)] w-full overflow-y-auto   [&::-webkit-scrollbar]:hidden font-mavenPro">
             <div className="grid items-center grid-cols-1 gap-4 py-4 md:grid-cols-2">
-              <input
-                value={state?.title}
-                type="text"
-                onChange={handleChange}
-                name="title"
-                className="w-full h-10 pl-4 font-medium bg-green-100 border border-transparent rounded-md outline-none focus:border-blue-200 "
-                placeholder="Video Title"
-                required
-              />
+              <input value={state?.title} type="text" onChange={handleChange} name="title" className="w-full h-10 pl-4 font-medium bg-green-100 border border-transparent rounded-md outline-none focus:border-blue-200 " placeholder="Video Title" required />
 
               {/* Category Dropdown */}
               <div className="relative">
-                <div
-                  className="flex justify-between p-2 pl-4 font-medium text-gray-400 bg-green-100 border-transparent rounded-md cursor-pointer focus:border-blue-200"
-                  onClick={() =>
-                    setOpen({ ...isOpen, category: !isOpen.category })
-                  }
-                >
+                <div className="flex justify-between p-2 pl-4 font-medium text-gray-400 bg-green-100 border-transparent rounded-md cursor-pointer focus:border-blue-200" onClick={() => setOpen({ ...isOpen, category: !isOpen.category })}                >
                   {state.category !== "" ? state.category : "Select Category"}
                   <FaCaretDown className="m-1" />
                 </div>
-                <ul
-                  className={`mt-2 p-2 rounded-md w-32 text-[#DEE1E2] bg-gray-800 shadow-lg absolute z-10 ${
-                    isOpen.category ? "max-h-60" : "hidden"
-                  } custom-scrollbar`}
-                >
+
+                <ul className={`mt-2 p-2 rounded-md w-32 text-[#DEE1E2] bg-gray-800 shadow-lg absolute z-10 ${isOpen.category ? "max-h-60" : "hidden"} custom-scrollbar`}>
                   {categoryData?.map((video: VideoCategorys, i: number) => (
-                    <li
-                      key={i}
-                      className={`p-2 mb-2 text-sm text-[#DEE1E2]  rounded-md cursor-pointer hover:bg-blue-200/60 ${
-                        state.category === video?.category ? "bg-rose-600" : ""
-                      }`}
-                      onClick={() => selectOption("category", video?.category)}
-                    >
+                    <li key={i} className={`p-2 mb-2 text-sm text-[#DEE1E2]  rounded-md cursor-pointer hover:bg-blue-200/60 ${state.category === video?.category ? "bg-rose-600" : ""}`} onClick={() => selectOption("category", video?.category)}>
                       <span>{video?.category}</span>
                     </li>
                   ))}
                 </ul>
               </div>
 
-           
               <div className="flex w-full col-span-1 gap-5 md:col-span-2 ">
-              <JoditTextEditor
-                 value={state?.description}
-                 OnChangeEditor={(e: string) => HandleChange("description", e)}
-                />
-             
+                <ReactQuill theme="snow" value={state?.description} onChange={(content: string) => HandleChange("description", content)} className="w-full bg-green-100 border-none rounded-md " />
               </div>
-            
 
               {/* add tags */}
               <div className="">
-                <input
-                  type="text"
-                  onKeyDown={handleTagInput}
-                  className="w-full h-10 pl-4 font-medium bg-green-100 border border-transparent rounded-md outline-none focus:border-blue-200"
-                  placeholder="Add Tags (press Enter or comma to add)"
-                />
+                <input type="text" onKeyDown={handleTagInput} className="w-full h-10 pl-4 font-medium bg-green-100 border border-transparent rounded-md outline-none focus:border-blue-200" placeholder="Add Tags (press Enter or comma to add)" />
                 <div className="flex flex-wrap gap-2 mt-2">
                   {state.tags.map((tag, index) => (
-                    <span
-                      key={index}
-                      className="flex items-center px-2 py-1 text-sm font-medium text-white bg-blue-600 rounded-full"
-                    >
+                    <span key={index} className="flex items-center px-2 py-1 text-sm font-medium text-white bg-blue-600 rounded-full">
                       {tag}
-                      <button
-                        type="button"
-                        className="ml-2 text-xs font-bold"
-                        onClick={() => handleTagRemove(tag)}
-                      >
-                        ×
-                      </button>
+                      <button type="button" className="ml-2 text-xs font-bold" onClick={() => handleTagRemove(tag)}>×</button>
                     </span>
                   ))}
                 </div>
@@ -331,70 +281,36 @@ const UploadVideo = () => {
 
               <div className="w-full col-span-1 md:col-span-2">
                 <div className="flex w-full gap-2 mb-2">
-                  <label htmlFor="" className="mb-1 font-medium text-gray-500">
-                    External URL
-                  </label>
-                  <input
-                    checked={external}
-                    onClick={() => setExternal(!external)}
-                    className="  rounded-[7px] outline-none border border-transparent bg-green-100 focus:border-blue-200"
-                    type="checkbox"
-                  />
+                  <label htmlFor="" className="mb-1 font-medium text-gray-500">External URL</label>
+                  <input checked={external} onClick={() => setExternal(!external)} className="  rounded-[7px] outline-none border border-transparent bg-green-100 focus:border-blue-200" type="checkbox" />
                 </div>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   {external ? (
                     <>
                       {/* <label htmlFor="">URL:</label> */}
-                      <input
-                        value={state?.url}
-                        name="url"
-                        onChange={handleChange}
-                        className="w-full h-10 pl-4 font-medium bg-green-100 border border-transparent rounded-md outline-none focus:border-blue-200"
-                        type="url"
-                        placeholder="Video URL"
-                      />
+                      <input value={state?.url} name="url" onChange={handleChange} className="w-full h-10 pl-4 font-medium bg-green-100 border border-transparent rounded-md outline-none focus:border-blue-200" type="url" placeholder="Video URL" />
                     </>
                   ) : (
                     <div>
-                      <label className="ml-1 font-medium text-gray-500 ">
-                        Upload Video
-                      </label>
-                      <input
-                        ref={fileInputRef}
-                        accept="video/*"
-                        onChange={handleFileUpload}
-                        className="w-full h-[40px] mt-2 p-1 rounded-[7px] outline-none border border-transparent bg-green-100 focus:border-blue-200"
-                        type="file"
-                      />
+                      <label className="ml-1 font-medium text-gray-500 ">Upload Video</label>
+                      <input ref={fileInputRef} accept="video/*" onChange={handleFileUpload} className="w-full h-[40px] mt-2 p-1 rounded-[7px] outline-none border border-transparent bg-green-100 focus:border-blue-200" type="file" />
                       {progressVideoStatus !== null &&
                         progressVideoStatus !== 0 && (
                           <>
                             <div className="inset-0 z-10 flex flex-row items-end gap-2 pt-2">
-                              <p className="text-black text-[12px]">
-                                uploading
-                              </p>
-                              <div
-                                className="h-1 bg-blue-400 rounded-md mx-[1px] mb-[1px]"
-                                style={{ width: `${progressVideoStatus}%` }}
-                              ></div>
+                              <p className="text-black text-[12px]">uploading</p>
+                              <div className="h-1 bg-blue-400 rounded-md mx-[1px] mb-[1px]" style={{ width: `${progressVideoStatus}%` }}></div>
                             </div>
                           </>
                         )}
                     </div>
                   )}
                   {state?.url ? (
-                    <ReactPlayer
-                      url={state?.url}
-                      width="100%"
-                      height="200px"
-                      controls
-                    />
+                    <ReactPlayer url={state?.url} width="100%" height="200px" controls />
                   ) : (
                     <div className="w-full h-[200px] gap-4 bg-blue-50 flex justify-center items-center text-gray-500 font-semibold text-xl">
                       <MdOutlineOndemandVideo className="w-12 h-12" />
-                      <span className="w-[180px]">
-                        Video will play here after uploade
-                      </span>
+                      <span className="w-[180px]">Video will play here after uploade</span>
                     </div>
                   )}
                 </div>
@@ -410,18 +326,10 @@ const UploadVideo = () => {
                   />
                   <label
                     htmlFor="file-upload"
-                    className={`px-4 py-2 pl-24 relative ${
-                      progressStatus ? "pb-2" : ""
-                    } w-full text-base bg-green-100 focus:border-blue-200 border-transparent border rounded-md text-gray-400 cursor-pointer flex items-center justify-between`}
+                    className={`px-4 py-2 pl-24 relative ${progressStatus ? "pb-2" : ""
+                      } w-full text-base bg-green-100 focus:border-blue-200 border-transparent border rounded-md text-gray-400 cursor-pointer flex items-center justify-between`}
                   >
-                    <p
-                      className={`font-medium ${
-                        state.imageTitle && "text-gray-700"
-                      }`}
-                    >
-                      {state.imageTitle || "Choose a file"}
-                    </p>
-
+                    {state.imageTitle || "Choose a file"}
                     <span className="text-gray-500 text-[15px] absolute top-0 h-full flex items-center left-0 rounded-tl-md rounded-bl-md px-3 font-medium bg-green-200">
                       Browse
                     </span>
@@ -432,7 +340,7 @@ const UploadVideo = () => {
                         <div
                           className="h-1 bg-blue-400 rounded-md mx-[1px] mb-[1px]"
                           style={{ width: `${progressStatus}%` }}
-                          // style={{ width: `${100}%` }}
+                        // style={{ width: `${100}%` }}
                         ></div>
                       </div>
                     </>
@@ -461,7 +369,7 @@ const UploadVideo = () => {
               <button
                 className="px-4 py-2 text-white rounded-md bg-[#1f3c88] hover:bg-[#2d56bb] "
                 type="submit"
-                // disabled={isError}
+              // disabled={isError}
               >
                 {isUpdate && !isError ? "Update" : "Submit"}
               </button>

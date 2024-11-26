@@ -6,7 +6,7 @@ import { BlogCategory } from "../types";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import uploadImage from "../firebase_image/image";
-import JoditTextEditor from "../components/editorNew"
+import TextEditor from "../components/textEditor";
 
 import { FaBloggerB, FaCaretDown } from "react-icons/fa";
 
@@ -24,8 +24,6 @@ interface StateProps {
   subcategory?: string;
   subsubcategory?: string;
   innercategory?: string;
-  categoryId:string;
-  categoryName:string;
   title: string;
   slug: string;
   thumnail: string;
@@ -56,32 +54,22 @@ const CreatBlog = () => {
     subsubcategoryData: [],
     innercategoryData: [],
   });
-  interface blogACt{
-    _id:string,
-    name:string
-  }
   const [state, setState] = useState<StateProps>({
     maincategory: "",
     mainId: "",
     subid: "",
     subsubid: "",
-    categoryId:blogData?.data?.categoryId||"",
-     categoryName:blogData?.data?.categoryName||"",
     innerid: "",
     subcategory: "",
     subsubcategory: "",
     innercategory: "",
-    title: blogData?.data?.title || "",
+    title: data?.data?.title || "",
     slug: "",
-    thumnail: blogData?.data?.thumnail || "",
-    content: blogData?.data?.content || "",
+    thumnail: data?.data?.thumnail || "",
+    content: data?.data?.content || "",
     imageTitle:
-      blogData?.data?.thumnail?.slice(67, data?.image?.indexOf("%")) || "",
+      data?.data?.thumnail?.slice(67, data?.image?.indexOf("%")) || "",
   });
-
-  const handleBlogcat=(category:blogACt)=>{
-    setState((prev)=>({...prev,categoryId:category?._id,categoryName:category?.name}))
-      }
 
   const [isOpen, setOpen] = useState({
     maincategory: false,
@@ -90,7 +78,7 @@ const CreatBlog = () => {
     innercategory: false,
   });
 
-  const isUpdate = !!blogData;
+  const isUpdate = Object.keys(data || [])?.length !== 0;
 
   useEffect(() => {
     if (isUpdate && !isError) {
@@ -99,8 +87,6 @@ const CreatBlog = () => {
         thumnail: blogData?.data?.thumnail,
         slug: blogData?.data?.slug,
         content: blogData?.data?.content,
-        categoryId:blogData?.data?.categoryId,
-        categoryName:blogData?.data?.categoryName,
         imageTitle:
           blogData?.data?.thumnail?.slice(
             72,
@@ -234,12 +220,14 @@ const CreatBlog = () => {
   const submitHandler = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    console.log(state, "hello>>>");
+    console.log(state, "hello");
     try {
       toast.loading("Checking Details");
       const payload = {
-        categoryId:state?.categoryId,
-        categoryName:state?.categoryName,
+        maincategory: state?.maincategory,
+        subcategory: state?.subcategory,
+        subsubcategory: state?.subsubcategory,
+        innercategory: state?.innercategory,
         title: state?.title,
         slug: state?.slug,
         thumnail: state?.thumnail,
@@ -252,7 +240,7 @@ const CreatBlog = () => {
         path:
           isUpdate && !isError
             ? `/blog/update-blog/${id}`
-            : "/blog/create",
+            : "/blog/create-blogs",
       });
 
       console.log(response);
@@ -282,23 +270,21 @@ const CreatBlog = () => {
   };
 
   const clearhandler = () => {
-    setState({
-      maincategory: "",
-      mainId: "",
-      subid: "",
-      subsubid: "",
-      innerid: "",
-      categoryId:"",
-      categoryName:"",
-      subcategory: "",
-      subsubcategory: "",
-      innercategory: "",
-      title: "",
-      slug: "",
-      thumnail: "",
-      content: "",
-      imageTitle: "",
-    });
+    // setState({
+    //   maincategory: "",
+    //   mainId: "",
+    //   subid: "",
+    //   subsubid: "",
+    //   innerid: "",
+    //   subcategory: "",
+    //   subsubcategory: "",
+    //   innercategory: "",
+    //   title: "",
+    //   slug: "",
+    //   thumnail: "",
+    //   content: "",
+    //   imageTitle: "",
+    // });
 
     navigate("/creat-blog/blogs-list");
   };
@@ -333,6 +319,9 @@ const CreatBlog = () => {
             <h2 className="md:text-4xl text-[28px] font-bold text-gray-600 font-mavenPro">
               Blog Form
             </h2>
+            {/* <div onClick={clearhandler}>
+              <TiArrowBackOutline className="w-10 h-10 ml-4 text-emerald-600 hover:text-emerald-500" />
+            </div> */}
           </div>
           <div className="flex items-center justify-end w-full pb-2">
             {/* <button> */}
@@ -419,7 +408,7 @@ const CreatBlog = () => {
                     <FaCaretDown className="m-1" />
                   </div>
                   <ul
-                    className={`mt-2 p-2  overflow-auto rounded-md w-32 text-[#DEE1E2] bg-gray-800 shadow-lg absolute z-10 ${
+                    className={`mt-2 p-2 rounded-md w-32 text-[#DEE1E2] bg-gray-800 shadow-lg absolute z-10 ${
                       isOpen.maincategory ? "max-h-60" : "hidden"
                     } custom-scrollbar`}
                   >
@@ -432,10 +421,8 @@ const CreatBlog = () => {
                               ? "bg-rose-600"
                               : ""
                           }`}
-                          onClick={() =>{
+                          onClick={() =>
                             handleDropChange("maincategory", main?._id)
-                            handleBlogcat({_id:main?._id,name:main?.name})
-                          }
                           }
                         >
                           <span>{main?.name}</span>
@@ -463,7 +450,7 @@ const CreatBlog = () => {
                     <FaCaretDown className="m-1" />
                   </div>
                   <ul
-                    className={`mt-2 p-2 overflow-auto rounded-md w-32 text-[#DEE1E2] bg-gray-800 shadow-lg absolute z-10 ${
+                    className={`mt-2 p-2 rounded-md w-32 text-[#DEE1E2] bg-gray-800 shadow-lg absolute z-10 ${
                       isOpen?.subcategory ? "max-h-60" : "hidden"
                     } custom-scrollbar`}
                   >
@@ -473,10 +460,8 @@ const CreatBlog = () => {
                         className={`p-2 mb-2 text-sm text-[#DEE1E2]  rounded-md cursor-pointer hover:bg-blue-200/60 ${
                           state.subcategory === sub?.name ? "bg-rose-600" : ""
                         }`}
-                        onClick={() =>{
+                        onClick={() =>
                           handleDropChange("subcategory", sub?._id)
-                          handleBlogcat({_id:sub?._id,name:sub?.name})
-                        }
                         }
                       >
                         <span>{sub?.name}</span>
@@ -504,7 +489,7 @@ const CreatBlog = () => {
                     <FaCaretDown className="m-1" />
                   </div>
                   <ul
-                    className={`mt-2 p-2 rounded-md overflow-auto w-32 text-[#DEE1E2] bg-gray-800 shadow-lg absolute z-10 ${
+                    className={`mt-2 p-2 rounded-md w-32 text-[#DEE1E2] bg-gray-800 shadow-lg absolute z-10 ${
                       isOpen.subsubcategory ? "max-h-60" : "hidden"
                     } custom-scrollbar`}
                   >
@@ -516,10 +501,8 @@ const CreatBlog = () => {
                             ? "bg-rose-600"
                             : ""
                         }`}
-                        onClick={() =>{
+                        onClick={() =>
                           handleDropChange("subsubcategory", subsub?._id)
-                          handleBlogcat({_id:subsub?._id,name:subsub?.name})
-                        }
                         }
                       >
                         <span>{subsub?.name}</span>
@@ -547,7 +530,7 @@ const CreatBlog = () => {
                     <FaCaretDown className="m-1" />
                   </div>
                   <ul
-                    className={`mt-2 p-2 rounded-md overflow-auto w-32 text-[#DEE1E2] bg-gray-800 shadow-lg absolute z-10 ${
+                    className={`mt-2 p-2 rounded-md w-32 text-[#DEE1E2] bg-gray-800 shadow-lg absolute z-10 ${
                       isOpen?.innercategory ? "max-h-60" : "hidden"
                     } custom-scrollbar`}
                   >
@@ -559,10 +542,8 @@ const CreatBlog = () => {
                             ? "bg-rose-600"
                             : ""
                         }`}
-                        onClick={() =>{
+                        onClick={() =>
                           handleDropChange("innercategory", iner?._id)
-                          handleBlogcat({_id:iner?._id,name:iner?.name})
-                        }
                         }
                       >
                         <span>{iner?.name}</span>
@@ -573,11 +554,10 @@ const CreatBlog = () => {
               )}
 
               <div className="col-span-1 md:col-span-2">
-              <JoditTextEditor
-                 value={state?.content}
-                 OnChangeEditor={(e: string) => handleDropChange("content", e)}
+                <TextEditor
+                  value={state?.content}
+                  OnChangeEditor={(e) => handleDropChange("content", e)}
                 />
-               
               </div>
             </div>
 
@@ -585,7 +565,14 @@ const CreatBlog = () => {
               <button
                 className="px-4 py-2 text-white rounded-md bg-[#1f3c88] hover:bg-[#2d56bb] disabled:bg-gray-500"
                 type="submit"
-                disabled={!state?.thumnail || !state?.title || !state?.content}
+                disabled={
+                  !state?.thumnail ||
+                  (isUpdate && !isError
+                    ? !state?.maincategory
+                    : !state?.maincategory) ||
+                  !state?.title ||
+                  !state?.content
+                }
               >
                 {isUpdate && !isError ? "Update" : "Submit"}
               </button>

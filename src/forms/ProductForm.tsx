@@ -20,13 +20,12 @@ interface Props{
   close:()=>void,
   updateData:sponsorProductsType,
   sponsorname:string
-  isCreate:boolean
 }
 
-const ProductForm = ({ close, updateData , sponsorname,isCreate }:Props) => {
+const ProductForm = ({ close, updateData , sponsorname }:Props) => {
 
   const [updatePost] = useUpdatePostMutation();
-console.log("isCreate>>>>",isCreate)
+
   const { id } = useParams();
 
   const [ProductData, setProductData] = useState<CompaniesType>({
@@ -43,6 +42,10 @@ console.log("isCreate>>>>",isCreate)
     image: updateData?.image || "",
   });
 
+  console.log(updateData, "from company form");
+
+
+
   const [progressStatus, setProgressStatus] = useState<number | null>(null);
 
   //for text Data
@@ -57,7 +60,7 @@ console.log("isCreate>>>>",isCreate)
     }));
    
   };
-  
+
   //for Image Data
   const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -81,9 +84,10 @@ console.log("isCreate>>>>",isCreate)
   //   console.log(updateData ? "PUT Operation" : "POST Operation");
   const submitHandler = async (e: React.FormEvent) => {
     e.preventDefault();
+
     const companySponserProductPostObject = {
       name: ProductData.name,
-      image:  ProductData.image,
+      image: updateData?.image ? updateData?.image : ProductData.image,
       link: ProductData.webLink,
       description: ProductData.discription,
       active: ProductData.status,
@@ -91,19 +95,24 @@ console.log("isCreate>>>>",isCreate)
       companyId: id,
     };
 
+   
+
     toast.loading("Checking Details");
     try {
       console.log(companySponserProductPostObject, "submit");
       const response = await updatePost({
         data: companySponserProductPostObject,
-        method: isCreate ? "POST" : "PUT",
-        path: isCreate
-          ? "/sponsor/product"
-          : `/sponsor/product/${updateData?._id}`,
+        method: updateData ? "PUT" : "POST",
+        path: updateData
+          ? `/sponsor/product/${updateData?._id}`
+          : "/sponsor/product",
       });
+      console.log(response);
       if (response?.data?.success) {
         toast.dismiss();
-        toast.success(response?.data?.message);
+        toast.success(response?.data?.message, {
+          autoClose: 5000,
+        });
         clearhandler();
       } else {
         toast.dismiss();

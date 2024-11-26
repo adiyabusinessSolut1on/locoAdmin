@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useGetDataQuery, useUpdatePostMutation } from "../api";
 import { toast, ToastContainer } from "react-toastify";
 import { TiArrowBackOutline } from "react-icons/ti";
-import JoditTextEditor from "../components/editorNew";
+import TextEditor from "../components/textEditor";
 interface CategoryForm {
   content:string,
     creat:boolean,
@@ -160,13 +160,12 @@ const Task = ({ isTestForm, setTestForm }:Props) => {
                 />
 
                 <div className="">
-                <JoditTextEditor
-                  value={testDataForm?.content}
-                  OnChangeEditor={(e) =>
-                    handleEditorChange("content", e)
-                  }
-                />
-                 
+                  <TextEditor
+                    value={testDataForm?.content}
+                    OnChangeEditor={(e) =>
+                      handleEditorChange("content", e)
+                    }
+                  />
                 </div>
               
               </div>

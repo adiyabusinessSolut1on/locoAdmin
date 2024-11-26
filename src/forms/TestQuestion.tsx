@@ -4,9 +4,8 @@ import { useGetDataQuery, useUpdatePostMutation } from "../api";
 import { toast, ToastContainer } from "react-toastify";
 import TextEditor from "../components/textEditor";
 import { FaCaretDown } from "react-icons/fa";
+import MultipleImageUploadeForm from "../components/multiple_image_upload/MultipleImageUploadeForm";
 import { TestQuestionsType } from "../types";
-import uploadImage from "../firebase_image/image";
-import DeleteICONSVG from "../assets/SVG/deleteICON";
 
 interface Props{
   close:()=>void,
@@ -19,7 +18,6 @@ interface Props{
  
 }
 interface StateProps {
-  name:string
   image: string[];
   imageSrc: File[];
   options: string[];
@@ -32,8 +30,7 @@ const TestQuestion = ({ isQuestionForm, close }:Props) => {
   const [updatePost] = useUpdatePostMutation();
 
   const [testData, settestData] = useState<StateProps>({
-    name:isQuestionForm?.data?.name,
-    image: isQuestionForm?.data?.image || [],
+    image: isQuestionForm?.data?.name || [],
     imageSrc: [],
     options: isQuestionForm?.data?.options || [],
     result: isQuestionForm?.data?.predicted_result || "",
@@ -51,7 +48,7 @@ const TestQuestion = ({ isQuestionForm, close }:Props) => {
   //   });
   // }, []);
 
-
+  console.log(testData);
 
   const { data,  isError } = useGetDataQuery({
     url: `/test/question/${isQuestionForm?.data?._id}`,
@@ -72,8 +69,7 @@ const TestQuestion = ({ isQuestionForm, close }:Props) => {
     if (isUpdate && !isError) {
       settestData((prev) => ({
         ...prev,
-        name:data?.name||"",
-        image: data?.image || [],
+        image: data?.name || "",
         options: data?.options || [],
         result: data?.predicted_result || "",
         content: data?.answer_description || "",
@@ -91,8 +87,8 @@ const TestQuestion = ({ isQuestionForm, close }:Props) => {
     e.preventDefault();
 
     const testQuestionObject = {
-      name: testData?.name,
-      image: testData?.image,
+      name: testData?.image,
+
       options: testData?.options,
       predicted_result: testData?.result,
       answer_description: testData?.content,
@@ -181,7 +177,6 @@ const TestQuestion = ({ isQuestionForm, close }:Props) => {
 
   const clearHandler = () => {
     settestData({
-      name:"",
       image: [],
       imageSrc: [],
       options: [],
@@ -190,37 +185,12 @@ const TestQuestion = ({ isQuestionForm, close }:Props) => {
     });
     close();
   };
-  const [progressStatus, setProgressStatus] = useState<number | null>(null);
-  const handleDeleteImage = (index: number) => {
-    settestData((prevState) => ({
-      ...prevState,
-      image: prevState?.image.filter((_, i) => i !== index),
-    }));
-  };
-  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFiles = Array.from(e.target?.files || []);
-    if (selectedFiles.length > 0) {
-      try {
-        const imageUploadPromises = selectedFiles.map(file =>
-          uploadImage(file.name, file, setProgressStatus)
-        );
-        const imageUrls = await Promise.all(imageUploadPromises);
-        settestData(prevState => ({
-          ...prevState,
-          image: [...prevState.image, ...imageUrls],
-        }));
-      } catch (error) {
-        console.error('Error uploading images:', error);
-        toast.error('Error uploading images');
-      }
-    }
-  };
   return (
     <div
       className="fixed inset-0 z-10 flex items-center justify-center px-4 sm:px-0 bg-black/40"
       onClick={close}
     >
-      <ToastContainer />
+      <ToastContainer/>
       <div
         className="md:w-[800px] bg-white rounded-md "
         // className="w-full bg-white md:px-4 md:ml-4 md:pl-0"
@@ -241,61 +211,12 @@ const TestQuestion = ({ isQuestionForm, close }:Props) => {
             </div>
             <div className="h-[calc(100vh-12rem)] w-full overflow-y-auto  [&::-webkit-scrollbar]:hidden font-mavenPro">
               <div className="grid items-center grid-cols-1 gap-4 py-4 md:grid-cols-2">
-              <label className="font-medium">Question Name:</label>
-              <div className="grid grid-cols-1 col-span-1 gap-2 md:gap-4 md:grid-cols-2 md:col-span-2">
-              
-                  <input
-                    type="text"
-                    value={testData?.name}
-                    onChange={(e)=>handleEditorChange("name",e.target.value)}
-                    className="w-full h-10 pl-4 font-medium bg-green-100 border border-transparent rounded-md outline-none focus:border-blue-200"
-                    placeholder="Add Options (press Enter or comma to add)"
-                  />
-                  </div>
-                  <label className="font-medium">Question Images:</label>
-                <div className="relative grid items-center w-full h-full grid-cols-1 col-span-1 gap-2 md:gap-4 md:col-span-2 md:grid-cols-2">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    name="image"
-                    multiple
-                    onChange={handleImageChange}
-                    className={`px-2 py-[5px] ${
-                      progressStatus ? "pb-2" : ""
-                    } w-full text-sm border border-gray-400 focus-within:border-sky-400 rounded-md placeholder:text-gray-500 outline-none`}
-                    placeholder="Image URL"
-                 
-                  />
-                  {progressStatus !== null && (
-                    <div className="absolute inset-0 z-10 flex items-end">
-                      <div
-                        className="h-1 bg-blue-400 rounded-md mx-[1px] mb-[1px]"
-                        style={{ width: `${progressStatus}%` }}
-                      ></div>
-                    </div>
-                  )}
-                 
-                </div>
-                <div className="grid  grid-cols-1 col-span-1 gap-2 md:gap-4 md:grid-cols-2 md:col-span-2">
-                {testData?.image?.length > 0 && (
-                    <ul className="flex flex-wrap gap-5 items-end  ">
-                      {testData?.image?.map((item: string, index: number) => (
-                        <div key={index} className=" flex flex-col gap-3">
-                          <img src={item} className="max-h-20 max-w-[7rem]" alt={`Uploaded ${index}`} />
-                          <i
-                            className="text-red-600 flex items-center justify-center cursor-pointer"
-                            onClick={() => handleDeleteImage(index)}
-                          >
-                            <DeleteICONSVG height={20} width={20} fill={"#ce3939"}/>
-                          </i>
-                        </div>
-                      ))}
-                    </ul>
-                  )}
-                  </div>
+                <MultipleImageUploadeForm
+                  imge={testData.image}
+                  setImageData={settestData}
+                />
+
                 {/* Add Option */}
-                <label className="font-medium">Enter Options:</label>
-                
                 <div className="grid grid-cols-1 col-span-1 gap-2 md:gap-4 md:grid-cols-2 md:col-span-2">
                   <input
                     type="text"
@@ -305,7 +226,7 @@ const TestQuestion = ({ isQuestionForm, close }:Props) => {
                     placeholder="Add Options (press Enter or comma to add)"
                   />
                   <div className="flex flex-wrap gap-2 mt-2">
-                    {testData?.options.map((tag, index) => (
+                    {testData.options.map((tag, index) => (
                       <span
                         key={index}
                         className="flex items-center px-2 py-1 text-sm font-medium text-white bg-green-600 rounded-full"
@@ -323,8 +244,8 @@ const TestQuestion = ({ isQuestionForm, close }:Props) => {
                   </div>
                 </div>
 
+         
                 <div className="relative">
-                <label className="font-medium">Select predicted option:</label>
                   <div
                     className="flex justify-between p-2 pl-4 font-medium text-gray-400 bg-green-100 border-transparent rounded-md cursor-pointer focus:border-blue-200"
                     onClick={() =>

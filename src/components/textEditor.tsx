@@ -127,8 +127,8 @@ const TextEditor = ({ value, OnChangeEditor }: Props) => {
           plugins: plugins.join(" "),
           toolbar: toolbar.join(" "),
           file_picker_callback: (
-            _callback:any,
-            _value:any,
+            _callback,
+            _value,
             meta
           ) => {
             if (meta && meta.filetype === "image") {
@@ -145,107 +145,3 @@ const TextEditor = ({ value, OnChangeEditor }: Props) => {
   );
 };
 export default TextEditor;
-// import React, { useRef } from 'react';
-// import ReactQuill from 'react-quill';
-// import 'react-quill/dist/quill.snow.css';
-
-// interface Props {
-//   value: string;
-//   OnChangeEditor: (content: string) => void;
-// }
-
-// const TextEditor: React.FC<Props> = ({ value, OnChangeEditor }) => {
-//   const quillRef = useRef<ReactQuill>(null);
-//   const upload=(content:string)=>{
-//     OnChangeEditor(content)
-//   }
-//   // const uploadVideoHandler = async () => {
-//   //   try {
-//   //     const input = document.createElement('input');
-//   //     input.setAttribute('type', 'file');
-//   //     input.setAttribute('accept', 'video/*');
-//   //     input.click();
-
-//   //     input.onchange = async () => {
-//   //       const file = input.files?.[0];
-//   //       if (file) {
-//   //         const videoUrl = await uploadVideo(file);
-//   //         if (videoUrl) {
-//   //           const editor = quillRef.current?.getEditor();
-//   //           if (editor) {
-//   //             const range = editor.getSelection();
-//   //             editor.insertEmbed(range?.index || 0, 'video', videoUrl);
-//   //           }
-//   //         }
-//   //       }
-//   //     };
-//   //   } catch (error) {
-//   //     console.error('Failed to upload video:', error);
-//   //   }
-//   // };
-//   // const uploadImageHandler = async () => {
-//   //   try {
-//   //     const input = document.createElement('input');
-//   //     input.setAttribute('type', 'file');
-//   //     input.setAttribute('accept', 'image/*');
-//   //     input.click();
-
-//   //     input.onchange = async () => {
-//   //       const file = input.files?.[0];
-//   //       if (file) {
-//   //         const imageUrl = await uploadImage(file);
-//   //         if (imageUrl) {
-//   //           const editor = quillRef.current?.getEditor();
-//   //           if (editor) {
-//   //             const range = editor.getSelection();
-//   //             editor.insertEmbed(range?.index || 0, 'image', imageUrl);
-//   //           }
-//   //         }
-//   //       }
-//   //     };
-//   //   } catch (error) {
-//   //     console.error('Failed to upload image:', error);
-//   //   }
-//   // };
-//   const modules = {
-//     toolbar: {
-//       container: [
-//         [{ header: [] },  { 'font': [] }, {color:[]}, {background:[]}],
-//         [{ size: [] }],
-//         ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-//         [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-//         ['link', 'image', 'video'],
-//         ['clean'],
-//       ],
-//       // handlers: {
-//       //   image: uploadImageHandler,
-//       //   video: uploadVideoHandler,
-//       // },
-//     },
-    
-//   };
-
-//   const formats = [
-//     'header', 'font', 'size',
-//     'bold', 'italic', 'underline', 'strike', 'blockquote',
-//     'list', 'bullet',
-//     'link', 'image', 'video',
-//   ];
-
-
-
-//   return (
-//     <ReactQuill
-//       ref={quillRef}
-//       theme="snow"
-//       value={value}
-//       onChange={upload}
-//       modules={modules}
-//       formats={formats}
-//     />
-//   );
-// };
-
-// export default TextEditor;
-
-

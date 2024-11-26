@@ -176,7 +176,7 @@ const SponsorCompanyProfile = () => {
       data: { ...productData },
     }));
   };
-const [isCreate,setIsCreate]=useState<boolean>(true)
+
   const handleConfirmDelete = () => {
     // Handle the delete action here
     toast.loading("checking Details");
@@ -211,7 +211,6 @@ const [isCreate,setIsCreate]=useState<boolean>(true)
       )}
       {isProductForm.condition && (
         <ProductForm
-        isCreate={isCreate}
           close={closeHandler}
           updateData={isProductForm?.data}
           sponsorname={isProductForm?.sponsername || ""}
@@ -330,10 +329,7 @@ const [isCreate,setIsCreate]=useState<boolean>(true)
                     className={` px-2 py-1 
                    bg-[#1f3c88] hover:bg-[#2d56bb]  text-[#DEE1E2] font-semibold
               }    rounded shadow-xl md:px-4 md:py-2  sm:self-center`}
-                    onClick={() => {
-                      setIsCreate(true);
-                      productFormHandler();
-                    }}
+                    onClick={productFormHandler}
                   >
                     {/* <Link to={`/sponsor/profile/${id}/product_form`}> */}
                     <p>
@@ -369,7 +365,7 @@ const [isCreate,setIsCreate]=useState<boolean>(true)
                       Check Internet connection or Contact to Admin
                     </p>
                   ) : data.products?.length > 0 ? (
-                    currentSponsorCompanyProducts?.map(
+                    currentSponsorCompanyProducts.map(
                       (product: sponsorProductsType, i: number) => (
                         <section
                           key={i}
@@ -430,16 +426,13 @@ const [isCreate,setIsCreate]=useState<boolean>(true)
                           <div className="grid justify-center gap-2">
                             <button
                               className="px-3 py-2 text-sm font-semibold text-white rounded-md bg-[#1f3c88] hover:bg-[#2d56bb]"
-                              onClick={() => {
-                                updateproduct(product);
-                                setIsCreate(false);
-                              }}
+                              onClick={() => updateproduct(product)}
                             >
                               Edit
                             </button>
                             <button
                               className="px-3 py-2 text-sm font-semibold text-white rounded-md bg-rose-600 hover:bg-rose-700"
-                              onClick={() => deletproduct(product?._id)}
+                              onClick={() => deletproduct(product._id)}
                             >
                               Delete
                             </button>
@@ -454,7 +447,7 @@ const [isCreate,setIsCreate]=useState<boolean>(true)
                   )}
                 </div>
               </section>
-              <Pagination<sponsorProductsType>
+              <Pagination
                 currentPage={currentPage}
                 apiData={data?.products}
                 itemsPerPage={itemsPerPage}
