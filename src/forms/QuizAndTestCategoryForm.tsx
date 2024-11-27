@@ -18,14 +18,8 @@ interface Props {
   };
 }
 
-const QuizAndTestCategoryForm = ({
-  isCategoryForm,
-  setCategoryForm,
-  singleCategory,
-}: Props) => {
-  const [categoryDataForm, setCategoryDataForm] = useState({
-    categoryName: singleCategory.name ? singleCategory.name : "",
-  });
+const QuizAndTestCategoryForm = ({ isCategoryForm, setCategoryForm, singleCategory, }: Props) => {
+  const [categoryDataForm, setCategoryDataForm] = useState({ categoryName: singleCategory.name ? singleCategory.name : "", });
 
   const [updatePost] = useUpdatePostMutation();
 
@@ -40,37 +34,32 @@ const QuizAndTestCategoryForm = ({
   const submiteHandler = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    console.log(categoryDataForm);
-    // try {
-    //   const payload = {
-    //     category: categoryDataForm?.categoryName,
-    //   };
+    try {
+      const payload = {
+        category: categoryDataForm?.categoryName,
+      };
 
-    //   console.log(payload, isCategoryForm.creat);
 
-    //   const response = await updatePost({
-    //     data: payload,
-    //     method: isCategoryForm.creat ? "POST" : "PUT",
-    //     // path: isCategoryForm.creat
-    //     //   ? `/video/create-category`
-    //     //   : `/video/update-category/${isCategoryForm.updateId}`,
-    //   });
-    //   console.log(response);
-    //   if (response?.data?.success) {
-    //     toast.dismiss();
-    //     toast.success(response?.data?.message, {
-    //       autoClose: 5000,
-    //     });
-    //     closeHandler();
-    //   } else {
-    //     toast.dismiss();
-    //     toast.error("Failed to create main category");
-    //   }
-    // } catch (error) {
-    //   toast.dismiss();
-    //   console.error("Error creating main category:", error);
-    //   toast.error("An error occurred");
-    // }
+      const response = await updatePost({
+        data: payload,
+        method: isCategoryForm.creat ? "POST" : "PUT",
+        path: isCategoryForm.creat ? `/video/create-category` : `/video/update-category/${isCategoryForm.updateId}`,
+      });
+      if (response?.data?.success) {
+        toast.dismiss();
+        toast.success(response?.data?.message, {
+          autoClose: 5000,
+        });
+        closeHandler();
+      } else {
+        toast.dismiss();
+        toast.error("Failed to create main category");
+      }
+    } catch (error) {
+      toast.dismiss();
+      console.error("Error creating main category:", error);
+      toast.error("An error occurred");
+    }
   };
 
   const closeHandler = () => {
@@ -89,7 +78,6 @@ const QuizAndTestCategoryForm = ({
     setCategoryDataForm({
       categoryName: "",
     });
-    console.log(categoryDataForm);
   };
 
   return (
@@ -120,9 +108,7 @@ const QuizAndTestCategoryForm = ({
                   type="text"
                   onChange={handleChange}
                   name="categoryName"
-                  className={
-                    " font-medium outline-none w-full  border h-10 border-gray-400 rounded-md pl-4 focus-within:border-blue-400  "
-                  }
+                  className={" font-medium outline-none w-full  border h-10 border-gray-400 rounded-md pl-4 focus-within:border-blue-400  "}
                   placeholder={"Category Name"}
                   required
                 />

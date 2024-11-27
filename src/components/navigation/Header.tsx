@@ -8,7 +8,7 @@ import { useNavigate } from "react-router";
 import LogOutModal from "../modal/LogoutModal";
 import { MdDirectionsSubway } from "react-icons/md";
 import { IoMdNotifications } from "react-icons/io";
-import { BiLogOutCircle } from "react-icons/bi";
+
 interface Props {
   isOpen: {
     small: boolean;

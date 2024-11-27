@@ -1,16 +1,12 @@
 import { useEffect, useState } from "react";
-import {
-  useCreatePostMutation,
-  useGetDataQuery,
-  useUpdatePostMutation,
-} from "../api";
+import { useGetDataQuery, useUpdatePostMutation, } from "../api";
 
-import { useNavigate, useParams } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import { useParams } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import uploadFile from "../firebase_file/file";
 import { TiArrowBackOutline } from "react-icons/ti";
 import Loader from "../components/loader";
+import { toast } from "react-toastify";
 
 interface Props {
   title: string;
@@ -77,7 +73,8 @@ const OldCreatDocuments = () => {
       }
     }
   };
-  const navigate = useNavigate();
+
+
   //@ts-expect-error not define event specification use oly for prevent default event
   const handleCreate = async (e) => {
     e.preventDefault();
@@ -175,14 +172,12 @@ const OldCreatDocuments = () => {
                   />
                   <label
                     htmlFor="file-upload"
-                    className={`px-4 py-2 pl-24 relative ${
-                      progressStatus ? "pb-2" : ""
-                    } w-full text-base bg-green-100 focus:border-blue-200 border-transparent border rounded-md text-gray-400 cursor-pointer flex items-center justify-between`}
+                    className={`px-4 py-2 pl-24 relative ${progressStatus ? "pb-2" : ""
+                      } w-full text-base bg-green-100 focus:border-blue-200 border-transparent border rounded-md text-gray-400 cursor-pointer flex items-center justify-between`}
                   >
                     <p
-                      className={`font-medium ${
-                        value?.imageSrc && "text-gray-700"
-                      }`}
+                      className={`font-medium ${value?.imageSrc && "text-gray-700"
+                        }`}
                     >
                       {value?.imageSrc || "Choose a file"}
                     </p>
@@ -196,7 +191,7 @@ const OldCreatDocuments = () => {
                         <div
                           className="h-1 bg-blue-400 rounded-md mx-[1px] mb-[1px]"
                           style={{ width: `${progressStatus}%` }}
-                          // style={{ width: `${100}%` }}
+                        // style={{ width: `${100}%` }}
                         ></div>
                       </div>
                     </>

@@ -1,10 +1,5 @@
 import React, { useState } from "react";
-import {
-  useCreatePostMutation,
-  useGetDataQuery,
-  useDeletePostMutation,
-  useUpdatePostMutation,
-} from "../api";
+import { useCreatePostMutation, useGetDataQuery, useDeletePostMutation, useUpdatePostMutation, } from "../api";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import DeleteICONSVG from "../assets/SVG/deleteICON";
@@ -20,6 +15,7 @@ interface Image {
   thumnail: string;
   imageSrc: string;
 }
+
 const Switches = ({ value }: Props) => {
   const route = React.useMemo(() => {
     switch (value) {
@@ -186,14 +182,12 @@ const Tab1: React.FC = () => {
               />
               <label
                 htmlFor="file-upload"
-                className={`px-4 py-1 pl-24 relative ${
-                  progressStatus ? "pb-1" : ""
-                } w-full text-base bg-blue-100 focus:border-blue-200 border-transparent border rounded-md text-gray-400 cursor-pointer flex items-center justify-between`}
+                className={`px-4 py-1 pl-24 relative ${progressStatus ? "pb-1" : ""
+                  } w-full text-base bg-blue-100 focus:border-blue-200 border-transparent border rounded-md text-gray-400 cursor-pointer flex items-center justify-between`}
               >
                 <p
-                  className={`${
-                    categoryImage.imageSrc ? "text-gray-700" : "text-gray-400"
-                  }`}
+                  className={`${categoryImage.imageSrc ? "text-gray-700" : "text-gray-400"
+                    }`}
                 >
                   {categoryImage.imageSrc || "Choose a file"}
                 </p>
@@ -207,7 +201,7 @@ const Tab1: React.FC = () => {
                     <div
                       className="h-1 bg-blue-400 rounded-md mx-[1px] mb-[1px]"
                       style={{ width: `${progressStatus}%` }}
-                      // style={{ width: `${100}%` }}
+                    // style={{ width: `${100}%` }}
                     ></div>
                   </div>
                 </>
@@ -219,9 +213,8 @@ const Tab1: React.FC = () => {
             <button
               onClick={handleClickCreate}
               disabled={!createData}
-              className={`${
-                createData ? "bg-[#1e40af]" : "bg-gray-500"
-              } px-4 py-2 rounded-[8px] text-[15px] font-[600] text-[#f8f8f8]`}
+              className={`${createData ? "bg-[#1e40af]" : "bg-gray-500"
+                } px-4 py-2 rounded-[8px] text-[15px] font-[600] text-[#f8f8f8]`}
             >
               Save
             </button>
@@ -255,16 +248,14 @@ const Tab1: React.FC = () => {
                         />
                         <label
                           htmlFor="file-upload"
-                          className={`px-4 py-1 pl-24 relative ${
-                            progressStatus ? "pb-1" : ""
-                          } w-full text-base bg-blue-100 focus:border-blue-200 border-transparent border rounded-md text-gray-400 cursor-pointer flex items-center justify-between`}
+                          className={`px-4 py-1 pl-24 relative ${progressStatus ? "pb-1" : ""
+                            } w-full text-base bg-blue-100 focus:border-blue-200 border-transparent border rounded-md text-gray-400 cursor-pointer flex items-center justify-between`}
                         >
                           <p
-                            className={`${
-                              categoryImage.imageSrc
+                            className={`${categoryImage.imageSrc
                                 ? "text-gray-700"
                                 : "text-gray-400"
-                            }`}
+                              }`}
                           >
                             {categoryImage.imageSrc || "Choose a file"}
                           </p>
@@ -278,7 +269,7 @@ const Tab1: React.FC = () => {
                               <div
                                 className="h-1 bg-blue-400 rounded-md mx-[1px] mb-[1px]"
                                 style={{ width: `${progressStatus}%` }}
-                                // style={{ width: `${100}%` }}
+                              // style={{ width: `${100}%` }}
                               ></div>
                             </div>
                           </>
@@ -491,12 +482,11 @@ const Tab2: React.FC = () => {
           <button
             onClick={HanldeCreate}
             disabled={!createSubCategory?.name && !createSubCategory?.mainId}
-            className={` ${
-              createSubCategory?.name && createSubCategory?.mainId
+            className={` ${createSubCategory?.name && createSubCategory?.mainId
                 ? "bg-[#1e40af]"
                 : // ? "bg-[#5a83bd]"
-                  "bg-gray-500"
-            } px-4 py-2 rounded-[8px] text-[15px] font-[600] text-[#f8f8f8]`}
+                "bg-gray-500"
+              } px-4 py-2 rounded-[8px] text-[15px] font-[600] text-[#f8f8f8]`}
           >
             Save
           </button>
@@ -515,9 +505,8 @@ const Tab2: React.FC = () => {
                     {/* {showSubCategories[category?._id] ? ( */}
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      className={`w-4 h-4 transition-all duration-500 ${
-                        showSubCategories[category?._id] ? "rotate-180" : ""
-                      }`}
+                      className={`w-4 h-4 transition-all duration-500 ${showSubCategories[category?._id] ? "rotate-180" : ""
+                        }`}
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -842,14 +831,13 @@ const Tab3: React.FC = () => {
               !createSubCategory.subId ||
               !createSubCategory.name
             }
-            className={`${
-              createSubCategory.mainId &&
-              createSubCategory.subId &&
-              createSubCategory.name
+            className={`${createSubCategory.mainId &&
+                createSubCategory.subId &&
+                createSubCategory.name
                 ? "bg-[#1e40af]"
                 : // ? "bg-[#5a83bd]"
-                  "bg-gray-500"
-            } px-4 py-2 rounded-[8px] text-[15px] font-[600] text-[#f8f8f8]`}
+                "bg-gray-500"
+              } px-4 py-2 rounded-[8px] text-[15px] font-[600] text-[#f8f8f8]`}
           >
             Save
           </button>
@@ -867,9 +855,8 @@ const Tab3: React.FC = () => {
                   {/* {showSubCategories[category?._id] ? ( */}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className={`w-4 h-4 transition-all duration-500 ${
-                      showSubCategories[category?._id] ? "rotate-180" : ""
-                    }`}
+                    className={`w-4 h-4 transition-all duration-500 ${showSubCategories[category?._id] ? "rotate-180" : ""
+                      }`}
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -915,9 +902,8 @@ const Tab3: React.FC = () => {
                           {/* {showSubSubCategories[sub?._id] ? ( */}
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            className={`w-4 h-4 transition-all duration-500 ${
-                              showSubSubCategories[sub?._id] ? "rotate-180" : ""
-                            }`}
+                            className={`w-4 h-4 transition-all duration-500 ${showSubSubCategories[sub?._id] ? "rotate-180" : ""
+                              }`}
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
@@ -1299,15 +1285,14 @@ const Tab4: React.FC = () => {
               !createInnerCategory?.subSubId ||
               !createInnerCategory?.name
             }
-            className={`${
-              createInnerCategory?.mainId &&
-              createInnerCategory?.subId &&
-              createInnerCategory?.subSubId &&
-              createInnerCategory?.name
+            className={`${createInnerCategory?.mainId &&
+                createInnerCategory?.subId &&
+                createInnerCategory?.subSubId &&
+                createInnerCategory?.name
                 ? "bg-[#1e40af]"
                 : // ? "bg-[#5a83bd]"
-                  "bg-gray-500"
-            }  px-4 py-2 rounded-[8px] text-[15px] font-[600] text-[#f8f8f8]`}
+                "bg-gray-500"
+              }  px-4 py-2 rounded-[8px] text-[15px] font-[600] text-[#f8f8f8]`}
           >
             save
           </button>
@@ -1325,9 +1310,8 @@ const Tab4: React.FC = () => {
                   {/* {showSubCategories[category?._id] ? ( */}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className={`w-4 h-4 transition-all duration-500 ${
-                      showSubCategories[category?._id] ? "rotate-180" : ""
-                    }`}
+                    className={`w-4 h-4 transition-all duration-500 ${showSubCategories[category?._id] ? "rotate-180" : ""
+                      }`}
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -1376,9 +1360,8 @@ const Tab4: React.FC = () => {
                           {/* {showSubSubCategories[sub?._id] ? ( */}
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            className={`w-4 h-4 transition-all duration-500 ${
-                              showSubSubCategories[sub?._id] ? "rotate-180" : ""
-                            }`}
+                            className={`w-4 h-4 transition-all duration-500 ${showSubSubCategories[sub?._id] ? "rotate-180" : ""
+                              }`}
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
@@ -1426,11 +1409,10 @@ const Tab4: React.FC = () => {
                                   {/* {showInnerCategories[subSub?._id] ? ( */}
                                   <svg
                                     xmlns="http://www.w3.org/2000/svg"
-                                    className={`w-4 h-4 transition-all duration-500 ${
-                                      showInnerCategories[subSub?._id]
+                                    className={`w-4 h-4 transition-all duration-500 ${showInnerCategories[subSub?._id]
                                         ? "rotate-180"
                                         : ""
-                                    }`}
+                                      }`}
                                     fill="none"
                                     viewBox="0 0 24 24"
                                     stroke="currentColor"

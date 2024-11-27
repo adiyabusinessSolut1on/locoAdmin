@@ -1,26 +1,24 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { useGetDataQuery, useUpdatePostMutation } from "../api";
-import uploadImage from "../firebase_image/image";
 import { useNavigate, useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
-import ReactQuill from "react-quill";
 import { FaCaretDown } from "react-icons/fa";
 // import { awarenessCategoryType } from "../types";
 import { TiArrowBackOutline } from "react-icons/ti";
 
-interface StateProps {
+/* interface StateProps {
     category: CategoryType;
     title: string;
 
     thumnail: string;
     imageSrc: string;
     content: string;
-}
+} */
 
-interface CategoryType {
+/* interface CategoryType {
     id: string;
     name: string;
-}
+} */
 
 type awarenessCategoryType = {
     _id: string;
@@ -116,8 +114,8 @@ function AddDailyTask() {
         setSelectAwareness({ title: result?.title, _id: result?._id });
 
         // Add to awarenessTag if not already present
-        setAwarenessTag((prev) => {
-            if (prev.some((item) => item._id === result._id)) return prev; // Avoid duplicates
+        setAwarenessTag((prev: any) => {
+            if (prev.some((item: any) => item._id === result._id)) return prev; // Avoid duplicates
             return [...prev, result];
         });
 
@@ -128,8 +126,8 @@ function AddDailyTask() {
         setSelectBlog({ title: result?.title, _id: result?._id });
 
         // Add to awarenessTag if not already present
-        setBlogTag((prev) => {
-            if (prev.some((item) => item._id === result._id)) return prev; // Avoid duplicates
+        setBlogTag((prev: any) => {
+            if (prev.some((item: any) => item._id === result._id)) return prev; // Avoid duplicates
             return [...prev, result];
         });
 
@@ -141,7 +139,7 @@ function AddDailyTask() {
 
         // Add to awarenessTag if not already present
         setVideoTag((prev: any) => {
-            if (prev.some((item: String) => item._id === result._id)) return prev; // Avoid duplicates
+            if (prev.some((item: String | any) => item._id === result._id)) return prev; // Avoid duplicates
             return [...prev, result];
         });
 
@@ -152,7 +150,7 @@ function AddDailyTask() {
 
         // Add to awarenessTag if not already present
         setQuizTag((prev: any) => {
-            if (prev.some((item: String) => item._id === result._id)) return prev; // Avoid duplicates
+            if (prev.some((item: String | any) => item._id === result._id)) return prev; // Avoid duplicates
             return [...prev, result];
         });
 
@@ -163,7 +161,7 @@ function AddDailyTask() {
 
         // Add to awarenessTag if not already present
         setTestTag((prev: any) => {
-            if (prev.some((item: String) => item._id === result._id)) return prev; // Avoid duplicates
+            if (prev.some((item: String | any) => item._id === result._id)) return prev; // Avoid duplicates
             return [...prev, result];
         });
 
@@ -274,10 +272,10 @@ function AddDailyTask() {
 
                                     {/* Selected Awareness Tags */}
                                     <div className="mt-4 flex flex-wrap gap-2">
-                                        {awarenessTag.map((tag) => (
+                                        {awarenessTag.map((tag: any) => (
                                             <div key={tag._id} className="bg-blue-100 text-blue-600 text-sm px-3 py-1 rounded-md flex items-center gap-2">
                                                 {tag.title}
-                                                <button onClick={() => setAwarenessTag((prev) => prev.filter((item) => item._id !== tag._id))} className="text-red-500 hover:text-red-700">
+                                                <button onClick={() => setAwarenessTag((prev: any) => prev.filter((item: any) => item._id !== tag._id))} className="text-red-500 hover:text-red-700">
                                                     &times;
                                                 </button>
                                             </div>
@@ -310,10 +308,10 @@ function AddDailyTask() {
 
                                     {/* Blog Tags */}
                                     <div className="mt-4 flex flex-wrap gap-2">
-                                        {blogTag.map((tag) => (
+                                        {blogTag.map((tag: any) => (
                                             <div key={tag._id} className="bg-blue-100 text-blue-600 text-sm px-3 py-1 rounded-md flex items-center gap-2">
                                                 {tag.title}
-                                                <button onClick={() => setBlogTag((prev) => prev.filter((item) => item._id !== tag._id))} className="text-red-500 hover:text-red-700">
+                                                <button onClick={() => setBlogTag((prev: any) => prev.filter((item: any) => item._id !== tag._id))} className="text-red-500 hover:text-red-700">
                                                     &times;
                                                 </button>
                                             </div>
@@ -345,10 +343,10 @@ function AddDailyTask() {
 
                                     {/* Video Tags */}
                                     <div className="mt-4 flex flex-wrap gap-2">
-                                        {videoTag.map((tag) => (
+                                        {videoTag.map((tag: any) => (
                                             <div key={tag._id} className="bg-blue-100 text-blue-600 text-sm px-3 py-1 rounded-md flex items-center gap-2">
                                                 {tag.title}
-                                                <button onClick={() => setVideoTag((prev) => prev.filter((item) => item._id !== tag._id))} className="text-red-500 hover:text-red-700">
+                                                <button onClick={() => setVideoTag((prev: any) => prev.filter((item: any) => item._id !== tag._id))} className="text-red-500 hover:text-red-700">
                                                     &times;
                                                 </button>
                                             </div>
@@ -380,10 +378,10 @@ function AddDailyTask() {
 
                                     {/* Quiz Tags */}
                                     <div className="mt-4 flex flex-wrap gap-2">
-                                        {quizTag.map((tag) => (
+                                        {quizTag.map((tag: any) => (
                                             <div key={tag._id} className="bg-blue-100 text-blue-600 text-sm px-3 py-1 rounded-md flex items-center gap-2">
                                                 {tag.title}
-                                                <button onClick={() => setQuizTag((prev) => prev.filter((item) => item._id !== tag._id))} className="text-red-500 hover:text-red-700">
+                                                <button onClick={() => setQuizTag((prev: any) => prev.filter((item: any) => item._id !== tag._id))} className="text-red-500 hover:text-red-700">
                                                     &times;
                                                 </button>
                                             </div>
@@ -415,10 +413,10 @@ function AddDailyTask() {
 
                                     {/* test Tags */}
                                     <div className="mt-4 flex flex-wrap gap-2">
-                                        {testTag.map((tag) => (
+                                        {testTag.map((tag: any) => (
                                             <div key={tag._id} className="bg-blue-100 text-blue-600 text-sm px-3 py-1 rounded-md flex items-center gap-2">
                                                 {tag.title}
-                                                <button onClick={() => setTestTag((prev) => prev.filter((item) => item._id !== tag._id))} className="text-red-500 hover:text-red-700">
+                                                <button onClick={() => setTestTag((prev: any) => prev.filter((item: any) => item._id !== tag._id))} className="text-red-500 hover:text-red-700">
                                                     &times;
                                                 </button>
                                             </div>

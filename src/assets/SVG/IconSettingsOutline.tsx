@@ -1,5 +1,3 @@
-import * as React from "react";
-
 interface Props { width?: number; height?: number; fill?: string; className?: string; }
 
 const IconSettingsOutline = (data: Props) => {

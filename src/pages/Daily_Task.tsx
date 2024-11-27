@@ -6,9 +6,8 @@ import ConfirmDeleteModal from "../components/modal/DeleteModal";
 import Loader from "../components/loader";
 import { toast, ToastContainer } from "react-toastify";
 import { useDeletePostMutation, useGetDataQuery } from "../api";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { IoIosSend } from "react-icons/io";
-import { PiEye } from "react-icons/pi";
 import { DailyTask } from "../types";
 import Task from "../forms/Task";
 import moment from "moment";
@@ -39,14 +38,14 @@ const DalyTasks = () => {
     setCurrentPage(pageNumber);
   };
 
-  const [isTakForm, setTaskForm] = useState({
+  const [isTakForm, setTaskForm] = useState<any>({
     creat: false,
     updateId: "",
     title: "",
     content: "",
   });
 
-  const [isModalOpen, setModalOpen] = useState({
+  const [isModalOpen, setModalOpen] = useState<any>({
     condition: false,
     id: "",
   });
@@ -58,13 +57,13 @@ const DalyTasks = () => {
     });
   };
 
-  const updateHandler = (task: DailyTask) => {
+  const updateHandler = (task: string) => {
     navigate(`/update-daily-task/${task}`)
   };
 
   const deletHandler = (id: string) => {
     console.log(id, "from handler");
-    setModalOpen((prev) => ({
+    setModalOpen((prev: any) => ({
       ...prev,
       condition: !prev.condition,
       id: id,
@@ -94,12 +93,6 @@ const DalyTasks = () => {
 
   const handlingCrateQuiz = () => {
     navigate('/create-daily-task')
-    /* setTaskForm((prev) => ({
-      ...prev,
-      creat: !prev.creat,
-      title: "",
-      content: "",
-    })); */
   };
 
   return (
@@ -197,3 +190,4 @@ const DalyTasks = () => {
 };
 
 export default DalyTasks;
+3

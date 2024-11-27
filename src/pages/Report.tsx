@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Pagination from '../components/pagination/Pagination';
 import Loader from '../components/loader';
 import { useGetDataQuery } from '../api';

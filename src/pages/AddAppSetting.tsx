@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { TiArrowBackOutline } from 'react-icons/ti'
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify'
-import { useGetDataQuery, useUpdatePostMutation } from '../api';
+import { useUpdatePostMutation } from '../api';
 import axios from 'axios';
 import Loader from '../components/loader';
 
@@ -42,6 +42,8 @@ function AddAppSetting() {
             setLoading(false)
         }).catch((error: any) => {
             toast.error("Failed to get App Setting")
+            console.log("error on get single product: ", error);
+
             setLoading(false)
         })
     }

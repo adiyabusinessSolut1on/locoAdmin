@@ -14,9 +14,7 @@ import { IoIosSend } from "react-icons/io";
 
 const ImportantDocuments = () => {
   const navigate = useNavigate();
-  const { data, isLoading, isError } = useGetDataQuery({
-    url: "/important_link",
-  });
+  const { data, isLoading, isError } = useGetDataQuery({ url: "/important_link", });
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
@@ -24,12 +22,8 @@ const ImportantDocuments = () => {
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
-  const currentDocuments = Array.isArray(data)
-    ? data.slice(indexOfFirstItem, indexOfLastItem)
-    : data.mesaage;
-  const handleClick = (pageNumber: number) => {
-    setCurrentPage(pageNumber);
-  };
+  const currentDocuments = Array.isArray(data) ? data?.slice(indexOfFirstItem, indexOfLastItem) : data?.mesaage;
+  const handleClick = (pageNumber: number) => { setCurrentPage(pageNumber); };
   const [deletPost] = useDeletePostMutation();
 
   const [isModalOpen, setModalOpen] = useState({
@@ -108,9 +102,9 @@ const ImportantDocuments = () => {
                 className={` p-2 text-sm md:text-base  sm:px-4 py-1 border-[2px] border-transparent 
                  bg-slate-50 focus:border-gray-100
               shadow-inner rounded-[0.26rem] outline-none `}
-                // value={searchQuery}
-                // onChange={(e) => setSearchQuery(e.target.value)}
-                // onFocus={() => setCurrentPage(1)}
+              // value={searchQuery}
+              // onChange={(e) => setSearchQuery(e.target.value)}
+              // onFocus={() => setCurrentPage(1)}
               />
             </div>
             <div className="relative flex items-center self-end ">
@@ -138,9 +132,8 @@ const ImportantDocuments = () => {
               {listHeadingUsers.map((heading, index) => (
                 <p
                   key={index}
-                  className={`   md:text-lg ${
-                    index !== 0 ? "justify-self-center" : "ml-20"
-                  }`}
+                  className={`   md:text-lg ${index !== 0 ? "justify-self-center" : "ml-20"
+                    }`}
                 >
                   {heading.charAt(0).toUpperCase() + heading.slice(1)}
                 </p>
@@ -193,8 +186,8 @@ const ImportantDocuments = () => {
                     >
                       {document?.createdAt
                         ? new Date(
-                            document?.createdAt?.split("T")[0]
-                          ).toLocaleDateString()
+                          document?.createdAt?.split("T")[0]
+                        ).toLocaleDateString()
                         : ""}
                     </span>
 

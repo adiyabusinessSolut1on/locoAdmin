@@ -24,7 +24,7 @@ const CreatTest = ({ isTestForm, setTestForm }: Props) => {
 
   const isUpdate = Object.keys(data || [])?.length !== 0;
 
-  const [testDataForm, settestDataForm] = useState({
+  const [testDataForm, settestDataForm] = useState<any>({
     title: data?.title ? data?.title : "",
     category: data?.category ? data?.category : "",
     instructions: data?.instructions ? data?.instructions : "",
@@ -36,8 +36,8 @@ const CreatTest = ({ isTestForm, setTestForm }: Props) => {
   });
 
   const selectOption = (field: string, value: string) => {
-    console.log(value);
-    settestDataForm((prev) => ({
+    // console.log(value);
+    settestDataForm((prev: any) => ({
       ...prev,
       [field]: value,
     }));
@@ -49,7 +49,7 @@ const CreatTest = ({ isTestForm, setTestForm }: Props) => {
 
   useEffect(() => {
     if (isUpdate && !isError) {
-      settestDataForm((prev) => ({
+      settestDataForm((prev: any) => ({
         ...prev,
         title: data?.title ? data?.title : "",
         instructions: data?.instructions ? data?.instructions : "",
@@ -61,7 +61,7 @@ const CreatTest = ({ isTestForm, setTestForm }: Props) => {
   const [updatePost] = useUpdatePostMutation();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    settestDataForm((prev) => ({
+    settestDataForm((prev: any) => ({
       ...prev,
       [e?.target?.name]:
         e?.target?.type === "checkbox" ? e?.target?.checked : e?.target?.value,
@@ -84,7 +84,7 @@ const CreatTest = ({ isTestForm, setTestForm }: Props) => {
         method: isTestForm.creat ? "POST" : "PUT",
         path: isTestForm.creat ? "/test" : `/test/${isTestForm.updateId}`,
       });
-      console.log(response);
+      // console.log(response);
       if (response?.data?.success) {
         toast.dismiss();
         toast.success(response?.data?.message, {
@@ -104,15 +104,14 @@ const CreatTest = ({ isTestForm, setTestForm }: Props) => {
         error
       );
       toast.error(
-        `Error ${
-          isTestForm.creat ? "Creating Test" : "Updating Test"
+        `Error ${isTestForm.creat ? "Creating Test" : "Updating Test"
         } : ${error}`
       );
     }
   };
 
   const handleEditorChange = (name: string, value: string) => {
-    settestDataForm((prev) => ({
+    settestDataForm((prev: any) => ({
       ...prev,
       [name]: value,
     }));
@@ -136,7 +135,6 @@ const CreatTest = ({ isTestForm, setTestForm }: Props) => {
       instructions: "",
       completed: false,
     });
-    console.log(testDataForm);
   };
 
   const categoryData = [
@@ -199,34 +197,30 @@ const CreatTest = ({ isTestForm, setTestForm }: Props) => {
                     }
                   >
                     <p
-                      className={`${
-                        testDataForm?.category !== "" && "text-gray-800"
-                      }`}
+                      className={`${testDataForm?.category !== "" && "text-gray-800"
+                        }`}
                     >
                       {testDataForm?.category !== ""
                         ? testDataForm?.category
                         : "Select Category"}
                     </p>
                     <FaCaretDown
-                      className={`m-1 transition-all duration-300 ${
-                        isOpen.category ? "rotate-180 text-blue-400" : ""
-                      }`}
+                      className={`m-1 transition-all duration-300 ${isOpen.category ? "rotate-180 text-blue-400" : ""
+                        }`}
                     />
                   </div>
                   <ul
-                    className={`mt-2 p-2 rounded-md w-32 text-white bg-gray-800 shadow-lg absolute z-10 ${
-                      isOpen.category ? "max-h-60" : "hidden"
-                    } custom-scrollbar`}
+                    className={`mt-2 p-2 rounded-md w-32 text-white bg-gray-800 shadow-lg absolute z-10 ${isOpen.category ? "max-h-60" : "hidden"
+                      } custom-scrollbar`}
                   >
                     {categoryData?.map(
                       (caetory: QuizAndTestCategoryType, i: number) => (
                         <li
                           key={i}
-                          className={`p-2 mb-2 text-sm rounded-md cursor-pointer hover:bg-blue-200/60 ${
-                            testDataForm.category === caetory?.name
-                              ? "bg-rose-400"
-                              : ""
-                          }`}
+                          className={`p-2 mb-2 text-sm rounded-md cursor-pointer hover:bg-blue-200/60 ${testDataForm.category === caetory?.name
+                            ? "bg-rose-400"
+                            : ""
+                            }`}
                           onClick={() =>
                             selectOption("category", caetory?.name)
                           }
@@ -269,9 +263,8 @@ const CreatTest = ({ isTestForm, setTestForm }: Props) => {
                     required
                   />
                   <span
-                    className={`text-sm font-semibold ${
-                      testDataForm.completed ? "text-black" : "text-gray-500"
-                    } `}
+                    className={`text-sm font-semibold ${testDataForm.completed ? "text-black" : "text-gray-500"
+                      } `}
                   >
                     Completed
                   </span>

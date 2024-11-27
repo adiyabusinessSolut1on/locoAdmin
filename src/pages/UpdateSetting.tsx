@@ -1,15 +1,14 @@
-import React, { Fragment, useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { IoIosSend } from 'react-icons/io'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast, ToastContainer } from 'react-toastify'
 import { useDeletePostMutation, useGetDataQuery } from '../api';
-import axios from 'axios';
 import ConfirmDeleteModal from '../components/modal/DeleteModal';
 import Loader from '../components/loader';
 
 function UpdateSetting() {
-    const basUrl = import.meta.env.VITE_API_BASE_URL
-    const token = localStorage.getItem("user");
+    // const basUrl = import.meta.env.VITE_API_BASE_URL
+    // const token = localStorage.getItem("user");
     const [deletPost] = useDeletePostMutation();
     // const [isLoading, setIsLoading] = useState(true)
     const navigate = useNavigate()
@@ -139,7 +138,7 @@ function UpdateSetting() {
                                     Check Internet connection or Contact Admin
                                 </p>
                             ) : data?.data?.length > 0 ? (
-                                data?.data?.map((blog, i: number) => (
+                                data?.data?.map((blog: any, i: number) => (
                                     <section key={i} className="grid items-center gap-6 py-2 pl-6 pr-4 border-t-2 border-gray-200 grid-cols-customSetting group hover:bg-gray-50">
                                         <span>{i + 1}</span>
 

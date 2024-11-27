@@ -16,6 +16,7 @@ export interface BlogCategory {
   _id: string;
   name: string;
   subCategories: [subcategory];
+  image: string;
 }
 
 interface blogsubcat {
@@ -54,6 +55,7 @@ export interface BlogWithCategory {
 export interface VideoCategorys {
   _id: string;
   category: string;
+  image: string
 }
 
 export interface videosTypes {

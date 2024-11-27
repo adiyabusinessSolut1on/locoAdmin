@@ -73,20 +73,6 @@ const AwarenessCategory = () => {
      //... More categories
    ]; */
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    // Handle the create or update action here
-    toast.loading("checking Details");
-    console.log("Form submitted", updateData);
-    //...
-  };
-
-  const handleSort = (element: string) => {
-    setSortElement(element);
-    // Handle the sorting action here
-    console.log("Sorting by", element);
-    //...
-  };
 
   // const sortedAwarCategory = currentAwarenessCategory
 
