@@ -6,6 +6,12 @@ interface Props {
 const LogOutModal = ({ onClose, onConfirm }: Props) => {
   const handlingPropogation = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
+    // Add your logout logic here
+    console.log("Logged out");
+    // setLogoutModal(true);
+    localStorage.removeItem("admin");
+    // localStorage.removeItem("user")
+    // navigate("/login");
   };
 
   return (

@@ -24,9 +24,13 @@ const Header = ({ onToggleSidebarSmall, isOpen }: Props) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
+    // Add your logout logic here
     console.log("Logged out");
     setLogoutModal(true);
- 
+    localStorage.removeItem("admin");
+    // localStorage.removeItem("user")
+    // navigate("/login");
+
   };
 
   const profilePannelHanlder = () => {
@@ -81,11 +85,10 @@ const Header = ({ onToggleSidebarSmall, isOpen }: Props) => {
       )}
 
       <header
-        className={`fixed top-0 flex items-center justify-between border-b bg-[#FAFAFA] border-gray-200 w-full  ${
-          !isOpen.large
-            ? "md:w-[calc(100vw-15.4rem)]"
-            : "lg:w-[calc(100%-5.4rem)]"
-        } h-20   z-10`}
+        className={`fixed top-0 flex items-center justify-between border-b bg-[#FAFAFA] border-gray-200 w-full  ${!isOpen.large
+          ? "md:w-[calc(100vw-15.4rem)]"
+          : "lg:w-[calc(100%-5.4rem)]"
+          } h-20   z-10`}
       >
         <div className="grid w-full h-full grid-cols-2 mx-4 md:grid-cols-1 md:mr-6 md:mx-0 ">
           <div className="flex items-center h-full gap-2 px-2 md:hidden">
@@ -99,7 +102,7 @@ const Header = ({ onToggleSidebarSmall, isOpen }: Props) => {
                 <RxCross1 className="w-6 h-6 text-gray-600" />
               )}
             </button>
-           
+
             <p className="flex items-center gap-1 text-3xl font-semibold text-gray-800 ">
               <MdDirectionsSubway className="w-8 h-8 text-blue-800" />
 
@@ -113,9 +116,8 @@ const Header = ({ onToggleSidebarSmall, isOpen }: Props) => {
             {/* notification */}
             <div className="relative flex items-center">
               <IoMdNotifications
-                className={`${
-                  showNotification ? "text-blue-400" : "text-blue-300"
-                } cursor-pointer w-7 h-7 hover:text-blue-400`}
+                className={`${showNotification ? "text-blue-400" : "text-blue-300"
+                  } cursor-pointer w-7 h-7 hover:text-blue-400`}
                 onClick={handlingNotification}
               />
               <span className="absolute flex w-2 h-2 top-1 right-1">
@@ -123,34 +125,27 @@ const Header = ({ onToggleSidebarSmall, isOpen }: Props) => {
                 <span className="relative inline-flex w-2 h-2 rounded-full bg-sky-700"></span>
               </span>
             </div>
-           
+
             <div className="flex items-center justify-start font-bold text-green-800 md:w-1/2 font-lato">
               {/* time */}
-              <div className="pr-2 text-xs border-r border-green-800 md:text-sm">
-                {time}
-              </div>
+              <div className="pr-2 text-xs border-r border-green-800 md:text-sm">{time}</div>
               {/* date and month */}
               <div className="pl-2 text-xs md:text-sm ">{dateMonth}</div>
             </div>
+            
             {/* user Profile */}
-            <div
-              className={`flex items-center  gap-4 p-1  cursor-pointer rounded-md z-4  `}
-              onClick={profilePannelHanlder}
-             
-            >
-             
+            <div className={`flex items-center  gap-4 p-1  cursor-pointer rounded-md z-4  `} onClick={profilePannelHanlder}>
+
               <div className={`flex items-center justify-center p-1`}>
-               
-                <FaUserCog
-                  className={` cursor-pointer w-8 h-8  text-green-800 `}
-                />
-              
+
+                <FaUserCog className={` cursor-pointer w-8 h-8  text-green-800 `} />
+
               </div>
-         
+
             </div>
-          
+
           </div>
-         
+
         </div>
       </header>
     </>

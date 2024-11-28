@@ -17,6 +17,8 @@ import TestIcon from "../../assets/SVG/testICON";
 
 import DailytaskICON from "../../assets/SVG/dailytaskICON";
 import PostDetails from "../../assets/SVG/postDetails";
+import IconReportTwentyFour from "../../assets/SVG/IconReportTwentyFour";
+import IconSettingsOutline from "../../assets/SVG/IconSettingsOutline";
 
 interface SidebarItem {
   name: string;
@@ -97,6 +99,16 @@ const sidebarData: SidebarItem[] = [
     path: "/qt-category",
     icon: CategoryICONSVG,
   },
+  {
+    name: "Report",
+    path: "/report",
+    icon: IconReportTwentyFour,
+  },
+  {
+    name: "App Update Settings",
+    path: "/update",
+    icon: IconSettingsOutline,
+  },
 
   // {
   //   name: "Railway History",
@@ -137,24 +149,20 @@ const SideBar = ({
 }: Props) => {
   return (
     <section
-      className={` h-screen border-r border-gray-200  ${
-        isOpen.small
-          ? "fixed inset-0 bg-black/60 flex z-30 "
-          : ` md:inline-block hidden  transition-all duration-500 ${
-              isOpen.large ? "w-24" : "w-60"
-            }`
-      }  transition-all duration-500   cursor-pointer`}
+      className={` h-screen border-r border-gray-200  ${isOpen.small
+        ? "fixed inset-0 bg-black/60 flex z-30 "
+        : ` md:inline-block hidden  transition-all duration-500 ${isOpen.large ? "w-24" : "w-60"
+        }`
+        }  transition-all duration-500   cursor-pointer`}
     >
       <section
         className={`
-    cursor-default h-full bg-white shadow-md overflow-clip   ${
-      isOpen.small ? "w-full sm:w-64" : ""
-    }`}
+    cursor-default h-full bg-white shadow-md overflow-clip   ${isOpen.small ? "w-full sm:w-64" : ""
+          }`}
       >
         <div
-          className={` ${
-            isOpen.large ? "justify-center" : isOpen.small ? "" : "pl-6"
-          } flex w-full gap-2 px-3  pt-6 `}
+          className={` ${isOpen.large ? "justify-center" : isOpen.small ? "" : "pl-6"
+            } flex w-full gap-2 px-3  pt-6 `}
         >
           <button
             onClick={onToggleSidebarLarge}
@@ -190,9 +198,8 @@ const SideBar = ({
         </div>
 
         <div
-          className={`w-full h-[calc(100vh-6rem)] mt-2 ${
-            isOpen.large ? "p-4" : "  p-2 pt-4 pl-4 "
-          }  overflow-y-auto  [&::-webkit-scrollbar]:hidden `}
+          className={`w-full h-[calc(100vh-6rem)] mt-2 ${isOpen.large ? "p-4" : "  p-2 pt-4 pl-4 "
+            }  overflow-y-auto  [&::-webkit-scrollbar]:hidden `}
         >
           {sidebarData.map((sideData) => {
             const isActive = location.pathname.includes(sideData.path);
@@ -203,14 +210,12 @@ const SideBar = ({
                 to={`${sideData.path}`}
                 className={({ isActive }) =>
                   ` relative group rounded-md border-l-4 transition-all duration-500  flex font-medium items-center
-                    ${
-                      isOpen.large
-                        ? "m-0 p-1 justify-center"
-                        : "m-1 p-2 w-[95%]"
-                    } h-[2.7rem]   ${
-                    isActive
-                      ? " border-blue-800 bg-blue-200 text-blue-800 font-semibold"
-                      : "hover:bg-blue-200 hover:text-gray-800 text-gray-400 border-transparent"
+                    ${isOpen.large
+                    ? "m-0 p-1 justify-center"
+                    : "m-1 p-2 w-[95%]"
+                  } h-[2.7rem]   ${isActive
+                    ? " border-blue-800 bg-blue-200 text-blue-800 font-semibold"
+                    : "hover:bg-blue-200 hover:text-gray-800 text-gray-400 border-transparent"
                   }`
                 }
               >
@@ -221,9 +226,8 @@ const SideBar = ({
                 />
 
                 <span
-                  className={`mx-1 p-1  text-sm font-montserrat ${
-                    isOpen.large ? "hidden" : ""
-                  } `}
+                  className={`mx-1 p-1  text-sm font-montserrat ${isOpen.large ? "hidden" : ""
+                    } `}
                 >
                   {sideData.name}
                 </span>
@@ -234,9 +238,8 @@ const SideBar = ({
       </section>
       <button
         onClick={onToggleSidebarSmall}
-        className={`absolute top-6 right-4 z-50 p-1 bg-white rounded-md text-black hover:text-rose-400 ${
-          isOpen.small ? "" : "hidden"
-        }`}
+        className={`absolute top-6 right-4 z-50 p-1 bg-white rounded-md text-black hover:text-rose-400 ${isOpen.small ? "" : "hidden"
+          }`}
       >
         <RxCross1 className="w-6 h-6 font-bold" />
       </button>

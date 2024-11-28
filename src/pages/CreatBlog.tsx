@@ -24,8 +24,8 @@ interface StateProps {
   subcategory?: string;
   subsubcategory?: string;
   innercategory?: string;
-  categoryId:string;
-  categoryName:string;
+  categoryId: string;
+  categoryName: string;
   title: string;
   slug: string;
   thumnail: string;
@@ -56,17 +56,17 @@ const CreatBlog = () => {
     subsubcategoryData: [],
     innercategoryData: [],
   });
-  interface blogACt{
-    _id:string,
-    name:string
+  interface blogACt {
+    _id: string,
+    name: string
   }
   const [state, setState] = useState<StateProps>({
     maincategory: "",
     mainId: "",
     subid: "",
     subsubid: "",
-    categoryId:blogData?.data?.categoryId||"",
-     categoryName:blogData?.data?.categoryName||"",
+    categoryId: blogData?.data?.categoryId || "",
+    categoryName: blogData?.data?.categoryName || "",
     innerid: "",
     subcategory: "",
     subsubcategory: "",
@@ -79,9 +79,9 @@ const CreatBlog = () => {
       blogData?.data?.thumnail?.slice(67, data?.image?.indexOf("%")) || "",
   });
 
-  const handleBlogcat=(category:blogACt)=>{
-    setState((prev)=>({...prev,categoryId:category?._id,categoryName:category?.name}))
-      }
+  const handleBlogcat = (category: blogACt) => {
+    setState((prev) => ({ ...prev, categoryId: category?._id, categoryName: category?.name }))
+  }
 
   const [isOpen, setOpen] = useState({
     maincategory: false,
@@ -99,8 +99,8 @@ const CreatBlog = () => {
         thumnail: blogData?.data?.thumnail,
         slug: blogData?.data?.slug,
         content: blogData?.data?.content,
-        categoryId:blogData?.data?.categoryId,
-        categoryName:blogData?.data?.categoryName,
+        categoryId: blogData?.data?.categoryId,
+        categoryName: blogData?.data?.categoryName,
         imageTitle:
           blogData?.data?.thumnail?.slice(
             72,
@@ -173,7 +173,7 @@ const CreatBlog = () => {
         ...prev,
         innercategoryData: subSubCategory
           ? //@ts-expect-error mooj
-            subSubCategory?.innerCategories
+          subSubCategory?.innerCategories
           : [],
       }));
       setState((prev) => ({
@@ -238,8 +238,8 @@ const CreatBlog = () => {
     try {
       toast.loading("Checking Details");
       const payload = {
-        categoryId:state?.categoryId,
-        categoryName:state?.categoryName,
+        categoryId: state?.categoryId,
+        categoryName: state?.categoryName,
         title: state?.title,
         slug: state?.slug,
         thumnail: state?.thumnail,
@@ -249,13 +249,10 @@ const CreatBlog = () => {
       const response = await updatePost({
         data: payload,
         method: isUpdate && !isError ? "PUT" : "POST",
-        path:
-          isUpdate && !isError
-            ? `/blog/update-blog/${id}`
-            : "/blog/create",
+        path: isUpdate && !isError ? `/blog/update-blog/${id}` : "/blog/create",
       });
 
-      console.log(response);
+      // console.log(response);
 
       if (response?.data?.success) {
         toast.dismiss();
@@ -266,8 +263,7 @@ const CreatBlog = () => {
       } else {
         toast.dismiss();
         toast.error(
-          `Failed to ${
-            isUpdate && !isError ? "Update Blog" : "Create Blog"
+          `Failed to ${isUpdate && !isError ? "Update Blog" : "Create Blog"
           } create Blog`
         );
       }
@@ -288,8 +284,8 @@ const CreatBlog = () => {
       subid: "",
       subsubid: "",
       innerid: "",
-      categoryId:"",
-      categoryName:"",
+      categoryId: "",
+      categoryName: "",
       subcategory: "",
       subsubcategory: "",
       innercategory: "",
@@ -373,9 +369,8 @@ const CreatBlog = () => {
                 />
                 <label
                   htmlFor="file-upload"
-                  className={`px-4 py-2 pl-24 relative ${
-                    progressStatus ? "pb-2" : ""
-                  } w-full text-base bg-blue-100 focus:border-blue-200 border-transparent border rounded-md text-gray-400 cursor-pointer flex items-center justify-between`}
+                  className={`px-4 py-2 pl-24 relative ${progressStatus ? "pb-2" : ""
+                    } w-full text-base bg-blue-100 focus:border-blue-200 border-transparent border rounded-md text-gray-400 cursor-pointer flex items-center justify-between`}
                 >
                   {state.imageTitle || "Choose a file"}
                   <span className="text-gray-400 text-[15px] absolute top-0 h-full flex items-center left-0 rounded-tl-md rounded-bl-md px-3 font-medium bg-blue-200">
@@ -388,7 +383,7 @@ const CreatBlog = () => {
                       <div
                         className="h-1 bg-blue-400 rounded-md mx-[1px] mb-[1px]"
                         style={{ width: `${progressStatus}%` }}
-                        // style={{ width: `${100}%` }}
+                      // style={{ width: `${100}%` }}
                       ></div>
                     </div>
                   </>
@@ -419,22 +414,20 @@ const CreatBlog = () => {
                     <FaCaretDown className="m-1" />
                   </div>
                   <ul
-                    className={`mt-2 p-2  overflow-auto rounded-md w-32 text-[#DEE1E2] bg-gray-800 shadow-lg absolute z-10 ${
-                      isOpen.maincategory ? "max-h-60" : "hidden"
-                    } custom-scrollbar`}
+                    className={`mt-2 p-2  overflow-auto rounded-md w-32 text-[#DEE1E2] bg-gray-800 shadow-lg absolute z-10 ${isOpen.maincategory ? "max-h-60" : "hidden"
+                      } custom-scrollbar`}
                   >
                     {data?.data?.length > 0 ? (
                       data?.data?.map((main: BlogCategory, i: number) => (
                         <li
                           key={i}
-                          className={`p-2 mb-2 text-sm text-[#DEE1E2]  rounded-md cursor-pointer hover:bg-blue-200/60 ${
-                            state?.maincategory === main?.name
-                              ? "bg-rose-600"
-                              : ""
-                          }`}
-                          onClick={() =>{
+                          className={`p-2 mb-2 text-sm text-[#DEE1E2]  rounded-md cursor-pointer hover:bg-blue-200/60 ${state?.maincategory === main?.name
+                            ? "bg-rose-600"
+                            : ""
+                            }`}
+                          onClick={() => {
                             handleDropChange("maincategory", main?._id)
-                            handleBlogcat({_id:main?._id,name:main?.name})
+                            handleBlogcat({ _id: main?._id, name: main?.name })
                           }
                           }
                         >
@@ -463,19 +456,17 @@ const CreatBlog = () => {
                     <FaCaretDown className="m-1" />
                   </div>
                   <ul
-                    className={`mt-2 p-2 overflow-auto rounded-md w-32 text-[#DEE1E2] bg-gray-800 shadow-lg absolute z-10 ${
-                      isOpen?.subcategory ? "max-h-60" : "hidden"
-                    } custom-scrollbar`}
+                    className={`mt-2 p-2 overflow-auto rounded-md w-32 text-[#DEE1E2] bg-gray-800 shadow-lg absolute z-10 ${isOpen?.subcategory ? "max-h-60" : "hidden"
+                      } custom-scrollbar`}
                   >
                     {category?.subcategoryData?.map((sub, i) => (
                       <li
                         key={i}
-                        className={`p-2 mb-2 text-sm text-[#DEE1E2]  rounded-md cursor-pointer hover:bg-blue-200/60 ${
-                          state.subcategory === sub?.name ? "bg-rose-600" : ""
-                        }`}
-                        onClick={() =>{
+                        className={`p-2 mb-2 text-sm text-[#DEE1E2]  rounded-md cursor-pointer hover:bg-blue-200/60 ${state.subcategory === sub?.name ? "bg-rose-600" : ""
+                          }`}
+                        onClick={() => {
                           handleDropChange("subcategory", sub?._id)
-                          handleBlogcat({_id:sub?._id,name:sub?.name})
+                          handleBlogcat({ _id: sub?._id, name: sub?.name })
                         }
                         }
                       >
@@ -504,21 +495,19 @@ const CreatBlog = () => {
                     <FaCaretDown className="m-1" />
                   </div>
                   <ul
-                    className={`mt-2 p-2 rounded-md overflow-auto w-32 text-[#DEE1E2] bg-gray-800 shadow-lg absolute z-10 ${
-                      isOpen.subsubcategory ? "max-h-60" : "hidden"
-                    } custom-scrollbar`}
+                    className={`mt-2 p-2 rounded-md overflow-auto w-32 text-[#DEE1E2] bg-gray-800 shadow-lg absolute z-10 ${isOpen.subsubcategory ? "max-h-60" : "hidden"
+                      } custom-scrollbar`}
                   >
                     {category?.subsubcategoryData?.map((subsub, i) => (
                       <li
                         key={i}
-                        className={`p-2 mb-2 text-sm text-[#DEE1E2]  rounded-md cursor-pointer hover:bg-blue-200/60 ${
-                          state.subsubcategory === subsub?.name
-                            ? "bg-rose-600"
-                            : ""
-                        }`}
-                        onClick={() =>{
+                        className={`p-2 mb-2 text-sm text-[#DEE1E2]  rounded-md cursor-pointer hover:bg-blue-200/60 ${state.subsubcategory === subsub?.name
+                          ? "bg-rose-600"
+                          : ""
+                          }`}
+                        onClick={() => {
                           handleDropChange("subsubcategory", subsub?._id)
-                          handleBlogcat({_id:subsub?._id,name:subsub?.name})
+                          handleBlogcat({ _id: subsub?._id, name: subsub?.name })
                         }
                         }
                       >
@@ -547,21 +536,19 @@ const CreatBlog = () => {
                     <FaCaretDown className="m-1" />
                   </div>
                   <ul
-                    className={`mt-2 p-2 rounded-md overflow-auto w-32 text-[#DEE1E2] bg-gray-800 shadow-lg absolute z-10 ${
-                      isOpen?.innercategory ? "max-h-60" : "hidden"
-                    } custom-scrollbar`}
+                    className={`mt-2 p-2 rounded-md overflow-auto w-32 text-[#DEE1E2] bg-gray-800 shadow-lg absolute z-10 ${isOpen?.innercategory ? "max-h-60" : "hidden"
+                      } custom-scrollbar`}
                   >
                     {category?.innercategoryData?.map((iner, i) => (
                       <li
                         key={i}
-                        className={`p-2 mb-2 text-sm text-[#DEE1E2]  rounded-md cursor-pointer hover:bg-blue-200/60 ${
-                          state.innercategory === iner?.name
-                            ? "bg-rose-600"
-                            : ""
-                        }`}
-                        onClick={() =>{
+                        className={`p-2 mb-2 text-sm text-[#DEE1E2]  rounded-md cursor-pointer hover:bg-blue-200/60 ${state.innercategory === iner?.name
+                          ? "bg-rose-600"
+                          : ""
+                          }`}
+                        onClick={() => {
                           handleDropChange("innercategory", iner?._id)
-                          handleBlogcat({_id:iner?._id,name:iner?.name})
+                          handleBlogcat({ _id: iner?._id, name: iner?.name })
                         }
                         }
                       >
@@ -573,11 +560,11 @@ const CreatBlog = () => {
               )}
 
               <div className="col-span-1 md:col-span-2">
-              <JoditTextEditor
-                 value={state?.content}
-                 OnChangeEditor={(e: string) => handleDropChange("content", e)}
+                <JoditTextEditor
+                  value={state?.content}
+                  OnChangeEditor={(e: string) => handleDropChange("content", e)}
                 />
-               
+
               </div>
             </div>
 

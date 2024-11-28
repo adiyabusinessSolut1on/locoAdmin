@@ -3,11 +3,7 @@ if (typeof global === "undefined") {
   window.global = window;
 }
 import "./App.css";
-import {
-  RouterProvider,
-  createBrowserRouter,
-  Navigate,
-} from "react-router-dom";
+import { RouterProvider, createBrowserRouter, Navigate, } from "react-router-dom";
 import Login from "./pages/login";
 import Layout from "./layout";
 import Create_Category from "./pages/create-category";
@@ -39,6 +35,9 @@ import QuizAndTestCategory from "./pages/QuizAndTestCategory";
 import CreatDocuments from "./pages/CreatDocuments";
 
 import Dashboard from "./pages/Dashboard";
+import Report from "./pages/Report";
+import AddAppSetting from "./pages/AddAppSetting";
+import UpdateSetting from "./pages/UpdateSetting";
 
 function App() {
   const token = localStorage.getItem("user");
@@ -190,6 +189,22 @@ function App() {
             {
               path: "qt-category",
               element: <QuizAndTestCategory />,
+            },
+            {
+              path: "update",
+              element: <UpdateSetting />,
+            },
+            {
+              path: "add-update",
+              element: <AddAppSetting />,
+            },
+            {
+              path: "update/:id",
+              element: <AddAppSetting />,
+            },
+            {
+              path: "report",
+              element: <Report />,
             },
           ],
         },

@@ -16,6 +16,7 @@ export default {
         customImportand: "40px 0.8fr 1fr 1fr 0.6fr",
         customUsers: "40px 0.4fr 1fr 1.2fr 1fr 0.6fr",
 
+        customSetting: "40px 1fr 0.4fr 0.4fr 1.5fr 1.5fr 0.8fr 0.6fr",
         customBlog: "40px 0.4fr 1fr 1fr 0.6fr",
         customVideo: "40px  1fr 1fr 0.4fr 1fr  1fr 0.8fr 0.6fr ",
         customProduct: "40px  1fr 1fr 2fr 1fr 1fr 0.8fr 0.6fr",
