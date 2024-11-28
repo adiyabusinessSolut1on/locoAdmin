@@ -38,6 +38,7 @@ import Dashboard from "./pages/Dashboard";
 import Report from "./pages/Report";
 import AddAppSetting from "./pages/AddAppSetting";
 import UpdateSetting from "./pages/UpdateSetting";
+import AddDailyTask from "./pages/AddDailyTask";
 
 function App() {
   const token = localStorage.getItem("user");
@@ -115,7 +116,6 @@ function App() {
               path: "videos/:id",
               element: <UploadVideo />,
             },
-
             {
               path: "videos/upload-video",
               element: <UploadVideo />,
@@ -123,6 +123,14 @@ function App() {
             {
               path: "daily-task",
               element: <DalyTasks />,
+            },
+            {
+              path: "create-daily-task",
+              element: <AddDailyTask />,
+            },
+            {
+              path: "update-daily-task/:id",
+              element: <AddDailyTask />,
             },
             {
               path: "awareness",

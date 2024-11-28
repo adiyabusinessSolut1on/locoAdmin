@@ -12,19 +12,29 @@ import { AwarenessTypes } from "../types";
 
 const Awareness = () => {
   const navigate = useNavigate();
+
   const { data, isLoading, isError } = useGetDataQuery({
     url: "/awareness",
   });
+
   const [deletPost] = useDeletePostMutation();
 
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 15;
+
+  const [searchQuery, setSearchQuery] = useState("");
 
   //calculation of page
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
-  const currentAwareness = data?.slice(indexOfFirstItem, indexOfLastItem);
+  // Filter data based on search query
+  const filteredData = data?.filter((item: AwarenessTypes) =>
+    item.title?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const currentAwareness = filteredData?.slice(indexOfFirstItem, indexOfLastItem);
+
 
   const handleClick = (pageNumber: number) => {
     setCurrentPage(pageNumber);
@@ -56,20 +66,16 @@ const Awareness = () => {
 
   const handleConfirmDelete = () => {
     toast.loading("checking Details");
-    deletPost({
-      url: `/awareness/${isModalOpen.id}`,
-    })
-      .then((res) => {
-        if (res.data.success) {
-          toast.dismiss();
-          toast.success(`${res.data.message}`);
-        }
-        console.log(res);
-      })
-      .catch(() => {
+    deletPost({ url: `/awareness/${isModalOpen.id}`, }).then((res) => {
+      if (res.data.success) {
         toast.dismiss();
-        toast.error("Not successfull to delete");
-      });
+        toast.success(`${res.data.message}`);
+      }
+      console.log(res);
+    }).catch(() => {
+      toast.dismiss();
+      toast.error("Not successfull to delete");
+    });
     setModalOpen({
       condition: false,
       id: "",
@@ -107,9 +113,9 @@ const Awareness = () => {
                 className={` p-2 text-sm md:text-base  sm:px-4 py-1 border-[2px] border-transparent 
                    bg-slate-50 focus:border-gray-100
                 shadow-inner rounded-[0.26rem] outline-none `}
-                // value={searchQuery}
-                // onChange={(e) => setSearchQuery(e.target.value)}
-                // onFocus={() => setCurrentPage(1)}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onFocus={() => setCurrentPage(1)}
               />
             </div>
             <div className="relative flex items-center self-end ">
@@ -128,23 +134,15 @@ const Awareness = () => {
               </button>
             </div>
           </div>
-          <section
-            className={`w-full overflow-auto   border-2 [&::-webkit-scrollbar]:hidden rounded-lg border-gray-200 shadow-md bg-white`}
-          >
+          <section className={`w-full overflow-auto   border-2 [&::-webkit-scrollbar]:hidden rounded-lg border-gray-200 shadow-md bg-white`}>
             <section className="grid grid-cols-customAwarness pb-2 p-2  gap-4   min-w-[800px] font-medium md:font-semibold bg-white font-mavenPro">
               <p className="pl-2 md:text-lg">SrNo.</p>
 
               {listHeadingAwarness?.map((heading: string, index: number) => (
-                <p
-                  key={index}
-                  className={`   md:text-lg ${
-                    index !== 0 ? "justify-self-center" : "ml-20"
-                  }`}
-                >
-                  {heading.charAt(0).toUpperCase() + heading.slice(1)}
-                </p>
+                <p key={index} className={`   md:text-lg ${index !== 0 ? "justify-self-center" : "ml-20"}`}>{heading.charAt(0).toUpperCase() + heading.slice(1)}</p>
               ))}
             </section>
+
             <div className=" h-[380px] overflow-y-auto [&::-webkit-scrollbar]:hidden min-w-[800px] bg-gray-50">
               {isLoading ? (
                 <p>Loading...</p>
@@ -152,60 +150,30 @@ const Awareness = () => {
                 <p className="flex items-center justify-center w-full h-full font-medium text-center text-rose-800">
                   Check Internet connection or Contact to Admin
                 </p>
-              ) : data?.length > 0 ? (
+              ) : filteredData?.length > 0 ? (
                 currentAwareness?.map((awar: AwarenessTypes, i: number) => (
-                  <section
-                    key={i}
-                    className="grid items-center gap-6 py-2 pl-6 pr-4 border-t-2 border-gray-200 grid-cols-customAwarness group hover:bg-gray-50"
-                  >
+                  <section key={i} className="grid items-center gap-6 py-2 pl-6 pr-4 border-t-2 border-gray-200 grid-cols-customAwarness group hover:bg-gray-50">
                     <span>{i + 1}</span>
 
-                    <span
-                      className={`  font-semibold text-center  rounded-full  `}
-                    >
-                      {awar?.title ? awar?.title : "---"}
-                    </span>
-                    <span
-                      className={`  font-semibold text-center  rounded-full  `}
-                    >
-                      {awar?.category ? awar?.category : "--"}
-                    </span>
-                    <span
-                      className={`  font-semibold text-center  rounded-full  `}
-                    >
-                      {awar?.createdAt
-                        ? new Date(
-                            awar?.createdAt?.split("T")[0]
-                          ).toLocaleDateString()
-                        : ""}
-                    </span>
+                    <span className={`font-semibold text-center  rounded-full  `}>{awar?.title ? awar?.title : "---"}</span>
+                    <span className={`font-semibold text-center  rounded-full  `}>{awar?.category ? awar?.category : "--"}</span>
+                    <span className={`font-semibold text-center  rounded-full  `}>{awar?.createdAt ? new Date(awar?.createdAt?.split("T")[0]).toLocaleDateString() : ""}</span>
 
                     <div className="flex items-center justify-center">
                       {awar?.image ? (
-                        <img
-                          src={awar?.image}
-                          alt="Awareness Image"
-                          className="object-cover w-24 h-24 rounded-full "
-                        />
+                        <img src={awar?.image} alt="Awareness Image" className="object-cover w-24 h-24 rounded-full " />
                       ) : (
-                        <span className="text-sm font-bold text-gray-400">
-                          No Image
-                        </span>
+                        <span className="text-sm font-bold text-gray-400">No Image</span>
                       )}
                     </div>
 
                     <div className="grid justify-center gap-2">
-                      <button
-                        className="px-3 py-2 text-sm font-semibold text-white rounded-md bg-[#1f3c88] hover:bg-[#2d56bb]"
-                        onClick={() => updateHandler(awar)}
-                      >
+                      <button className="px-3 py-2 text-sm font-semibold text-white rounded-md bg-[#1f3c88] hover:bg-[#2d56bb]" onClick={() => updateHandler(awar)}>
                         {/* Edit */}
                         <EditICONSVG height={18} width={18} fill={"white"} />
                       </button>
-                      <button
-                        className="px-3 py-2 text-sm font-semibold text-white rounded-md bg-rose-600 hover:bg-rose-700"
-                        onClick={() => deletHandler(awar?._id)}
-                      >
+
+                      <button className="px-3 py-2 text-sm font-semibold text-white rounded-md bg-rose-600 hover:bg-rose-700" onClick={() => deletHandler(awar?._id)}>
                         {/* Delete */}
                         <DeleteICONSVG height={18} width={18} fill={"white"} />
                       </button>
