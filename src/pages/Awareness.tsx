@@ -188,7 +188,7 @@ const Awareness = () => {
 
           <Pagination<AwarenessTypes>
             currentPage={currentPage}
-            apiData={data}
+            apiData={filteredData}
             itemsPerPage={itemsPerPage}
             handleClick={handleClick}
           />

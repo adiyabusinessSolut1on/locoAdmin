@@ -14,29 +14,23 @@ import { IoIosSend } from "react-icons/io";
 
 const ImportantDocuments = () => {
   const navigate = useNavigate();
-  const { data, isLoading, isError, error } = useGetDataQuery({
-    url: "/important_link",
-  });
+  const { data, isLoading, isError } = useGetDataQuery({ url: "/important_link", });
 
+  const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 15;
   //calculation of page
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
-  const currentDocuments = Array.isArray(data)
-    ? data.slice(indexOfFirstItem, indexOfLastItem)
-    : data?.mesaage;
-
-  console.log(
-    data,
-    indexOfFirstItem,
-    indexOfLastItem,
-    isError,
-    error,
-    typeof currentDocuments === "string",
-    currentDocuments
+  // const currentDocuments = Array.isArray(data) ? data.slice(indexOfFirstItem, indexOfLastItem) : data?.mesaage;
+  // Filter data based on search query
+  const filteredData = data?.filter((item: ImpLinkDocs) =>
+    item.title?.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const currentDocuments = filteredData?.slice(indexOfFirstItem, indexOfLastItem);
+
   const handleClick = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
@@ -119,9 +113,9 @@ const ImportantDocuments = () => {
                 className={` p-2 text-sm md:text-base  sm:px-4 py-1 border-[2px] border-transparent 
                  bg-slate-50 focus:border-gray-100
               shadow-inner rounded-[0.26rem] outline-none `}
-                // value={searchQuery}
-                // onChange={(e) => setSearchQuery(e.target.value)}
-                // onFocus={() => setCurrentPage(1)}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onFocus={() => setCurrentPage(1)}
               />
             </div>
             <div className="relative flex items-center self-end ">
@@ -149,9 +143,8 @@ const ImportantDocuments = () => {
               {listHeadingUsers.map((heading, index) => (
                 <p
                   key={index}
-                  className={`   md:text-lg ${
-                    index !== 0 ? "justify-self-center" : "ml-20"
-                  }`}
+                  className={`   md:text-lg ${index !== 0 ? "justify-self-center" : "ml-20"
+                    }`}
                 >
                   {heading.charAt(0).toUpperCase() + heading.slice(1)}
                 </p>
@@ -204,8 +197,8 @@ const ImportantDocuments = () => {
                     >
                       {document?.createdAt
                         ? new Date(
-                            document?.createdAt?.split("T")[0]
-                          ).toLocaleDateString()
+                          document?.createdAt?.split("T")[0]
+                        ).toLocaleDateString()
                         : ""}
                     </span>
 
@@ -233,7 +226,7 @@ const ImportantDocuments = () => {
 
           <Pagination<ImpLinkDocs>
             currentPage={currentPage}
-            apiData={data}
+            apiData={filteredData}
             itemsPerPage={itemsPerPage}
             handleClick={handleClick}
           />

@@ -227,7 +227,7 @@ const backLogin=()=>{
               Login
             </button>
           </div>
-          <div className="mt-2 text-sm ">
+          {/* <div className="mt-2 text-sm ">
             <span className="text-gray-700">Don't have account ?</span>
             <Link
               to={"/login/register"}
@@ -235,7 +235,7 @@ const backLogin=()=>{
             >
               Create a Account
             </Link>
-          </div>
+          </div> */}
         </form>
       </div>} 
      

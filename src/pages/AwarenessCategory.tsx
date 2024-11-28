@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import AwarenessCategoryForm from "../forms/AwarenessCategoryForm";
 import { IoIosSend } from "react-icons/io";
 import { useDeletePostMutation, useGetDataQuery } from "../api";
@@ -10,7 +10,7 @@ import Pagination from "../components/pagination/Pagination";
 interface awarenessCategory {
   _id: string;
   name: string;
-  image:string;
+  image: string;
 }
 const AwarenessCategory = () => {
   const [isCategoryForm, setCategoryForm] = useState({
@@ -19,7 +19,7 @@ const AwarenessCategory = () => {
   });
   const [updateData, setUpdateDate] = useState({
     name: "",
-    image:""
+    image: ""
   });
 
   const categoryHeading = ["Category Name", "Setting"];
@@ -31,14 +31,14 @@ const AwarenessCategory = () => {
     }));
     setUpdateDate({
       name: "",
-      image:""
+      image: ""
     });
   };
 
   const { data, isLoading, isError } = useGetDataQuery({
     url: "/awareness/category",
   });
-console.log("data in awareness>>>",data);
+  // console.log("data in awareness>>>",data);
   const [deletPost] = useDeletePostMutation();
 
   const [isModalOpen, setModalOpen] = useState({
@@ -46,19 +46,29 @@ console.log("data in awareness>>>",data);
     id: "",
   });
 
+  const [searchQuery, setSearchQuery] = useState<string>("");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 15;
 
-  //calculation of page
+
+  // Filtered and paginated data
+  const filteredData = useMemo(() => {
+    if (isLoading || !data?.data) return [];
+    return data.data.filter((category: awarenessCategory) =>
+      category.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [data, searchQuery]);
+
+
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentAwarenessCategory = filteredData.slice(indexOfFirstItem, indexOfLastItem);
 
-  console.log(data, data?.length, isLoading, isError, "awarnace");
 
-  const currentAwarenessCategory =
-    !isLoading && data?.data?.length > 0
-      ? data?.data?.slice(indexOfFirstItem, indexOfLastItem)
-      : [];
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+    setCurrentPage(1); // Reset to the first page when search query changes
+  };
 
   const handleClick = (pageNumber: number) => {
     setCurrentPage(pageNumber);
@@ -86,29 +96,27 @@ console.log("data in awareness>>>",data);
 
     setUpdateDate((prev) => ({
       ...prev,
-      image:category?.image,
+      image: category?.image,
       name: category?.name,
     }));
   };
 
+
+
+
+
   const handleConfirmDelete = () => {
     // Handle the delete action here
     toast.loading("checking Details");
-    console.log("Item deleted", isModalOpen.id);
-    deletPost({
-      url: `/awareness/category/${isModalOpen.id}`,
-    })
-      .then((res) => {
-        if (res.data.success) {
-          toast.dismiss();
-          toast.success(`${res.data.message}`);
-        }
-        console.log(res);
-      })
-      .catch(() => {
+    deletPost({ url: `/awareness/category/${isModalOpen.id}`, }).then((res) => {
+      if (res.data.success) {
         toast.dismiss();
-        toast.error("Not successfull to delete");
-      });
+        toast.success(`${res.data.message}`);
+      }
+    }).catch(() => {
+      toast.dismiss();
+      toast.error("Not successfull to delete");
+    });
     setModalOpen({
       condition: false,
       id: "",
@@ -118,32 +126,19 @@ console.log("data in awareness>>>",data);
   return (
     <>
       {(isCategoryForm.creat || isCategoryForm.updateId) && (
-        <AwarenessCategoryForm
-          singleCategory={updateData}
-          isCategoryForm={isCategoryForm}
-          setCategoryForm={setCategoryForm}
-        />
+        <AwarenessCategoryForm singleCategory={updateData} isCategoryForm={isCategoryForm} setCategoryForm={setCategoryForm} />
       )}
       <ToastContainer />
       {isLoading && <Loader />}
       {isModalOpen.condition && (
-        <ConfirmDeleteModal
-          onClose={handleCloseModal}
-          onConfirm={handleConfirmDelete}
-        />
+        <ConfirmDeleteModal onClose={handleCloseModal} onConfirm={handleConfirmDelete} />
       )}
-      <section
-        className={`  md:pl-0 p-4 h-full w-full rounded-md   mx-auto [&::-webkit-scrollbar]:hidden `}
-      >
-        <section
-          className={` md:p-8 p-6 h-full  text-gray-600  border-gray-200 
-          rounded-md   max-w-full w-full `}
-        >
+      <section className={`  md:pl-0 p-4 h-full w-full rounded-md   mx-auto [&::-webkit-scrollbar]:hidden `}>
+        <section className={` md:p-8 p-6 h-full  text-gray-600  border-gray-200 rounded-md   max-w-full w-full `}>
           <div className="flex items-center mb-2 md:mb-6">
-            <h1 className=" text-[28px] font-bold md:text-4xl font-mavenPro ">
-              Awareness Category
-            </h1>
+            <h1 className=" text-[28px] font-bold md:text-4xl font-mavenPro ">Awareness Category</h1>
           </div>
+
           <div className="flex justify-between mb-4">
             <div className="flex items-center gap-4 ">
               <div className={`flex items-center   `}>
@@ -154,9 +149,9 @@ console.log("data in awareness>>>",data);
                   className={` p-2 text-sm md:text-base  sm:px-4 py-1 border-[2px] border-transparent 
                  bg-slate-50 focus:border-gray-100
               shadow-inner rounded-[0.26rem] outline-none `}
-                  // value={searchQuery}
-                  // onChange={(e) => setSearchQuery(e.target.value)}
-                  // onFocus={() => setCurrentPage(1)}
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                  onFocus={() => setCurrentPage(1)}
                 />
               </div>
             </div>
@@ -183,9 +178,8 @@ console.log("data in awareness>>>",data);
               {categoryHeading?.map((heading, index) => (
                 <p
                   key={index}
-                  className={`  text-gray-600 md:text-lg ${
-                    index !== 0 ? "justify-self-center" : "ml-6"
-                  }`}
+                  className={`  text-gray-600 md:text-lg ${index !== 0 ? "justify-self-center" : "ml-6"
+                    }`}
                 >
                   {heading.charAt(0).toUpperCase() + heading.slice(1)}
                 </p>
@@ -207,11 +201,11 @@ console.log("data in awareness>>>",data);
                       className="grid items-center gap-6 py-2 pl-6 pr-4 border-t-2 border-gray-200 grid-cols-customeCategory group hover:bg-gray-50"
                     >
                       <span>{i + 1}</span>
-                      <img src={category?.image} className="h-20 w-20 rounded-full" alt="ICON"/>
+                      <img src={category?.image} className="h-20 w-20 rounded-full" alt="ICON" />
                       <span className="ml-2 text-sm font-semibold text-gray-600 md:text-base">
                         {category?.name}
                       </span>
-                    
+
                       <div className="flex justify-center gap-4">
                         <button
                           className="px-3 text-sm py-2 text-white  rounded-md bg-[#1f3c88] hover:bg-[#2d56bb]"
@@ -238,7 +232,7 @@ console.log("data in awareness>>>",data);
           </section>
           <Pagination<awarenessCategory>
             currentPage={currentPage}
-            apiData={data?.data}
+            apiData={filteredData}
             itemsPerPage={itemsPerPage}
             handleClick={handleClick}
           />

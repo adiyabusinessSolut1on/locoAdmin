@@ -18,16 +18,23 @@ const BlogList = () => {
     isError,
   } = useGetDataQuery({ url: "/blog/getallblogs" });
 
-  console.log(response);
-
+  const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 15;
 
   //calculation of page
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
-  const currentBlog = response?.data?.slice(indexOfFirstItem, indexOfLastItem);
+  // const currentBlog = response?.data?.slice(indexOfFirstItem, indexOfLastItem);
+
+  // Filter data based on search query
+  const filteredData = response?.data?.filter((item: BlogSTyepes) =>
+    item.title?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const currentBlog = filteredData?.slice(indexOfFirstItem, indexOfLastItem);
+
 
   const handleClick = (pageNumber: number) => {
     setCurrentPage(pageNumber);
@@ -110,9 +117,9 @@ const BlogList = () => {
                 className={` p-2 text-sm md:text-base  sm:px-4 py-1 border-[2px] border-transparent 
            bg-slate-50 focus:border-gray-100
         shadow-inner rounded-[0.26rem] outline-none `}
-                // value={searchQuery}
-                // onChange={(e) => setSearchQuery(e.target.value)}
-                // onFocus={() => setCurrentPage(1)}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onFocus={() => setCurrentPage(1)}
               />
             </div>
             <div className="relative flex items-center self-end ">
@@ -138,9 +145,8 @@ const BlogList = () => {
               {blogHeadings?.map((heading: string, index: number) => (
                 <p
                   key={index}
-                  className={`   md:text-lg ${
-                    index !== 0 ? "justify-self-center" : "ml-10"
-                  }`}
+                  className={`   md:text-lg ${index !== 0 ? "justify-self-center" : "ml-10"
+                    }`}
                 >
                   {heading.charAt(0).toUpperCase() + heading.slice(1)}
                 </p>
@@ -209,7 +215,7 @@ const BlogList = () => {
 
           <Pagination<BlogSTyepes>
             currentPage={currentPage}
-            apiData={response?.data}
+            apiData={filteredData}
             itemsPerPage={itemsPerPage}
             handleClick={handleClick}
           />

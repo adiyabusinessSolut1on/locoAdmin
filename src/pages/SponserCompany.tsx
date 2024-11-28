@@ -16,14 +16,22 @@ const SponserCompany = () => {
     url: "/sponsor/company",
   });
 
+  const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 15;
 
   //calculation of page
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
-  const currentSponser = data?.slice(indexOfFirstItem, indexOfLastItem);
+  // const currentSponser = data?.slice(indexOfFirstItem, indexOfLastItem);
+
+  // Filter data based on search query
+  const filteredData = data?.filter((item: SponsorCompanytypes) =>
+    item.name?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const currentSponser = filteredData?.slice(indexOfFirstItem, indexOfLastItem);
 
   const handleClick = (pageNumber: number) => {
     setCurrentPage(pageNumber);
@@ -69,7 +77,6 @@ const SponserCompany = () => {
     id: "",
   });
 
-  console.log(data);
 
   const handleCloseModal = () => {
     setModalOpen({
@@ -92,20 +99,15 @@ const SponserCompany = () => {
   const handleConfirmDelete = () => {
     // Handle the delete action here
     toast.loading("checking Details");
-    deletPost({
-      url: `/sponsor/company/${isModalOpen.id}`,
-    })
-      .then((res) => {
-        if (res.data.success) {
-          toast.dismiss();
-          toast.success(`${res.data.message}`);
-        }
-        console.log(res);
-      })
-      .catch(() => {
+    deletPost({ url: `/sponsor/company/${isModalOpen.id}`, }).then((res) => {
+      if (res.data.success) {
         toast.dismiss();
-        toast.error("Not successfull to delete");
-      });
+        toast.success(`${res.data.message}`);
+      }
+    }).catch(() => {
+      toast.dismiss();
+      toast.error("Not successfull to delete");
+    });
     setModalOpen({
       condition: false,
       id: "",
@@ -174,9 +176,9 @@ const SponserCompany = () => {
                 className={` p-2 text-sm md:text-base  sm:px-4 py-1 border-[2px] border-transparent 
            bg-slate-50 focus:border-gray-100
         shadow-inner rounded-[0.26rem] outline-none `}
-                // value={searchQuery}
-                // onChange={(e) => setSearchQuery(e.target.value)}
-                // onFocus={() => setCurrentPage(1)}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onFocus={() => setCurrentPage(1)}
               />
             </div>
             <div className="relative flex items-center self-end ">
@@ -204,9 +206,8 @@ const SponserCompany = () => {
               {listHeadingCompanies?.map((heading: string, index: number) => (
                 <p
                   key={index}
-                  className={`   md:text-lg ${
-                    index !== 0 ? "justify-self-center" : "ml-10"
-                  }`}
+                  className={`   md:text-lg ${index !== 0 ? "justify-self-center" : "ml-10"
+                    }`}
                 >
                   {heading.charAt(0).toUpperCase() + heading.slice(1)}
                 </p>
@@ -258,22 +259,21 @@ const SponserCompany = () => {
                       >
                         {company?.video ? "View Video" : "--"}
                       </span>
-                     
+
                       <div
-                            className={`line-clamp-5 `}
-                            dangerouslySetInnerHTML={{
-                              __html: company?.description,
-                            }}
-                          />
+                        className={`line-clamp-5 `}
+                        dangerouslySetInnerHTML={{
+                          __html: company?.description,
+                        }}
+                      />
                       <span
                         onClick={() =>
                           company?.link && handleLinkClick(company.link)
                         }
-                        className={` text-sm font-semibold text-center ${
-                          company?.link
-                            ? "hover:underline hover:text-sky-400 "
-                            : ""
-                        } break-words break-all cursor-pointer `}
+                        className={` text-sm font-semibold text-center ${company?.link
+                          ? "hover:underline hover:text-sky-400 "
+                          : ""
+                          } break-words break-all cursor-pointer `}
                       >
                         {company?.link ? "Official site" : "----"}
                       </span>
@@ -322,7 +322,7 @@ const SponserCompany = () => {
 
           <Pagination<SponsorCompanytypes>
             currentPage={currentPage}
-            apiData={data}
+            apiData={filteredData}
             itemsPerPage={itemsPerPage}
             handleClick={handleClick}
           />

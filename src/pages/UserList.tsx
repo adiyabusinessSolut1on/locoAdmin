@@ -20,15 +20,15 @@ const UserList = () => {
   const { data, isLoading, isError } = useGetDataQuery({ url: "/all-user" });
 
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 15;
   //calculation of page
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
-  console.log(data);
+  // console.log(data);
   const currentUsers = data?.slice(indexOfFirstItem, indexOfLastItem);
 
-  console.log(currentUsers, "pagination");
+  // console.log(currentUsers, "pagination");
 
   const handleClick = (pageNumber: number) => {
     setCurrentPage(pageNumber);

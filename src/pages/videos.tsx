@@ -18,13 +18,22 @@ const Video = () => {
     url: "/video/get-all-video",
   });
 
+  const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 15;
   //calculation of page
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
-  const currentVideos = data?.slice(indexOfFirstItem, indexOfLastItem);
+  // const currentVideos = data?.slice(indexOfFirstItem, indexOfLastItem);
+
+  // Filter data based on search query
+  const filteredData = data?.filter((item: videosTypes) =>
+    item.title?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const currentVideos = filteredData?.slice(indexOfFirstItem, indexOfLastItem);
+
 
   const [videoModal, setVideoModal] = useState({
     conditon: false,
@@ -46,7 +55,7 @@ const Video = () => {
     "Settings",
   ];
 
-  console.log(data, "from video");
+  // console.log(data, "from video");
 
   const [deletPost] = useDeletePostMutation();
 
@@ -55,7 +64,6 @@ const Video = () => {
     id: "",
   });
 
-  console.log(data);
 
   const handleCloseModal = () => {
     setModalOpen({
@@ -65,7 +73,6 @@ const Video = () => {
   };
 
   const deletvideo = (id: string) => {
-    console.log(id, "from handler");
     setModalOpen((prev) => ({
       ...prev,
       condition: !prev.condition,
@@ -79,21 +86,16 @@ const Video = () => {
   const handleConfirmDelete = () => {
     // Handle the delete action here
     toast.loading("checking Details");
-    console.log("Item deleted", isModalOpen.id);
-    deletPost({
-      url: `/video/delete/${isModalOpen.id}`,
-    })
-      .then((res) => {
-        if (res.data.success) {
-          toast.dismiss();
-          toast.success(`${res.data.message}`);
-        }
-        console.log(res);
-      })
-      .catch(() => {
+
+    deletPost({ url: `/video/delete/${isModalOpen.id}`, }).then((res) => {
+      if (res.data.success) {
         toast.dismiss();
-        toast.error("Not successfull to delete");
-      });
+        toast.success(`${res.data.message}`);
+      }
+    }).catch(() => {
+      toast.dismiss();
+      toast.error("Not successfull to delete");
+    });
     setModalOpen({
       condition: false,
       id: "",
@@ -120,25 +122,16 @@ const Video = () => {
       {isLoading && <Loader />}
       <ToastContainer />
       {isModalOpen.condition && (
-        <ConfirmDeleteModal
-          onClose={handleCloseModal}
-          onConfirm={handleConfirmDelete}
-        />
+        <ConfirmDeleteModal onClose={handleCloseModal} onConfirm={handleConfirmDelete} />
       )}
       {videoModal.conditon && (
         <VideoModal url={videoModal.url} onClose={handleCloseVideoModal} />
       )}
 
-      <section
-        className={`  md:pl-0 p-4 h-full  w-full rounded-md   mx-auto [&::-webkit-scrollbar]:hidden `}
-      >
-        <section
-          className={` md:p-8 p-6 h-full border-gray-200 rounded-md  max-w-full w-full `}
-        >
+      <section className={`  md:pl-0 p-4 h-full  w-full rounded-md   mx-auto [&::-webkit-scrollbar]:hidden `}>
+        <section className={` md:p-8 p-6 h-full border-gray-200 rounded-md  max-w-full w-full `}>
           <div className="flex items-center mb-2 md:mb-6">
-            <h1 className=" text-[28px] font-bold md:text-4xl text-gray-600 font-mavenPro">
-              Videos
-            </h1>
+            <h1 className=" text-[28px] font-bold md:text-4xl text-gray-600 font-mavenPro">Videos</h1>
           </div>
           <div className="flex justify-between mb-4">
             <div className={`flex items-center   `}>
@@ -148,9 +141,9 @@ const Video = () => {
                 className={` p-2 text-sm md:text-base  sm:px-4 py-1 border-[2px] border-transparent 
            bg-slate-50 focus:border-gray-100
         shadow-inner rounded-[0.26rem] outline-none `}
-                // value={searchQuery}
-                // onChange={(e) => setSearchQuery(e.target.value)}
-                // onFocus={() => setCurrentPage(1)}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onFocus={() => setCurrentPage(1)}
               />
             </div>
             <div className="relative flex items-center self-end ">
@@ -176,9 +169,8 @@ const Video = () => {
               {listHeadingOfVideo.map((heading, index) => (
                 <p
                   key={index}
-                  className={`   md:text-lg ${
-                    index !== 0 ? "justify-self-center" : "ml-20"
-                  }`}
+                  className={`   md:text-lg ${index !== 0 ? "justify-self-center" : "ml-20"
+                    }`}
                 >
                   {heading.charAt(0).toUpperCase() + heading.slice(1)}
                 </p>
@@ -249,10 +241,10 @@ const Video = () => {
                     <span className="flex justify-center text-sm font-semibold ">
                       {video?.tags.length > 0
                         ? video?.tags.map((tag: string) => (
-                            <ul>
-                              <li>{tag},</li>
-                            </ul>
-                          ))
+                          <ul>
+                            <li>{tag},</li>
+                          </ul>
+                        ))
                         : "--"}
                     </span>
 
@@ -280,7 +272,7 @@ const Video = () => {
 
           <Pagination<videosTypes>
             currentPage={currentPage}
-            apiData={data}
+            apiData={filteredData}
             itemsPerPage={itemsPerPage}
             handleClick={handleClick}
           />
