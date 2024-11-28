@@ -10,7 +10,7 @@ import ConfirmDeleteModal from "../components/modal/DeleteModal";
 import VideoCategoryForm from "../forms/VideoCategoryForm";
 
 const VideoCategory: React.FC = () => {
-  const { data, isLoading } = useGetDataQuery({
+  const { data, isLoading, isError } = useGetDataQuery({
     url: "/video/get-category",
   });
 
@@ -29,7 +29,7 @@ const VideoCategory: React.FC = () => {
   });
 
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const itemsPerPage = 5;
   //calculation of page
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -186,38 +186,46 @@ const VideoCategory: React.FC = () => {
               </section>
               {/* min-w-[900px] */}
               <div className=" h-[380px] overflow-y-auto [&::-webkit-scrollbar]:hidden min-w-[600px] bg-gray-50">
-                {currentVideoCategory?.map(
-                  (category: VideoCategorys, i: number) => (
-                    <section
-                      key={i}
-                      className="grid items-center gap-6 py-2 pl-6 pr-4 border-t-2 border-gray-200 grid-cols-customeCategory group hover:bg-gray-50"
-                    >
-                      <span>{i + 1}</span>
+                {isError ? (
+                  <p className="flex items-center justify-center w-full h-full font-medium text-center text-rose-800">
+                    Check Internet connection or Contact to Admin
+                  </p>
+                ) : data?.length > 0 ? (
+                  currentVideoCategory?.map(
+                    (category: VideoCategorys, i: number) => (
+                      <section
+                        key={i}
+                        className="grid items-center gap-6 py-2 pl-6 pr-4 border-t-2 border-gray-200 grid-cols-customeCategory group hover:bg-gray-50"
+                      >
+                        <span>{i + 1}</span>
 
-                      <span className="ml-2 text-sm font-semibold text-gray-600 md:text-base">
-                        {category?.category}
-                      </span>
+                        <span className="ml-2 text-sm font-semibold text-gray-600 md:text-base">
+                          {category?.category}
+                        </span>
 
-                      <div className="flex justify-center gap-4">
-                        <button
-                          className="px-3 text-sm py-2 text-white  rounded-md bg-[#1f3c88] hover:bg-[#2d56bb]"
-                          onClick={() => updateCategory(category)}
-                        >
-                          Edit
-                        </button>
-                        <button
-                          className="px-3 py-2 text-sm text-white rounded-md bg-rose-600 hover:bg-rose-700"
-                          onClick={() => deletCategory(category?._id)}
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </section>
+                        <div className="flex justify-center gap-4">
+                          <button
+                            className="px-3 text-sm py-2 text-white  rounded-md bg-[#1f3c88] hover:bg-[#2d56bb]"
+                            onClick={() => updateCategory(category)}
+                          >
+                            Edit
+                          </button>
+                          <button
+                            className="px-3 py-2 text-sm text-white rounded-md bg-rose-600 hover:bg-rose-700"
+                            onClick={() => deletCategory(category?._id)}
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </section>
+                    )
                   )
+                ) : (
+                  <div>No Data Found</div>
                 )}
               </div>
             </section>
-            <Pagination
+            <Pagination<VideoCategorys>
               currentPage={currentPage}
               apiData={data}
               itemsPerPage={itemsPerPage}

@@ -143,7 +143,7 @@ const CreatDocuments = () => {
                 onChange={(e) => OnchangeValue("title", e.target.value)}
                 type="text"
                 placeholder="Enter Title"
-                className="w-full h-10 pl-4 font-medium text-gray-700 bg-green-100 border border-transparent rounded-md outline-none focus:border-blue-200 "
+                className="w-full h-10 pl-4 font-medium text-gray-700 bg-blue-100 border border-transparent rounded-md outline-none focus:border-blue-200 "
                 required
               />
               {isExternal ? (
@@ -153,7 +153,7 @@ const CreatDocuments = () => {
                     onChange={(e) => OnchangeValue("link", e.target.value)}
                     type="text"
                     placeholder="Enter Url"
-                    className="w-full h-10 pl-4 font-medium bg-green-100 border border-transparent rounded-md outline-none focus:border-blue-200 "
+                    className="w-full h-10 pl-4 font-medium bg-blue-100 border border-transparent rounded-md outline-none focus:border-blue-200 "
                   />
                 </div>
               ) : (
@@ -169,7 +169,7 @@ const CreatDocuments = () => {
                     htmlFor="file-upload"
                     className={`px-4 py-2 pl-24 relative ${
                       progressStatus ? "pb-2" : ""
-                    } w-full text-base bg-green-100 focus:border-blue-200 border-transparent border rounded-md text-gray-400 cursor-pointer flex items-center justify-between`}
+                    } w-full text-base bg-blue-100 focus:border-blue-200 border-transparent border rounded-md text-gray-400 cursor-pointer flex items-center justify-between`}
                   >
                     <p
                       className={`font-medium ${
@@ -178,7 +178,7 @@ const CreatDocuments = () => {
                     >
                       {value?.imageSrc || "Choose a file"}
                     </p>
-                    <span className="text-gray-400 text-[15px] absolute top-0 h-full flex items-center left-0 rounded-tl-md rounded-bl-md px-3 font-medium bg-blue-100">
+                    <span className="text-gray-400 text-[15px] absolute top-0 h-full flex items-center left-0 rounded-tl-md rounded-bl-md px-3 font-medium bg-blue-200">
                       Browse
                     </span>
                   </label>
@@ -208,7 +208,7 @@ const CreatDocuments = () => {
                   onChange={() =>
                     OnchangeValue("donwloadable", !value?.donwloadable)
                   }
-                  className="  rounded-[7px] outline-none border border-transparent bg-green-100 focus:border-blue-200"
+                  className="  rounded-[7px] outline-none border border-transparent bg-blue-100 focus:border-blue-200"
                   type="checkbox"
                 />
               </div>
@@ -219,7 +219,7 @@ const CreatDocuments = () => {
                 <input
                   checked={isExternal}
                   onChange={() => setIsExternal(!isExternal)}
-                  className="  rounded-[7px] outline-none border border-transparent bg-green-100 focus:border-blue-200"
+                  className="  rounded-[7px] outline-none border border-transparent bg-blue-100 focus:border-blue-200"
                   type="checkbox"
                 />
               </div>
@@ -247,113 +247,6 @@ const CreatDocuments = () => {
       </form>
     </div>
   );
-  // return (
-  //   <div className="w-full p-5 bg-blue-100">
-  //     <ToastContainer />
-  //     <button
-  //       onClick={() => navigate("/important-document")}
-  //       className="bg-[#3d3d3d] text-[#f8f8f8] px-3 py-1 rounded-[7px] text-[14px] font-[600] mb-[10px] hover:bg-[#323131]"
-  //     >
-  //       View Document List
-  //     </button>
-  //     <form
-  //       onSubmit={handleCreate}
-  //       className="flex flex-col gap-5 border bg-white border-[#8d8787f5] p-10 rounded-[7px]"
-  //     >
-  //       <div className="flex flex-row gap-2 ">
-  //         <label className="block mb-2 font-semibold text-gray-700">
-  //           title
-  //         </label>
-  //         <input
-  //           value={value?.title}
-  //           onChange={(e) => OnchangeValue("title", e.target.value)}
-  //           type="text"
-  //           placeholder="Title"
-  //           className="border pl-4 border-[#b9b4b4da] bg-[#e7e5e592] outline-none p-1 rounded-[7px]"
-  //         />
-  //       </div>
-  //       <div className="flex flex-row gap-2 ">
-  //         <label className="block mb-2 font-semibold text-gray-700">
-  //           External URL
-  //         </label>
-  //         <input
-  // checked={isExternal}
-  // onChange={() => setIsExternal(!isExternal)}
-  //           type="checkbox"
-  //           className="border pl-4 border-[#b9b4b4da] bg-[#e7e5e592] outline-none p-1 rounded-[7px]"
-  //         />
-  //       </div>
-  // {isExternal ? (
-  //   <div className="flex flex-col w-full gap-1">
-  //     <label className="block mb-2 font-semibold text-gray-700">
-  //       url{" "}
-  //     </label>
-  //     <input
-  //       value={value?.link}
-  //       onChange={(e) => OnchangeValue("link", e.target.value)}
-  //       type="text"
-  //       placeholder="Title"
-  //       className="border pl-4 border-[#b9b4b4da] bg-[#e7e5e592] outline-none p-1 rounded-[7px]"
-  //     />
-  //   </div>
-  // ) : (
-  //         <div className="relative flex flex-row gap-5 mb-6 outline-none ">
-  //           <div className="w-full ">
-  //             <label className="block mb-2 font-semibold text-gray-700">
-  //               Documents
-  //             </label>
-  //             <input
-  //               type="file"
-  //               accept="image/*,.pdf,.doc,.docx,.xls,.xlsx"
-  //               onChange={hanhleFilecUpload}
-  //               className=" border-[#b9b4b4da] bg-[#e7e5e592] p-3 border outline-none  rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-  //             />
-  //             {progressStatus !== null && progressStatus !== 0 && (
-  //               <>
-  //                 <div className="inset-0 z-10 flex flex-row items-end gap-2 pt-2">
-  //                   <p className="text-black text-[12px]">uploading</p>
-  //                   <div
-  //                     className="h-1 bg-blue-400 rounded-md mx-[1px] mb-[1px]"
-  //                     style={{ width: `${progressStatus}%` }}
-  //                   ></div>
-  //                 </div>
-  //               </>
-  //             )}
-  //           </div>
-  //           {/* {state?.thumnail && (
-  //           <img
-  //             src={state?.thumnail}
-  //             alt={state?.title}
-  //             className="rounded-[5px] max-w-[300px] max-h-[200px]"
-  //           />
-  //         )} */}
-  //         </div>
-  //       )}
-
-  //       <div className="flex flex-row gap-2 ">
-  //         <label className="block mb-2 font-semibold text-gray-700">
-  //           Download Able
-  //         </label>
-  //         <input
-  // checked={value?.donwloadable}
-  // onChange={() => OnchangeValue("donwloadable", !value?.donwloadable)}
-  //           type="checkbox"
-  //           placeholder="Title"
-  //           className="border pl-4 border-[#b9b4b4da] bg-[#e7e5e592] outline-none p-1 rounded-[7px]"
-  //         />
-  //       </div>
-  //       <button
-  //         type="submit"
-  //         disabled={!value?.link || !value?.title}
-  //         className={`${
-  //           value?.link&&value?.title ? "bg-[#5a83bd]" : "bg-gray-500"
-  //         } text-center  mt-8 p-1 rounded-[8px] text-[15px] font-[600] text-[#f8f8f8]`}
-  //       >
-  //         save
-  //       </button>
-  //     </form>
-  //   </div>
-  // );
 };
 
 export default CreatDocuments;

@@ -120,7 +120,10 @@ const Video = () => {
       {isLoading && <Loader />}
       <ToastContainer />
       {isModalOpen.condition && (
-        <ConfirmDeleteModal onClose={handleCloseModal} onConfirm={handleConfirmDelete} />
+        <ConfirmDeleteModal
+          onClose={handleCloseModal}
+          onConfirm={handleConfirmDelete}
+        />
       )}
       {videoModal.conditon && (
         <VideoModal url={videoModal.url} onClose={handleCloseVideoModal} />
@@ -145,9 +148,9 @@ const Video = () => {
                 className={` p-2 text-sm md:text-base  sm:px-4 py-1 border-[2px] border-transparent 
            bg-slate-50 focus:border-gray-100
         shadow-inner rounded-[0.26rem] outline-none `}
-              // value={searchQuery}
-              // onChange={(e) => setSearchQuery(e.target.value)}
-              // onFocus={() => setCurrentPage(1)}
+                // value={searchQuery}
+                // onChange={(e) => setSearchQuery(e.target.value)}
+                // onFocus={() => setCurrentPage(1)}
               />
             </div>
             <div className="relative flex items-center self-end ">
@@ -173,8 +176,9 @@ const Video = () => {
               {listHeadingOfVideo.map((heading, index) => (
                 <p
                   key={index}
-                  className={`   md:text-lg ${index !== 0 ? "justify-self-center" : "ml-20"
-                    }`}
+                  className={`   md:text-lg ${
+                    index !== 0 ? "justify-self-center" : "ml-20"
+                  }`}
                 >
                   {heading.charAt(0).toUpperCase() + heading.slice(1)}
                 </p>
@@ -245,10 +249,10 @@ const Video = () => {
                     <span className="flex justify-center text-sm font-semibold ">
                       {video?.tags.length > 0
                         ? video?.tags.map((tag: string) => (
-                          <ul>
-                            <li>{tag},</li>
-                          </ul>
-                        ))
+                            <ul>
+                              <li>{tag},</li>
+                            </ul>
+                          ))
                         : "--"}
                     </span>
 
@@ -274,7 +278,7 @@ const Video = () => {
             </div>
           </section>
 
-          <Pagination
+          <Pagination<videosTypes>
             currentPage={currentPage}
             apiData={data}
             itemsPerPage={itemsPerPage}

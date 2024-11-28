@@ -1,5 +1,10 @@
 import React, { useState } from "react";
-import { useCreatePostMutation, useGetDataQuery, useDeletePostMutation, useUpdatePostMutation, } from "../api";
+import {
+  useCreatePostMutation,
+  useGetDataQuery,
+  useDeletePostMutation,
+  useUpdatePostMutation,
+} from "../api";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import DeleteICONSVG from "../assets/SVG/deleteICON";
@@ -11,10 +16,8 @@ import uploadImage from "../firebase_image/image";
 interface Props {
   value: string;
 }
-interface Image {
-  thumnail: string;
-  imageSrc: string;
-}
+
+
 
 const Switches = ({ value }: Props) => {
   const route = React.useMemo(() => {
@@ -40,30 +43,34 @@ const Tab1: React.FC = () => {
   const { data, refetch, isLoading } = useGetDataQuery({
     url: "/get-blog-category",
   });
+
+  console.log(data, "main category");
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [editingName, setEditingName] = useState<string>("");
-  const [createData, setCreateData] = useState<string>("");
-  const [categoryImage, setCategoryImage] = useState<Image>({
-    thumnail: "",
-    imageSrc: "",
+  const [editing, setEditing] = useState({
+editname:"",
+editimage:""
+  });
+  const [createData, setCreateData] = useState({
+    name:"",
+    image:""
   });
 
   const handleEditClick = (id: string, name: string, image: string) => {
+   
     setEditingId(id);
-    setEditingName(name);
-    setCategoryImage({
-      thumnail: image,
-      imageSrc: image,
-    });
+    setEditing({
+      editname:name,
+      editimage:image
+    })
   };
+ 
 
-  const [progressStatus, setProgressStatus] = useState<number | null>(null);
 
   const handleSaveClick = async () => {
     try {
       const response = await updatePost({
         path: `/main-category/${editingId}`,
-        data: { name: editingName },
+        data: { name: editing?.editname, image: editing?.editimage },
       });
       if (response?.data?.success) {
         toast.success(response?.data?.message, {
@@ -71,7 +78,10 @@ const Tab1: React.FC = () => {
         });
         refetch();
         setEditingId(null);
-        setEditingName("");
+        setEditing({
+          editname:"",
+          editimage:""
+        });
       } else {
         toast.error("Failed to Update main category");
       }
@@ -82,10 +92,17 @@ const Tab1: React.FC = () => {
 
   const handleCancelClick = () => {
     setEditingId(null);
-    setEditingName("");
+    setEditing({
+      editname:"",
+      editimage:""
+    });
   };
 
-  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const [progressStatus, setProgressStatus] = useState<number | null>(null);
+  const [progressStatus1, setProgressStatus1] = useState<number | null>(null);
+ 
+  const handleImageCreate = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("handle Image in Create")
     const selectedFile = e.target?.files?.[0];
     if (selectedFile) {
       try {
@@ -94,10 +111,9 @@ const Tab1: React.FC = () => {
           selectedFile,
           setProgressStatus
         );
-        setCategoryImage({
-          ...categoryImage,
-          thumnail: imageUrl,
-          imageSrc: selectedFile.name,
+        setCreateData({
+          ...createData,
+          image: imageUrl,
         });
       } catch (error) {
         console.error("Error uploading image:", error);
@@ -105,12 +121,30 @@ const Tab1: React.FC = () => {
       }
     }
   };
-
+   const handleImageEdit = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("handle Image in Edit")
+    const selectedFile = e.target?.files?.[0];
+    if (selectedFile) {
+      try {
+        const imageUrl = await uploadImage(
+          selectedFile.name,
+          selectedFile,
+          setProgressStatus1
+        );
+        setEditing({
+          ...editing,
+          editimage: imageUrl,
+        });
+      } catch (error) {
+        console.error("Error uploading image:", error);
+        toast.error("Error uploading image");
+      }
+    }
+  };
   const handleClickCreate = async () => {
     try {
       const response = await createPost({
-        data: { name: createData },
-        // data: { name: createData, image: categoryImage },
+        data: { name: createData?.name, image: createData.image },
         path: "main-category",
       });
 
@@ -119,7 +153,10 @@ const Tab1: React.FC = () => {
           autoClose: 5000,
         });
         refetch();
-        setCreateData("");
+        setCreateData({
+          name:"",
+          image:""
+        });
       } else {
         toast.error("Failed to create main category");
       }
@@ -151,45 +188,48 @@ const Tab1: React.FC = () => {
   return (
     <React.Fragment>
       <ToastContainer />
-      <div className="flex flex-row w-full gap-2">
+      <div className="md:flex flex-row w-full h-[400px] gap-2">
         {isLoading && <Loader />}
-        <div className="flex flex-col w-full gap-5 p-10 border-r-2 border-gray-200 ">
-          <h3 className="text-[18px] font-bold text-gray-600">
+        <div className="flex flex-col w-full gap-5 p-10 border-b-2 border-gray-200 md:border-b-0 md:border-r-2">
+          <h3 className="text-[18px] font-[600] text-center">
             Create Main Category
           </h3>
-
           <div className="grid gap-3">
             <label className="text-gray-600 font-bold text-[15px]">
               Main Category
             </label>
             <input
-              value={createData}
+              value={createData?.name}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setCreateData(e.target.value)
+                setCreateData((prev)=>({...prev,name:e.target.value}))
               }
               // className="border border-[#6e6d6d5b] outline-none rounded-[7px] px-2 py-1"
               className="w-full h-8 pl-2 font-medium text-gray-700 bg-blue-100 border border-transparent rounded-md outline-none placeholder:pl-2 focus:border-blue-200 "
               type="text"
               placeholder="Enter Title"
             />
+            <div className="flex flex-row gap-4">
+              {createData?.image&&<img src={createData?.image} alt="main Image" className="h-20 w-20"/>}
             <div className="relative w-full h-full">
               <input
                 type="file"
                 name="image"
-                onChange={handleImageChange}
+                onChange={handleImageCreate}
                 className="hidden"
                 id="file-upload"
               />
               <label
                 htmlFor="file-upload"
-                className={`px-4 py-1 pl-24 relative ${progressStatus ? "pb-1" : ""
-                  } w-full text-base bg-blue-100 focus:border-blue-200 border-transparent border rounded-md text-gray-400 cursor-pointer flex items-center justify-between`}
+                className={`px-4 py-1 pl-24 relative ${
+                  progressStatus ? "pb-1" : ""
+                } w-full text-base bg-blue-100 focus:border-blue-200 border-transparent border rounded-md text-gray-400 cursor-pointer flex items-center justify-between`}
               >
                 <p
-                  className={`${categoryImage.imageSrc ? "text-gray-700" : "text-gray-400"
-                    }`}
+                  className={`${
+                    createData.image ? "text-gray-700" : "text-gray-400"
+                  }`}
                 >
-                  {categoryImage.imageSrc || "Choose a file"}
+                  { "Choose a file"}
                 </p>
                 <span className="text-gray-400 text-[15px] absolute top-0 h-full flex items-center left-0 rounded-tl-md rounded-bl-md px-3 font-medium bg-blue-200">
                   Browse
@@ -201,11 +241,12 @@ const Tab1: React.FC = () => {
                     <div
                       className="h-1 bg-blue-400 rounded-md mx-[1px] mb-[1px]"
                       style={{ width: `${progressStatus}%` }}
-                    // style={{ width: `${100}%` }}
+                      // style={{ width: `${100}%` }}
                     ></div>
                   </div>
                 </>
               )}
+            </div>
             </div>
           </div>
 
@@ -213,8 +254,9 @@ const Tab1: React.FC = () => {
             <button
               onClick={handleClickCreate}
               disabled={!createData}
-              className={`${createData ? "bg-[#1e40af]" : "bg-gray-500"
-                } px-4 py-2 rounded-[8px] text-[15px] font-[600] text-[#f8f8f8]`}
+              className={`${
+                createData ? "bg-[#1e40af]" : "bg-gray-500"
+              } px-4 py-2 rounded-[8px] text-[15px] font-[600] text-[#f8f8f8]`}
             >
               Save
             </button>
@@ -233,47 +275,51 @@ const Tab1: React.FC = () => {
                     <div className="grid w-full gap-2">
                       <input
                         type="text"
-                        value={editingName}
-                        onChange={(e) => setEditingName(e.target.value)}
-                        // className="flex-1 px-2 py-1 mr-2 border rounded"
+                        value={editing?.editname}
+                        onChange={(e) => setEditing((prev)=>({...prev, editname:e.target.value}))}
                         className="w-full h-8 pl-2 font-medium text-gray-700 bg-blue-100 border border-transparent rounded-md outline-none focus:border-blue-200 "
                       />
+                      <div className="flex flex-row gap-3">
+                        {editing?.editimage&&<img src={editing?.editimage} className="h-10 w-10" alt="imageg"/>}
                       <div className="relative w-full h-full">
                         <input
                           type="file"
                           name="image"
-                          onChange={handleImageChange}
+                          onChange={handleImageEdit}
                           className="hidden"
-                          id="file-upload"
+                          id="Image-upload"
                         />
                         <label
-                          htmlFor="file-upload"
-                          className={`px-4 py-1 pl-24 relative ${progressStatus ? "pb-1" : ""
-                            } w-full text-base bg-blue-100 focus:border-blue-200 border-transparent border rounded-md text-gray-400 cursor-pointer flex items-center justify-between`}
+                          htmlFor="Image-upload"
+                          className={`px-4 py-1 pl-24 relative ${
+                            progressStatus1 ? "pb-1" : ""
+                          } w-full text-base bg-blue-100 focus:border-blue-200 border-transparent border rounded-md text-gray-400 cursor-pointer flex items-center justify-between`}
                         >
                           <p
-                            className={`${categoryImage.imageSrc
+                            className={`${
+                              editing?.editimage
                                 ? "text-gray-700"
                                 : "text-gray-400"
-                              }`}
+                            }`}
                           >
-                            {categoryImage.imageSrc || "Choose a file"}
+                            { "Choose a file"}
                           </p>
                           <span className="text-gray-400 text-[15px] absolute top-0 h-full flex items-center left-0 rounded-tl-md rounded-bl-md px-3 font-medium bg-blue-200">
                             Browse
                           </span>
                         </label>
-                        {progressStatus !== null && progressStatus !== 0 && (
+                        {progressStatus1 !== null && progressStatus1 !== 0 && (
                           <>
                             <div className="absolute inset-0 z-10 flex items-end">
                               <div
                                 className="h-1 bg-blue-400 rounded-md mx-[1px] mb-[1px]"
-                                style={{ width: `${progressStatus}%` }}
-                              // style={{ width: `${100}%` }}
+                                style={{ width: `${progressStatus1}%` }}
+                                // style={{ width: `${100}%` }}
                               ></div>
                             </div>
                           </>
                         )}
+                      </div>
                       </div>
                       <div className="flex justify-end">
                         <button
@@ -292,9 +338,25 @@ const Tab1: React.FC = () => {
                     </div>
                   ) : (
                     <>
-                      <span className="text-lg font-medium text-gray-600">
-                        {item.name}
-                      </span>
+                      <div className="flex items-center gap-4">
+                        {/* <span className="text-lg font-medium text-gray-600"> */}
+
+                        {item.image ? (
+                          <img
+                            src={item.image}
+                            alt=""
+                            className="object-contain w-10 h-10"
+                          />
+                        ) : (
+                          <span className="text-xs font-bold text-gray-400 rounded-md bg-gray-50">
+                            No Icon
+                          </span>
+                        )}
+                        {/* </span> */}
+                        <span className="text-lg font-medium text-gray-600">
+                          {item.name}
+                        </span>
+                      </div>
                       <div className="flex flex-row gap-5">
                         <button onClick={() => handleShowAlert(item?._id)}>
                           <DeleteICONSVG
@@ -437,10 +499,10 @@ const Tab2: React.FC = () => {
     }
   };
   return (
-    <div className="flex flex-row w-full gap-2 ">
+    <div className="md:flex flex-row w-full h-[400px] gap-2">
       {isLoading && <Loader />}
       <ToastContainer />
-      <div className="flex flex-col w-full gap-5 p-10 border-r-2 border-gray-200">
+      <div className="flex flex-col w-full gap-5 p-10 border-b-2 border-gray-200 md:border-b-0 md:border-r-2">
         <h3 className=" text-[18px] font-bold text-gray-600">
           Create Sub-Category
         </h3>
@@ -482,11 +544,12 @@ const Tab2: React.FC = () => {
           <button
             onClick={HanldeCreate}
             disabled={!createSubCategory?.name && !createSubCategory?.mainId}
-            className={` ${createSubCategory?.name && createSubCategory?.mainId
+            className={` ${
+              createSubCategory?.name && createSubCategory?.mainId
                 ? "bg-[#1e40af]"
                 : // ? "bg-[#5a83bd]"
-                "bg-gray-500"
-              } px-4 py-2 rounded-[8px] text-[15px] font-[600] text-[#f8f8f8]`}
+                  "bg-gray-500"
+            } px-4 py-2 rounded-[8px] text-[15px] font-[600] text-[#f8f8f8]`}
           >
             Save
           </button>
@@ -505,8 +568,9 @@ const Tab2: React.FC = () => {
                     {/* {showSubCategories[category?._id] ? ( */}
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      className={`w-4 h-4 transition-all duration-500 ${showSubCategories[category?._id] ? "rotate-180" : ""
-                        }`}
+                      className={`w-4 h-4 transition-all duration-500 ${
+                        showSubCategories[category?._id] ? "rotate-180" : ""
+                      }`}
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -518,22 +582,6 @@ const Tab2: React.FC = () => {
                         d="M5 15l7-7 7 7"
                       />
                     </svg>
-                    {/* // ) : (
-                    //   <svg
-                    //     xmlns="http://www.w3.org/2000/svg"
-                    //     className="w-6 h-6"
-                    //     fill="none"
-                    //     viewBox="0 0 24 24"
-                    //     stroke="currentColor"
-                    //   >
-                    //     <path
-                    //       strokeLinecap="round"
-                    //       strokeLinejoin="round"
-                    //       strokeWidth="2"
-                    //       d="M19 9l-7 7-7-7"
-                    //     />
-                    //   </svg>
-                    // )} */}
                   </button>
                 )}
               </div>
@@ -767,10 +815,10 @@ const Tab3: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-row w-full gap-2">
+    <div className="md:flex flex-row w-full h-[400px] gap-2">
       {isLoading && <Loader />}
       <ToastContainer />
-      <div className="flex flex-col w-full gap-5 p-10 border-r-2 border-gray-200">
+      <div className="flex flex-col w-full gap-5 p-10 border-b-2 border-gray-200 md:border-b-0 md:border-r-2">
         <h3 className="text-[18px]  font-bold text-gray-600">
           Create Sub Sub-Category
         </h3>
@@ -831,19 +879,20 @@ const Tab3: React.FC = () => {
               !createSubCategory.subId ||
               !createSubCategory.name
             }
-            className={`${createSubCategory.mainId &&
-                createSubCategory.subId &&
-                createSubCategory.name
+            className={`${
+              createSubCategory.mainId &&
+              createSubCategory.subId &&
+              createSubCategory.name
                 ? "bg-[#1e40af]"
                 : // ? "bg-[#5a83bd]"
-                "bg-gray-500"
-              } px-4 py-2 rounded-[8px] text-[15px] font-[600] text-[#f8f8f8]`}
+                  "bg-gray-500"
+            } px-4 py-2 rounded-[8px] text-[15px] font-[600] text-[#f8f8f8]`}
           >
             Save
           </button>
         </div>
       </div>
-      <div className="p-4 h-[400px] overflow-auto w-full">
+      <div className="p-4 max-h-[400px] overflow-auto w-full">
         {data?.data?.map((category: BlogCategory, index: number) => (
           <div key={index} className="mb-4 bg-[#f8f8f8] p-1">
             <div className="flex items-center justify-between">
@@ -855,8 +904,9 @@ const Tab3: React.FC = () => {
                   {/* {showSubCategories[category?._id] ? ( */}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className={`w-4 h-4 transition-all duration-500 ${showSubCategories[category?._id] ? "rotate-180" : ""
-                      }`}
+                    className={`w-4 h-4 transition-all duration-500 ${
+                      showSubCategories[category?._id] ? "rotate-180" : ""
+                    }`}
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -902,8 +952,9 @@ const Tab3: React.FC = () => {
                           {/* {showSubSubCategories[sub?._id] ? ( */}
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            className={`w-4 h-4 transition-all duration-500 ${showSubSubCategories[sub?._id] ? "rotate-180" : ""
-                              }`}
+                            className={`w-4 h-4 transition-all duration-500 ${
+                              showSubSubCategories[sub?._id] ? "rotate-180" : ""
+                            }`}
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
@@ -1201,10 +1252,10 @@ const Tab4: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-row w-full gap-2">
+    <div className="md:flex flex-row md:h-[460px] w-full gap-2">
       {isLoading && <Loader />}
       <ToastContainer />
-      <div className="flex flex-col w-full gap-5 p-10 border-r-2 border-gray-200">
+      <div className="flex flex-col w-full gap-5 p-10 border-b-2 border-gray-200 md:border-b-0 md:border-r-2">
         <h3 className=" text-[18px] font-bold text-gray-600">
           Create Inner Category
         </h3>
@@ -1285,20 +1336,21 @@ const Tab4: React.FC = () => {
               !createInnerCategory?.subSubId ||
               !createInnerCategory?.name
             }
-            className={`${createInnerCategory?.mainId &&
-                createInnerCategory?.subId &&
-                createInnerCategory?.subSubId &&
-                createInnerCategory?.name
+            className={`${
+              createInnerCategory?.mainId &&
+              createInnerCategory?.subId &&
+              createInnerCategory?.subSubId &&
+              createInnerCategory?.name
                 ? "bg-[#1e40af]"
                 : // ? "bg-[#5a83bd]"
-                "bg-gray-500"
-              }  px-4 py-2 rounded-[8px] text-[15px] font-[600] text-[#f8f8f8]`}
+                  "bg-gray-500"
+            }  px-4 py-2 rounded-[8px] text-[15px] font-[600] text-[#f8f8f8]`}
           >
             save
           </button>
         </div>
       </div>
-      <div className=" h-[400px] overflow-auto  w-full  p-3 ">
+      <div className=" max-h-[460px] overflow-auto  w-full  p-3 ">
         {data?.data?.map((category: BlogCategory, index: number) => (
           <div key={index} className="mb-4 bg-[#f8f8f8] rounded-[7px] p-2">
             <div className="flex items-center justify-between">
@@ -1310,8 +1362,9 @@ const Tab4: React.FC = () => {
                   {/* {showSubCategories[category?._id] ? ( */}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className={`w-4 h-4 transition-all duration-500 ${showSubCategories[category?._id] ? "rotate-180" : ""
-                      }`}
+                    className={`w-4 h-4 transition-all duration-500 ${
+                      showSubCategories[category?._id] ? "rotate-180" : ""
+                    }`}
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -1320,30 +1373,9 @@ const Tab4: React.FC = () => {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth="2"
-                      // d={`${
-                      //   showSubCategories[category?._id]
-                      //     ? "M5 15l7-7 7 7"
-                      //     : "M19 9l-7 7-7-7"
-                      // }`}
                       d={`M5 15l7-7 7 7`}
                     />
                   </svg>
-                  {/* ) : ( */}
-                  {/* <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="w-6 h-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg> */}
-                  {/* )} */}
                 </button>
               )}
             </div>
@@ -1360,8 +1392,9 @@ const Tab4: React.FC = () => {
                           {/* {showSubSubCategories[sub?._id] ? ( */}
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            className={`w-4 h-4 transition-all duration-500 ${showSubSubCategories[sub?._id] ? "rotate-180" : ""
-                              }`}
+                            className={`w-4 h-4 transition-all duration-500 ${
+                              showSubSubCategories[sub?._id] ? "rotate-180" : ""
+                            }`}
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
@@ -1373,22 +1406,6 @@ const Tab4: React.FC = () => {
                               d="M5 15l7-7 7 7"
                             />
                           </svg>
-                          {/* // ) : (
-                          //   <svg
-                          //     xmlns="http://www.w3.org/2000/svg"
-                          //     className="w-6 h-6"
-                          //     fill="none"
-                          //     viewBox="0 0 24 24"
-                          //     stroke="currentColor"
-                          //   >
-                          //     <path
-                          //       strokeLinecap="round"
-                          //       strokeLinejoin="round"
-                          //       strokeWidth="2"
-                          //       d="M19 9l-7 7-7-7"
-                          //     />
-                          //   </svg>
-                          // )} */}
                         </button>
                       )}
                     </div>
@@ -1409,10 +1426,11 @@ const Tab4: React.FC = () => {
                                   {/* {showInnerCategories[subSub?._id] ? ( */}
                                   <svg
                                     xmlns="http://www.w3.org/2000/svg"
-                                    className={`w-4 h-4 transition-all duration-500 ${showInnerCategories[subSub?._id]
+                                    className={`w-4 h-4 transition-all duration-500 ${
+                                      showInnerCategories[subSub?._id]
                                         ? "rotate-180"
                                         : ""
-                                      }`}
+                                    }`}
                                     fill="none"
                                     viewBox="0 0 24 24"
                                     stroke="currentColor"
@@ -1424,22 +1442,6 @@ const Tab4: React.FC = () => {
                                       d="M5 15l7-7 7 7"
                                     />
                                   </svg>
-                                  {/* ) : (
-                                    <svg
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      className="w-6 h-6"
-                                      fill="none"
-                                      viewBox="0 0 24 24"
-                                      stroke="currentColor"
-                                    >
-                                      <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M19 9l-7 7-7-7"
-                                      />
-                                    </svg>
-                                  )} */}
                                 </button>
                               )}
                             </div>

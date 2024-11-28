@@ -4,15 +4,15 @@ import DeleteICONSVG from "../assets/SVG/deleteICON";
 import EditICONSVG from "../assets/SVG/editICON";
 import Loader from "../components/loader";
 import { UserTypes } from "../types";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import ConfirmDeleteModal from "../components/modal/DeleteModal";
 
 import { useState } from "react";
 import Pagination from "../components/pagination/Pagination";
-import { IoIosSend } from "react-icons/io";
 import CreatUser from "../forms/CreatUser";
+import { IoIosSend } from "react-icons/io";
 
 const UserList = () => {
   const navigate = useNavigate();
@@ -25,8 +25,10 @@ const UserList = () => {
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
+  console.log(data);
   const currentUsers = data?.slice(indexOfFirstItem, indexOfLastItem);
 
+  console.log(currentUsers, "pagination");
 
   const handleClick = (pageNumber: number) => {
     setCurrentPage(pageNumber);
@@ -36,6 +38,7 @@ const UserList = () => {
     condition: false,
     id: "",
   });
+
   const [userForm, setUserForm] = useState({
     isCreat: false,
   });
@@ -48,6 +51,7 @@ const UserList = () => {
   };
 
   const deletuser = (id: string) => {
+    console.log(id, "from handler");
     setModalOpen((prev) => ({
       ...prev,
       condition: !prev.condition,
@@ -56,25 +60,35 @@ const UserList = () => {
   };
   const updateuser = (user: UserTypes) => {
     navigate(`/users/${user._id}`);
+    console.log("under process", user);
   };
 
   const handleConfirmDelete = () => {
     // Handle the delete action here
     toast.loading("checking Details");
-    deletPost({ url: `/userDelete/${isModalOpen.id}`, }).then((res) => {
-      if (res.data.success) {
+    console.log("Item deleted", isModalOpen.id);
+    deletPost({
+      url: `/userDelete/${isModalOpen.id}`,
+    })
+      .then((res) => {
+        if (res.data.success) {
+          toast.dismiss();
+          toast.success(`${res.data.message}`);
+        }
+        console.log(res);
+      })
+      .catch(() => {
         toast.dismiss();
-        toast.success(`${res.data.message}`);
-      }
-    }).catch(() => {
-      toast.dismiss();
-      toast.error("Not successfull to delete");
-    });
+        toast.error("Not successfull to delete");
+      });
     setModalOpen({
       condition: false,
       id: "",
     });
+    console.log("deleting...");
   };
+
+  console.log("users data>>", data);
 
   const creatUserhandler = () => {
     setUserForm((prev) => ({ ...prev, isCreat: !prev.isCreat }));
@@ -84,14 +98,14 @@ const UserList = () => {
   return (
     <>
       {isLoading && <Loader />}
-      {/* <ToastContainer /> */}
-
+      <ToastContainer />
       {isModalOpen.condition && (
         <ConfirmDeleteModal
           onClose={handleCloseModal}
           onConfirm={handleConfirmDelete}
         />
       )}
+
       {userForm.isCreat && <CreatUser setUserForm={setUserForm} />}
 
       <section
@@ -113,9 +127,9 @@ const UserList = () => {
                 className={` p-2 text-sm md:text-base  sm:px-4 py-1 border-[2px] border-transparent 
                    bg-slate-50 focus:border-gray-100
                 shadow-inner rounded-[0.26rem] outline-none `}
-              // value={searchQuery}
-              // onChange={(e) => setSearchQuery(e.target.value)}
-              // onFocus={() => setCurrentPage(1)}
+                // value={searchQuery}
+                // onChange={(e) => setSearchQuery(e.target.value)}
+                // onFocus={() => setCurrentPage(1)}
               />
             </div>
             <div className="relative flex items-center self-end ">
@@ -142,8 +156,9 @@ const UserList = () => {
               {listHeadingUsers.map((heading, index) => (
                 <p
                   key={index}
-                  className={`   md:text-lg ${index !== 0 ? "justify-self-center" : "ml-10"
-                    }`}
+                  className={`   md:text-lg ${
+                    index !== 0 ? "justify-self-center" : "ml-10"
+                  }`}
                 >
                   {heading.charAt(0).toUpperCase() + heading.slice(1)}
                 </p>
@@ -220,7 +235,7 @@ const UserList = () => {
             </div>
           </section>
 
-          <Pagination
+          <Pagination<UserTypes>
             currentPage={currentPage}
             apiData={data}
             itemsPerPage={itemsPerPage}

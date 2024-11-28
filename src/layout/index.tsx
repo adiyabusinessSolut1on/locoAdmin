@@ -26,7 +26,7 @@ const Layout = () => {
   };
 
   useEffect(() => {
-    if (location.pathname === "/") navigate("/creat-blog");
+    if (location.pathname === "/") navigate("/post-details");
   }, [navigate]);
 
   return (
@@ -34,9 +34,16 @@ const Layout = () => {
       {/* <main className={`relative flex   min-h-screen bg-[#EFF6FF]`}> */}
       <ToastContainer />
 
-      <SideBar isOpen={isSidebarOpen} onToggleSidebarLarge={toggleSidebarLarge} onToggleSidebarSmall={toggleSidebarSmall} />
+      <SideBar
+        isOpen={isSidebarOpen}
+        onToggleSidebarLarge={toggleSidebarLarge}
+        onToggleSidebarSmall={toggleSidebarSmall}
+      />
       <div className="relative  flex-1 overflow-x-hidden [&::-webkit-scrollbar]:hidden">
-        <Header onToggleSidebarSmall={toggleSidebarSmall} isOpen={isSidebarOpen} />
+        <Header
+          onToggleSidebarSmall={toggleSidebarSmall}
+          isOpen={isSidebarOpen}
+        />
         <div className=" mt-20  h-[calc(100vh-5rem)] ">
           <Outlet />
         </div>

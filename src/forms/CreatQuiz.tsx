@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useGetDataQuery, useUpdatePostMutation } from "../api";
 import { toast } from "react-toastify";
 import { TiArrowBackOutline } from "react-icons/ti";
-import TextEditor from "../components/textEditor";
+import JoditTextEditor from "../components/editorNew";
 import { FaCaretDown } from "react-icons/fa";
 import { QuizAndTestCategoryType } from "../types";
+import { useNavigate } from "react-router-dom";
 interface quizform {
   creat: boolean;
   updateId: string;
@@ -31,7 +32,7 @@ const CreatQuiz = ({ isQuizForm, setQuizForm }: Props) => {
     title: data?.title ? data?.title : "",
     category: data?.category ? data?.category : "",
     instructions: data?.instructions ? data?.instructions : "",
-    completed: data?.isComplete ? data?.isComplete : false,
+    
   });
 
   useEffect(() => {
@@ -39,8 +40,9 @@ const CreatQuiz = ({ isQuizForm, setQuizForm }: Props) => {
       setquizDataForm((prev) => ({
         ...prev,
         title: data?.title ? data?.title : "",
+        category: data?.category ? data?.category : "",
         instructions: data?.instructions ? data?.instructions : "",
-        completed: data?.isComplete ? data?.isComplete : false,
+     
       }));
     }
   }, [isUpdate, isError, data]);
@@ -54,17 +56,18 @@ const CreatQuiz = ({ isQuizForm, setQuizForm }: Props) => {
         e?.target?.type === "checkbox" ? e?.target?.checked : e?.target?.value,
     }));
   };
-
+  const { data:quizcategory } = useGetDataQuery({
+    url: "/quiztest/category",
+  });
+  const navigate = useNavigate();
   const submiteHandler = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    console.log(quizDataForm);
     toast.loading("Checking Details");
     try {
       const payload = {
         title: quizDataForm?.title,
         instructions: quizDataForm?.instructions,
-        isComplete: quizDataForm?.completed,
+        category:quizDataForm?.category
       };
 
       const response = await updatePost({
@@ -74,6 +77,8 @@ const CreatQuiz = ({ isQuizForm, setQuizForm }: Props) => {
       });
       console.log(response);
       if (response?.data?.success) {
+        if(isQuizForm.creat) navigate(`/quiz/${response?.data?.data?._id}`);
+      
         toast.dismiss();
         toast.success(response?.data?.message, {
           autoClose: 5000,
@@ -133,27 +138,11 @@ const CreatQuiz = ({ isQuizForm, setQuizForm }: Props) => {
 
     setquizDataForm({
       title: "",
-      instructions: "",
       category: "",
-      completed: false,
+      instructions: "",
     });
     console.log(quizDataForm);
   };
-
-  const categoryData = [
-    {
-      name: "latest",
-      _id: "latest01",
-    },
-    {
-      name: "old",
-      _id: "old01",
-    },
-    {
-      name: "newstes",
-      _id: "newstes01",
-    },
-  ];
 
   return (
     <div
@@ -177,7 +166,7 @@ const CreatQuiz = ({ isQuizForm, setQuizForm }: Props) => {
             </div>
             <div className="h-[calc(100vh-12rem)] w-full overflow-y-auto  [&::-webkit-scrollbar]:hidden font-mavenPro">
               <div className="grid gap-2 py-4 md:gap-4 ">
-                {/* <div className="w-full font-mavenPro"> */}
+              <label className="font-medium text-[18px]">Quiz Title:</label>
                 <input
                   value={quizDataForm?.title}
                   type="text"
@@ -192,6 +181,7 @@ const CreatQuiz = ({ isQuizForm, setQuizForm }: Props) => {
 
                 {/* category of Quiz and Test */}
                 <div className="relative">
+                  <label className="font-medium text-[18px]">Quiz Category:</label>
                   <div
                     className="flex justify-between p-2 pl-4 font-medium text-gray-400 border border-gray-400 rounded-md cursor-pointer focus:border-blue-200"
                     onClick={() =>
@@ -215,10 +205,11 @@ const CreatQuiz = ({ isQuizForm, setQuizForm }: Props) => {
                   </div>
                   <ul
                     className={`mt-2 p-2 rounded-md w-32 text-white bg-gray-800 shadow-lg absolute z-10 ${
-                      isOpen.category ? "max-h-60" : "hidden"
+                      isOpen.category ? "max-h-60 max-w-50 overflow-auto" : "hidden"
                     } custom-scrollbar`}
                   >
-                    {categoryData?.map(
+                    {quizcategory?.length>0?
+                    quizcategory?.map(
                       (caetory: QuizAndTestCategoryType, i: number) => (
                         <li
                           key={i}
@@ -234,7 +225,7 @@ const CreatQuiz = ({ isQuizForm, setQuizForm }: Props) => {
                           <span>{caetory?.name}</span>
                         </li>
                       )
-                    )}
+                    ):"No Category Found"}
                   </ul>
                 </div>
                 {/* <input
@@ -249,32 +240,16 @@ const CreatQuiz = ({ isQuizForm, setQuizForm }: Props) => {
                 required
               /> */}
                 <div className="">
-                  <TextEditor
-                    value={quizDataForm?.instructions}
-                    OnChangeEditor={(e) =>
-                      handleEditorChange("instructions", e)
-                    }
-                  />
+                <label className="font-medium text-[18px]">Quiz Instruction! :</label>
+                <JoditTextEditor
+                  value={quizDataForm?.instructions}
+                  OnChangeEditor={(e: string) =>
+                    handleEditorChange("instructions", e)
+                  }
+                />
+                  
                 </div>
-                <div className="flex gap-2">
-                  <input
-                    type="checkbox"
-                    checked={quizDataForm.completed}
-                    onChange={handleChange}
-                    name="completed"
-                    className={
-                      " font-medium outline-none   border border-gray-400 rounded-md pl-4 focus-within:border-blue-400  "
-                    }
-                    required
-                  />
-                  <span
-                    className={`text-sm font-semibold ${
-                      quizDataForm.completed ? "text-black" : "text-gray-500"
-                    } `}
-                  >
-                    Completed
-                  </span>
-                </div>
+              
               </div>
 
               <div className="flex ">

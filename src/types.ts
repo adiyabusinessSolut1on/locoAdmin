@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export interface subcategory {
   _id: string;
   name: string;
@@ -15,8 +17,8 @@ export interface innerCategories {
 export interface BlogCategory {
   _id: string;
   name: string;
-  subCategories: [subcategory];
   image: string;
+  subCategories: [subcategory];
 }
 
 interface blogsubcat {
@@ -55,7 +57,6 @@ export interface BlogWithCategory {
 export interface VideoCategorys {
   _id: string;
   category: string;
-  image: string
 }
 
 export interface videosTypes {
@@ -101,6 +102,7 @@ export interface ImpLinkDocs {
 export interface DailyTask {
   _id: string;
   title: string;
+
   content: string;
   createdAt: string;
 }
@@ -164,7 +166,8 @@ export interface SponsorCompanytypes {
 }
 export interface TestQuestionsType {
   _id: string;
-  name: string[];
+  name: string,
+  image:string[],
   options: string[];
   predicted_result: string;
   actualresult: string;
@@ -195,3 +198,100 @@ export type RootState = {
     userToken: string | null;
   };
 };
+
+export interface PostDetails {
+  Mutulpost: string;
+  FeedPost: string;
+  Comments: number;
+  Likes: number;
+  _id: string;
+}
+
+export interface QuizTestCategorys {
+  _id: string;
+  name: string;
+  image: string;
+}
+
+//post details types
+
+//Post
+export interface CommentPostTypes {
+  length: number;
+  comment: string;
+  comment_user: string;
+  _id: string;
+}
+
+export interface PostDataType {
+  length: ReactNode;
+  comments: CommentPostTypes;
+  content: string;
+  createdAt: string;
+  like: number;
+  mediatype: string;
+  thumnail: string;
+  updatedAt: string;
+  user: string;
+  _id: string;
+}
+
+export interface PostDataTypes {
+  post: PostDataType[];
+  date: string;
+  likes: number;
+  comments: number;
+}
+
+//Blog
+export interface CommentDataType {
+  comment: string;
+  comment_user: string;
+  _id: string;
+}
+export interface BlogDataType {
+  length: ReactNode;
+  _id: string;
+  title: string;
+  slug: string;
+  thumnail: string;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+  comments: CommentDataType[];
+}
+
+export interface BlogDataTypes {
+  blog: BlogDataType[];
+  date: string;
+  comments: number;
+}
+
+//Mutual
+export interface MutaulDataType {
+  length: ReactNode;
+  createdAt: string;
+  currentdivision: string;
+  currentlobby: string;
+  designation: string;
+  email: string;
+  mobile: number;
+  name: string;
+  updatedAt: string;
+  userId: string;
+  wanteddivision: string;
+  wantedlobby: string;
+  _id: string;
+}
+export interface MutualPostDataTypes {
+  mutualPost: MutaulDataType[];
+  date: string;
+}
+
+export type DataType = PostDataType | BlogDataType | MutaulDataType;
+
+export interface GroupedDataType {
+  post: DataType[];
+  likes: number;
+  comments: number;
+}

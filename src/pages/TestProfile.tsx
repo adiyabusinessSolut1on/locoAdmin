@@ -1,4 +1,4 @@
-import  { useState } from "react";
+import { useState } from "react";
 import Pagination from "../components/pagination/Pagination";
 import { Link, useParams } from "react-router-dom";
 import { useDeletePostMutation, useGetDataQuery } from "../api";
@@ -9,23 +9,24 @@ import { IoIosSend } from "react-icons/io";
 import ConfirmDeleteModal from "../components/modal/DeleteModal";
 import TestQuestion from "../forms/TestQuestion";
 import { TestQuestionsType } from "../types";
-interface stateProps{
-  condition: boolean,
-  isCreat: boolean,
+interface stateProps {
+  condition: boolean;
+  isCreat: boolean;
   data: {
-    _id:string,
-    name:string[],
-    options:string[],
-    predicted_result:string,
-    actualresult:string,
-    isTrue:boolean,
-    answer_description:string
-  },
-  testId: string,
+    _id: string;
+    name: string;
+    image: string[];
+    options: string[];
+    predicted_result: string;
+    actualresult: string;
+    isTrue: boolean;
+    answer_description: string;
+  };
+  testId: string;
 }
 const TestProfile = () => {
   const { id } = useParams();
-  const { data, isLoading,  isError } = useGetDataQuery({
+  const { data, isLoading, isError } = useGetDataQuery({
     url: `/test/${id}`,
   });
 
@@ -35,13 +36,14 @@ const TestProfile = () => {
     condition: false,
     isCreat: false,
     data: {
-      _id:"",
-      name:[],
-      options:[],
-      predicted_result:"",
-      actualresult:"",
-      isTrue:false,
-      answer_description:""
+      _id: "",
+      name: "",
+      image: [],
+      options: [],
+      predicted_result: "",
+      actualresult: "",
+      isTrue: false,
+      answer_description: "",
     },
     testId: "",
   });
@@ -63,13 +65,14 @@ const TestProfile = () => {
       condition: false,
       isCreat: false,
       data: {
-        _id:"",
-        name:[],
-        options:[],
-        predicted_result:"",
-        actualresult:"",
-        isTrue:false,
-        answer_description:""
+        _id: "",
+        name: "",
+        image: [],
+        options: [],
+        predicted_result: "",
+        actualresult: "",
+        isTrue: false,
+        answer_description: "",
       },
       testId: "",
     }));
@@ -104,7 +107,7 @@ const TestProfile = () => {
     });
   };
 
-  const deletHandler = (id:string) => {
+  const deletHandler = (id: string) => {
     console.log(id, "from handler");
     setModalOpen((prev) => ({
       ...prev,
@@ -113,7 +116,7 @@ const TestProfile = () => {
     }));
   };
 
-  const updateHandler = (testData:TestQuestionsType) => {
+  const updateHandler = (testData: TestQuestionsType) => {
     setQuestionForm((prev) => ({
       ...prev,
       condition: true,
@@ -147,10 +150,9 @@ const TestProfile = () => {
   };
   return (
     <>
-    <ToastContainer/>
+      <ToastContainer />
       {isModalOpen.condition && (
         <ConfirmDeleteModal
-       
           onClose={handleCloseModal}
           onConfirm={handleConfirmDelete}
         />
@@ -185,6 +187,7 @@ const TestProfile = () => {
                 <div className="relative flex items-center justify-between w-full mb-8">
                   <div className="flex items-center gap-4">
                     {/* <div> */}
+                    <label className="font-bold">Test Name:</label>
                     <h2 className="text-xl font-semibold text-blue-800 md:text-2xl font-mavenPro">
                       {data?.title}
                     </h2>
@@ -193,10 +196,15 @@ const TestProfile = () => {
 
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2 ">
                   <p className="text-sm font-semibold md:text-base">
-                    <span className="pr-2 text-sm text-gray-500 ">
-                      instructions
+                  <span className="pr-2 text-sm text-red-400">
+                      Instructions:
                     </span>
-                    {data?.instructions}
+                    <div
+                           
+                            dangerouslySetInnerHTML={{
+                              __html: data?.instructions,
+                            }}
+                          />
                   </p>
                 </div>
               </div>
@@ -257,58 +265,58 @@ const TestProfile = () => {
                     <p className="flex items-center justify-center w-full h-full font-medium text-center text-rose-800">
                       Check Internet connection or Contact to Admin
                     </p>
-                  ) : data?.questions.length !== 0 ? (
-                    currentQuestion?.map((question:TestQuestionsType, i:number) => (
-                      <section
-                        key={i}
-                        className="grid items-center gap-6 py-2 pl-6 pr-4 border-t-2 border-gray-200 grid-cols-customQuizQuestion group hover:bg-gray-50"
-                      >
-                        <span>{i + 1}</span>
-
-                        <span
-                          className={`  font-semibold text-center  rounded-full  `}
+                  ) : data?.questions?.length !== 0 ? (
+                    currentQuestion?.map(
+                      (question: TestQuestionsType, i: number) => (
+                        <section
+                          key={i}
+                          className="grid items-center gap-6 py-2 pl-6 pr-4 border-t-2 border-gray-200 grid-cols-customQuizQuestion group hover:bg-gray-50"
                         >
-                          {question?.name.length !== 0
-                            ? "View Image"
-                            : "No Image"}
-                        </span>
-                        <span className="ml-6 font-semibold text-center rounded-full">
-                          <ul className="text-left list-disc list-inside">
-                            {question?.options?.map(
-                              (opt: string, index: number) => (
-                                <li className="text-sm" key={index}>
-                                  {opt}
-                                </li>
-                              )
-                            )}
-                          </ul>
-                        </span>
-                        <span
-                          className={`  font-semibold text-left ml-8 rounded-full  `}
-                        >
-                          {question?.predicted_result}
-                        </span>
+                          <span>{i + 1}</span>
 
-                        {/* <span className="flex justify-center ml-4 text-sm font-semibold ">
+                          <span
+                            className={`  font-semibold text-center  rounded-full  `}
+                          >
+                            {question?.name}
+                          </span>
+                          <span className="ml-6 font-semibold text-center rounded-full">
+                            <ul className="text-left list-disc list-inside">
+                              {question?.options?.map(
+                                (opt: string, index: number) => (
+                                  <li className="text-sm" key={index}>
+                                    {opt}
+                                  </li>
+                                )
+                              )}
+                            </ul>
+                          </span>
+                          <span
+                            className={`  font-semibold text-left ml-8 rounded-full  `}
+                          >
+                            {question?.predicted_result}
+                          </span>
+
+                          {/* <span className="flex justify-center ml-4 text-sm font-semibold ">
                           {question?.answer_description || "--"}
                         </span> */}
 
-                        <div className="grid justify-center gap-2">
-                          <button
-                            className="px-3 py-2 text-sm font-semibold text-white rounded-md bg-[#1f3c88] hover:bg-[#2d56bb]"
-                            onClick={() => updateHandler(question)}
-                          >
-                            Edit
-                          </button>
-                          <button
-                            className="px-3 py-2 text-sm font-semibold text-white rounded-md bg-rose-600 hover:bg-rose-700"
-                            onClick={() => deletHandler(question?._id)}
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      </section>
-                    ))
+                          <div className="grid justify-center gap-2">
+                            <button
+                              className="px-3 py-2 text-sm font-semibold text-white rounded-md bg-[#1f3c88] hover:bg-[#2d56bb]"
+                              onClick={() => updateHandler(question)}
+                            >
+                              Edit
+                            </button>
+                            <button
+                              className="px-3 py-2 text-sm font-semibold text-white rounded-md bg-rose-600 hover:bg-rose-700"
+                              onClick={() => deletHandler(question?._id)}
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </section>
+                      )
+                    )
                   ) : (
                     <p className="flex items-center justify-center w-full h-full font-semibold text-gray-600 font-mavenPro">
                       Add Questions
@@ -316,7 +324,7 @@ const TestProfile = () => {
                   )}
                 </div>
               </section>
-              <Pagination
+              <Pagination<TestQuestionsType>
                 currentPage={currentPage}
                 apiData={data?.questions}
                 itemsPerPage={itemsPerPage}

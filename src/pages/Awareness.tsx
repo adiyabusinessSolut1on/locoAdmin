@@ -18,23 +18,13 @@ const Awareness = () => {
   const [deletPost] = useDeletePostMutation();
 
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 15;
-
-  const [searchQuery, setSearchQuery] = useState("");
+  const itemsPerPage = 5;
 
   //calculation of page
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
-  // const currentAwareness = data?.slice(indexOfFirstItem, indexOfLastItem);
-
-  // Filter data based on search query
-  const filteredData = data?.filter((item: AwarenessTypes) =>
-    item.title?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  const currentAwareness = filteredData?.slice(indexOfFirstItem, indexOfLastItem);
-
+  const currentAwareness = data?.slice(indexOfFirstItem, indexOfLastItem);
 
   const handleClick = (pageNumber: number) => {
     setCurrentPage(pageNumber);
@@ -117,9 +107,9 @@ const Awareness = () => {
                 className={` p-2 text-sm md:text-base  sm:px-4 py-1 border-[2px] border-transparent 
                    bg-slate-50 focus:border-gray-100
                 shadow-inner rounded-[0.26rem] outline-none `}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onFocus={() => setCurrentPage(1)}
+                // value={searchQuery}
+                // onChange={(e) => setSearchQuery(e.target.value)}
+                // onFocus={() => setCurrentPage(1)}
               />
             </div>
             <div className="relative flex items-center self-end ">
@@ -138,12 +128,21 @@ const Awareness = () => {
               </button>
             </div>
           </div>
-          <section className={`w-full overflow-auto   border-2 [&::-webkit-scrollbar]:hidden rounded-lg border-gray-200 shadow-md bg-white`}>
+          <section
+            className={`w-full overflow-auto   border-2 [&::-webkit-scrollbar]:hidden rounded-lg border-gray-200 shadow-md bg-white`}
+          >
             <section className="grid grid-cols-customAwarness pb-2 p-2  gap-4   min-w-[800px] font-medium md:font-semibold bg-white font-mavenPro">
               <p className="pl-2 md:text-lg">SrNo.</p>
 
               {listHeadingAwarness?.map((heading: string, index: number) => (
-                <p key={index} className={`   md:text-lg ${index !== 0 ? "justify-self-center" : "ml-20"}`}>{heading.charAt(0).toUpperCase() + heading.slice(1)}</p>
+                <p
+                  key={index}
+                  className={`   md:text-lg ${
+                    index !== 0 ? "justify-self-center" : "ml-20"
+                  }`}
+                >
+                  {heading.charAt(0).toUpperCase() + heading.slice(1)}
+                </p>
               ))}
             </section>
             <div className=" h-[380px] overflow-y-auto [&::-webkit-scrollbar]:hidden min-w-[800px] bg-gray-50">
@@ -153,15 +152,22 @@ const Awareness = () => {
                 <p className="flex items-center justify-center w-full h-full font-medium text-center text-rose-800">
                   Check Internet connection or Contact to Admin
                 </p>
-              ) : filteredData?.length > 0 ? (
+              ) : data?.length > 0 ? (
                 currentAwareness?.map((awar: AwarenessTypes, i: number) => (
-                  <section key={i} className="grid items-center gap-6 py-2 pl-6 pr-4 border-t-2 border-gray-200 grid-cols-customAwarness group hover:bg-gray-50">
+                  <section
+                    key={i}
+                    className="grid items-center gap-6 py-2 pl-6 pr-4 border-t-2 border-gray-200 grid-cols-customAwarness group hover:bg-gray-50"
+                  >
                     <span>{i + 1}</span>
 
-                    <span className={`  font-semibold text-center  rounded-full  `}>
+                    <span
+                      className={`  font-semibold text-center  rounded-full  `}
+                    >
                       {awar?.title ? awar?.title : "---"}
                     </span>
-                    <span className={`  font-semibold text-center  rounded-full  `}>
+                    <span
+                      className={`  font-semibold text-center  rounded-full  `}
+                    >
                       {awar?.category ? awar?.category : "--"}
                     </span>
                     <span
@@ -169,8 +175,8 @@ const Awareness = () => {
                     >
                       {awar?.createdAt
                         ? new Date(
-                          awar?.createdAt?.split("T")[0]
-                        ).toLocaleDateString()
+                            awar?.createdAt?.split("T")[0]
+                          ).toLocaleDateString()
                         : ""}
                     </span>
 
@@ -212,9 +218,9 @@ const Awareness = () => {
             </div>
           </section>
 
-          <Pagination
+          <Pagination<AwarenessTypes>
             currentPage={currentPage}
-            apiData={filteredData}
+            apiData={data}
             itemsPerPage={itemsPerPage}
             handleClick={handleClick}
           />

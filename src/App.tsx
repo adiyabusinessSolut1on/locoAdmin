@@ -1,6 +1,13 @@
 // App.js
+if (typeof global === "undefined") {
+  window.global = window;
+}
 import "./App.css";
-import { RouterProvider, createBrowserRouter, Navigate, } from "react-router-dom";
+import {
+  RouterProvider,
+  createBrowserRouter,
+  Navigate,
+} from "react-router-dom";
 import Login from "./pages/login";
 import Layout from "./layout";
 import Create_Category from "./pages/create-category";
@@ -11,12 +18,11 @@ import PrivateRoute from "./middleware/privateroute";
 import ForgetPassword from "./pages/ForgetPassword";
 import Authentication from "./pages/Authentication";
 import ResetPassword from "./pages/ResetPassword";
-import ErrorElement from "./pages/ErrorElement";
+
 import Awareness from "./pages/Awareness";
 import CreatAwareness from "./forms/CreatAwareness";
 import AwarenessCategory from "./pages/AwarenessCategory";
 import ImportantDocuments from "./pages/ImportantDocuments";
-
 import SponserCompany from "./pages/SponserCompany";
 import SponserCompaniesForm from "./forms/SponserCompaniesForm";
 import SponsorCompanyProfile from "./pages/SponsorCompanyProfile";
@@ -29,20 +35,14 @@ import Test from "./pages/Test";
 import TestProfile from "./pages/TestProfile";
 import Video from "./pages/videos";
 import DalyTasks from "./pages/Daily_Task";
-import CreatDocuments from "./pages/CreatDocuments";
 import QuizAndTestCategory from "./pages/QuizAndTestCategory";
-import UpdateSetting from "./pages/UpdateSetting";
-import AddAppSetting from "./pages/AddAppSetting";
-import Report from "./pages/Report";
-import AddDailyTask from "./pages/AddDailyTask";
+import CreatDocuments from "./pages/CreatDocuments";
+
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   const token = localStorage.getItem("user");
-  console.log("user: ", localStorage.getItem("user"));
-  console.log("token: ", token);
-
   const isValidToken = token ? true : false;
-  console.log("Tokaen in Storage>>>", isValidToken);
   const route = createBrowserRouter([
     {
       path: "/login",
@@ -74,8 +74,11 @@ function App() {
         {
           path: "",
           element: <Layout />,
-          errorElement: <ErrorElement />,
           children: [
+            {
+              path: "post-details",
+              element: <Dashboard />,
+            },
             {
               path: "creat-blog",
               element: <CreatBlog />,
@@ -96,6 +99,7 @@ function App() {
               path: "videocategory",
               element: <VideoCategory />,
             },
+
             {
               path: "users",
               element: <UserList />,
@@ -112,10 +116,7 @@ function App() {
               path: "videos/:id",
               element: <UploadVideo />,
             },
-            // {
-            //   path: "video/:id",
-            //   element: <UpdateVideo />,
-            // },
+
             {
               path: "videos/upload-video",
               element: <UploadVideo />,
@@ -123,14 +124,6 @@ function App() {
             {
               path: "daily-task",
               element: <DalyTasks />,
-            },
-            {
-              path: "create-daily-task",
-              element: <AddDailyTask />,
-            },
-            {
-              path: "update-daily-task/:id",
-              element: <AddDailyTask />,
             },
             {
               path: "awareness",
@@ -183,10 +176,6 @@ function App() {
               element: <Quiz />,
             },
             {
-              path: "qt-category",
-              element: <QuizAndTestCategory />,
-            },
-            {
               path: "quiz/:id",
               element: <QuizProfile />,
             },
@@ -199,20 +188,8 @@ function App() {
               element: <TestProfile />,
             },
             {
-              path: "update",
-              element: <UpdateSetting />,
-            },
-            {
-              path: "add-update",
-              element: <AddAppSetting />,
-            },
-            {
-              path: "update/:id",
-              element: <AddAppSetting />,
-            },
-            {
-              path: "report",
-              element: <Report />,
+              path: "qt-category",
+              element: <QuizAndTestCategory />,
             },
           ],
         },

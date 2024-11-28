@@ -196,6 +196,7 @@ const QuizQuestion: React.FC<Props> = ({ isQuestionForm, close }: Props) => {
             </div>
             <div className="h-[calc(100vh-12rem)] w-full overflow-y-auto font-mavenPro">
               <div className="grid items-center grid-cols-1 gap-4 py-4 md:grid-cols-2">
+                <label className="font-medium">Question Name:</label>
                 <input
                   value={quizData.question}
                   type="text"
@@ -206,18 +207,22 @@ const QuizQuestion: React.FC<Props> = ({ isQuestionForm, close }: Props) => {
                   required
                 />
 
-                <div className="grid grid-cols-2 col-span-1 gap-4 md:col-span-2">
+                <div className="grid grid-cols-2 col-span-2 gap-4 items-center">
+                  <div>
+                  <label className="font-medium"> Add Option:</label>
+                  <p className="text-[12px] text-red-700">type Option and press Enter</p>
                   <input
                     type="text"
                     onKeyDown={handleQuestionInput}
                     className="w-full h-10 pl-4 font-medium bg-green-100 border border-transparent rounded-md outline-none focus:border-blue-200"
                     placeholder="Add Options (press Enter or comma to add)"
                   />
+                  </div>
                   <div className="flex flex-wrap gap-2 mt-2">
                     {quizData.options.map((tag, index) => (
                       <span
                         key={index}
-                        className="flex items-center px-2 py-1 text-sm font-medium text-white bg-green-600 rounded-full"
+                        className="flex items-center px-2 py-1 text-sm font-medium text-white bg-green-600 max-h-[28px] rounded-full"
                       >
                         {tag}
                         <button
@@ -233,6 +238,7 @@ const QuizQuestion: React.FC<Props> = ({ isQuestionForm, close }: Props) => {
                 </div>
 
                 <div className="relative">
+                  <label className="font-medium">Select Predicted Result:</label>
                   <div
                     className="flex justify-between p-2 pl-4 font-medium text-gray-400 bg-green-100 border-transparent rounded-md cursor-pointer focus:border-blue-200"
                     onClick={() =>

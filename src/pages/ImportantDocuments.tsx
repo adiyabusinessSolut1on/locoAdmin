@@ -6,7 +6,7 @@ import DeleteICONSVG from "../assets/SVG/deleteICON";
 import EditICONSVG from "../assets/SVG/editICON";
 import { useState } from "react";
 import ConfirmDeleteModal from "../components/modal/DeleteModal";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ImpLinkDocs } from "../types";
 import Pagination from "../components/pagination/Pagination";
@@ -14,7 +14,9 @@ import { IoIosSend } from "react-icons/io";
 
 const ImportantDocuments = () => {
   const navigate = useNavigate();
-  const { data, isLoading, isError } = useGetDataQuery({ url: "/important_link", });
+  const { data, isLoading, isError, error } = useGetDataQuery({
+    url: "/important_link",
+  });
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
@@ -22,8 +24,22 @@ const ImportantDocuments = () => {
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
-  const currentDocuments = Array.isArray(data) ? data?.slice(indexOfFirstItem, indexOfLastItem) : data?.mesaage;
-  const handleClick = (pageNumber: number) => { setCurrentPage(pageNumber); };
+  const currentDocuments = Array.isArray(data)
+    ? data.slice(indexOfFirstItem, indexOfLastItem)
+    : data?.mesaage;
+
+  console.log(
+    data,
+    indexOfFirstItem,
+    indexOfLastItem,
+    isError,
+    error,
+    typeof currentDocuments === "string",
+    currentDocuments
+  );
+  const handleClick = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
   const [deletPost] = useDeletePostMutation();
 
   const [isModalOpen, setModalOpen] = useState({
@@ -74,6 +90,7 @@ const ImportantDocuments = () => {
   const listHeadingUsers = ["Title", "Downloadable", "Date", "Setting"];
   return (
     <>
+      <ToastContainer />
       {isLoading && <Loader />}
 
       {isModalOpen.condition && (
@@ -102,9 +119,9 @@ const ImportantDocuments = () => {
                 className={` p-2 text-sm md:text-base  sm:px-4 py-1 border-[2px] border-transparent 
                  bg-slate-50 focus:border-gray-100
               shadow-inner rounded-[0.26rem] outline-none `}
-              // value={searchQuery}
-              // onChange={(e) => setSearchQuery(e.target.value)}
-              // onFocus={() => setCurrentPage(1)}
+                // value={searchQuery}
+                // onChange={(e) => setSearchQuery(e.target.value)}
+                // onFocus={() => setCurrentPage(1)}
               />
             </div>
             <div className="relative flex items-center self-end ">
@@ -132,8 +149,9 @@ const ImportantDocuments = () => {
               {listHeadingUsers.map((heading, index) => (
                 <p
                   key={index}
-                  className={`   md:text-lg ${index !== 0 ? "justify-self-center" : "ml-20"
-                    }`}
+                  className={`   md:text-lg ${
+                    index !== 0 ? "justify-self-center" : "ml-20"
+                  }`}
                 >
                   {heading.charAt(0).toUpperCase() + heading.slice(1)}
                 </p>
@@ -148,7 +166,7 @@ const ImportantDocuments = () => {
                 </p>
               ) : typeof currentDocuments === "string" ? (
                 <p className="flex items-center justify-center h-full font-bold text-gray-600">
-                  {currentDocuments} "Add More Document"
+                  {currentDocuments} "Add Document"
                 </p>
               ) : (
                 data?.length > 0 &&
@@ -186,8 +204,8 @@ const ImportantDocuments = () => {
                     >
                       {document?.createdAt
                         ? new Date(
-                          document?.createdAt?.split("T")[0]
-                        ).toLocaleDateString()
+                            document?.createdAt?.split("T")[0]
+                          ).toLocaleDateString()
                         : ""}
                     </span>
 
@@ -213,7 +231,7 @@ const ImportantDocuments = () => {
             </div>
           </section>
 
-          <Pagination
+          <Pagination<ImpLinkDocs>
             currentPage={currentPage}
             apiData={data}
             itemsPerPage={itemsPerPage}

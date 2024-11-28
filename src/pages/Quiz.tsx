@@ -34,7 +34,6 @@ const Quiz = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
-
   //calculation of page
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -62,6 +61,8 @@ const Quiz = () => {
     },
     quizId: "",
   });
+
+  const [isClapm, setClamp] = useState(false);
 
   const [isModalOpen, setModalOpen] = useState({
     condition: false,
@@ -94,16 +95,20 @@ const Quiz = () => {
   const handleConfirmDelete = () => {
     // Handle the delete action here
     toast.loading("checking Details");
-    deletPost({ url: `/quiz/${isModalOpen.id}`, }).then((res) => {
-      if (res.data.success) {
+    deletPost({
+      url: `/quiz/${isModalOpen.id}`,
+    })
+      .then((res) => {
+        if (res.data.success) {
+          toast.dismiss();
+          toast.success(`${res.data.message}`);
+        }
+        console.log(res);
+      })
+      .catch(() => {
         toast.dismiss();
-        toast.success(`${res.data.message}`);
-      }
-      // console.log(res);
-    }).catch(() => {
-      toast.dismiss();
-      toast.error("Not successfull to delete");
-    });
+        toast.error("Not successfull to delete");
+      });
     setModalOpen({
       condition: false,
       id: "",
@@ -163,27 +168,43 @@ const Quiz = () => {
       )}
 
       {isModalOpen.condition && (
-        <ConfirmDeleteModal onClose={handleCloseModal} onConfirm={handleConfirmDelete} />
+        <ConfirmDeleteModal
+          onClose={handleCloseModal}
+          onConfirm={handleConfirmDelete}
+        />
       )}
 
-      <section className={`md:pl-0 p-4 h-full w-full rounded-md mx-auto [&::-webkit-scrollbar]:hidden `}>
-        <section className={` md:p-8 p-6 h-full border-gray-200 rounded-md  max-w-full w-full `}>
+      <section
+        className={`  md:pl-0 p-4 h-full  w-full rounded-md   mx-auto [&::-webkit-scrollbar]:hidden `}
+      >
+        <section
+          className={` md:p-8 p-6 h-full border-gray-200 rounded-md  max-w-full w-full `}
+        >
           <div className="flex items-center mb-2 md:mb-6">
-            <h1 className=" text-[28px] font-bold md:text-4xl text-gray-600 font-mavenPro">Quiz</h1>
+            <h1 className=" text-[28px] font-bold md:text-4xl text-gray-600 font-mavenPro">
+              Quiz
+            </h1>
           </div>
           <div className="flex justify-between mb-4">
             <div className={`flex items-center   `}>
               <input
                 type="search"
                 placeholder={`Search`}
-                className={` p-2 text-sm md:text-base  sm:px-4 py-1 border-[2px] border-transparent bg-slate-50 focus:border-gray-100 shadow-inner rounded-[0.26rem] outline-none `}
-              // value={searchQuery}
-              // onChange={(e) => setSearchQuery(e.target.value)}
-              // onFocus={() => setCurrentPage(1)}
+                className={` p-2 text-sm md:text-base  sm:px-4 py-1 border-[2px] border-transparent 
+                         bg-slate-50 focus:border-gray-100
+                      shadow-inner rounded-[0.26rem] outline-none `}
+                // value={searchQuery}
+                // onChange={(e) => setSearchQuery(e.target.value)}
+                // onFocus={() => setCurrentPage(1)}
               />
             </div>
             <div className="relative flex items-center self-end ">
-              <button className={` px-2 py-1 bg-[#1f3c88] hover:bg-[#2d56bb] text-[#DEE1E2] font-semibold} rounded shadow-xl md:px-4 md:py-2  sm:self-center`} onClick={handlingCrateQuiz}>
+              <button
+                className={` px-2 py-1 
+                                 bg-[#1f3c88] hover:bg-[#2d56bb]  text-[#DEE1E2] font-semibold
+                            }    rounded shadow-xl md:px-4 md:py-2  sm:self-center`}
+                onClick={handlingCrateQuiz}
+              >
                 <span className="hidden md:inline-block">Creat Quiz</span>
 
                 <IoIosSend className="w-6 h-6 md:hidden" />
@@ -199,8 +220,9 @@ const Quiz = () => {
               {listHeadingQuiz.map((heading, index) => (
                 <p
                   key={index}
-                  className={`   md:text-lg ${index !== 0 ? "justify-self-center" : "ml-20"
-                    }`}
+                  className={`   md:text-lg ${
+                    index !== 0 ? "justify-self-center" : "ml-20"
+                  }`}
                 >
                   {heading.charAt(0).toUpperCase() + heading.slice(1)}
                 </p>
@@ -231,19 +253,33 @@ const Quiz = () => {
                     >
                       {quiz?.category ? quiz?.category : "---"}
                     </span>
-                    <span
+                    {/* <div className="flex"> */}
+                    <div
                       className={`  font-semibold text-center  rounded-full  `}
                     >
                       {quiz?.instructions ? (
-                        <div
-                          dangerouslySetInnerHTML={{
-                            __html: quiz?.instructions,
-                          }}
-                        />
+                        // hover:line-clamp-none
+                        <>
+                          <div
+                            className={`line-clamp-3 ${
+                              isClapm && "line-clamp-none"
+                            }`}
+                            dangerouslySetInnerHTML={{
+                              __html: quiz?.instructions,
+                            }}
+                          />
+                          <button
+                            className="font-semibold text-gray-500"
+                            onClick={() => setClamp((prev) => !prev)}
+                          >
+                            {isClapm ? "less" : "more"}
+                          </button>
+                        </>
                       ) : (
                         "--"
                       )}
-                    </span>
+                    </div>
+                    {/* </div> */}
 
                     <div className="grid items-center justify-center">
                       <button
@@ -286,7 +322,7 @@ const Quiz = () => {
             </div>
           </section>
 
-          <Pagination
+          <Pagination<quiztypes>
             currentPage={currentPage}
             apiData={data}
             itemsPerPage={itemsPerPage}

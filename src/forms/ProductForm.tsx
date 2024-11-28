@@ -20,12 +20,13 @@ interface Props{
   close:()=>void,
   updateData:sponsorProductsType,
   sponsorname:string
+  isCreate:boolean
 }
 
-const ProductForm = ({ close, updateData , sponsorname }:Props) => {
+const ProductForm = ({ close, updateData , sponsorname,isCreate }:Props) => {
 
   const [updatePost] = useUpdatePostMutation();
-
+console.log("isCreate>>>>",isCreate)
   const { id } = useParams();
 
   const [ProductData, setProductData] = useState<CompaniesType>({
@@ -42,10 +43,6 @@ const ProductForm = ({ close, updateData , sponsorname }:Props) => {
     image: updateData?.image || "",
   });
 
-  console.log(updateData, "from company form");
-
-
-
   const [progressStatus, setProgressStatus] = useState<number | null>(null);
 
   //for text Data
@@ -60,7 +57,7 @@ const ProductForm = ({ close, updateData , sponsorname }:Props) => {
     }));
    
   };
-
+  
   //for Image Data
   const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -84,10 +81,9 @@ const ProductForm = ({ close, updateData , sponsorname }:Props) => {
   //   console.log(updateData ? "PUT Operation" : "POST Operation");
   const submitHandler = async (e: React.FormEvent) => {
     e.preventDefault();
-
     const companySponserProductPostObject = {
       name: ProductData.name,
-      image: updateData?.image ? updateData?.image : ProductData.image,
+      image:  ProductData.image,
       link: ProductData.webLink,
       description: ProductData.discription,
       active: ProductData.status,
@@ -95,24 +91,19 @@ const ProductForm = ({ close, updateData , sponsorname }:Props) => {
       companyId: id,
     };
 
-   
-
     toast.loading("Checking Details");
     try {
       console.log(companySponserProductPostObject, "submit");
       const response = await updatePost({
         data: companySponserProductPostObject,
-        method: updateData ? "PUT" : "POST",
-        path: updateData
-          ? `/sponsor/product/${updateData?._id}`
-          : "/sponsor/product",
+        method: isCreate ? "POST" : "PUT",
+        path: isCreate
+          ? "/sponsor/product"
+          : `/sponsor/product/${updateData?._id}`,
       });
-      console.log(response);
       if (response?.data?.success) {
         toast.dismiss();
-        toast.success(response?.data?.message, {
-          autoClose: 5000,
-        });
+        toast.success(response?.data?.message);
         clearhandler();
       } else {
         toast.dismiss();
