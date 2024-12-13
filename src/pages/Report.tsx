@@ -64,7 +64,9 @@ function Report() {
                                     <span>{indexOfFirstItem + i + 1}</span>
                                     <div className="flex items-center justify-center">{blog?.reportedBy?.name}</div>
                                     <span className="font-semibold text-center rounded-full">{blog?.reportedUser?.name}</span>
-                                    <span className="font-semibold text-center rounded-full">{blog?.reportedPost?._id}</span>
+                                    {blog?.reportedPost && <span className="font-semibold text-center rounded-full">{blog?.reportedPost?.content}</span>}
+                                    {blog?.awareness && <span className="font-semibold text-center rounded-full">{blog?.awareness?.title}</span>}
+                                    {blog?.blog && <span className="font-semibold text-center rounded-full">{blog?.blog?.title}</span>}
                                     <span className="flex justify-center ml-2 text-sm font-semibold">
                                         {blog?.createdAt ? new Date(blog?.createdAt).toLocaleDateString() : ""}
                                     </span>

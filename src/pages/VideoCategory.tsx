@@ -36,7 +36,7 @@ const VideoCategory: React.FC = () => {
 
   const currentVideoCategory = data?.slice(indexOfFirstItem, indexOfLastItem);
 
-  console.log(currentVideoCategory, "pagination");
+  // console.log(currentVideoCategory, "pagination");
 
   const handleClick = (pageNumber: number) => {
     setCurrentPage(pageNumber);

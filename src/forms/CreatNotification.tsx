@@ -164,19 +164,17 @@ const CreatNotification = ({ setCategoryForm }: Props) => {
                   <FaCaretDown className="m-1" />
                 </div>
                 <ul
-                  className={`mt-2 p-2 rounded-md w-64 text-[#DEE1E2] bg-gray-800 shadow-lg absolute z-10 ${
-                    isOpen ? "max-h-60" : "hidden"
-                  } custom-scrollbar`}
+                  className={`mt-2 p-2 rounded-md w-64 text-[#DEE1E2] bg-gray-800 shadow-lg absolute z-10 ${isOpen ? "max-h-60" : "hidden"
+                    } custom-scrollbar`}
                 >
                   {data?.data?.length > 0 ? (
                     data?.data?.map((blog: BlogSTyepes, i: number) => (
                       <li
                         key={i}
-                        className={`p-2 mb-2 text-sm text-[#DEE1E2]  rounded-md cursor-pointer hover:bg-blue-200/60 ${
-                          notificationDataForm.blogId?.name === blog?.title
+                        className={`p-2 mb-2 text-sm text-[#DEE1E2]  rounded-md cursor-pointer hover:bg-blue-200/60 ${notificationDataForm.blogId?.name === blog?.title
                             ? "bg-rose-600"
                             : ""
-                        }`}
+                          }`}
                         onClick={() =>
                           selectOption("blogId", {
                             name: blog?.title,
