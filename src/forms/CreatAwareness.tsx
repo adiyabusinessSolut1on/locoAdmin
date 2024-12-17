@@ -30,7 +30,7 @@ const CreatAwareness = () => {
   const { data: updateAwar, isError: isErrorAwar } = useGetDataQuery({
     url: `/awareness/${id}`,
   });
-console.log("data descrtiption>>>",updateAwar)
+  console.log("data descrtiption>>>", updateAwar)
   const isUpdate = Object.keys(updateAwar || [])?.length !== 0;
 
   const { data } = useGetDataQuery({
@@ -51,7 +51,7 @@ console.log("data descrtiption>>>",updateAwar)
         updateAwar?.image?.lastIndexOf("%"),
         updateAwar?.image?.lastIndexOf("/") + 1
       ) || "",
-    content:updateAwar?.description||"",
+    content: updateAwar?.description || "",
   });
 
   useEffect(() => {
@@ -192,14 +192,12 @@ console.log("data descrtiption>>>",updateAwar)
                 />
                 <label
                   htmlFor="file-upload"
-                  className={`px-4 py-2 pl-24 relative ${
-                    progressStatus ? "pb-2" : ""
-                  } w-full text-base bg-blue-100 focus:border-blue-200 border-transparent border rounded-md text-gray-400 cursor-pointer flex items-center justify-between`}
+                  className={`px-4 py-2 pl-24 relative ${progressStatus ? "pb-2" : ""
+                    } w-full text-base bg-blue-100 focus:border-blue-200 border-transparent border rounded-md text-gray-400 cursor-pointer flex items-center justify-between`}
                 >
                   <p
-                    className={`font-medium ${
-                      state?.imageSrc && "text-gray-700"
-                    }`}
+                    className={`font-medium ${state?.imageSrc && "text-gray-700"
+                      }`}
                   >
                     {state?.imageSrc || "Choose a file"}
                   </p>
@@ -214,7 +212,7 @@ console.log("data descrtiption>>>",updateAwar)
                       <div
                         className="h-1 bg-blue-400 rounded-md mx-[1px] mb-[1px]"
                         style={{ width: `${progressStatus}%` }}
-                        // style={{ width: `${100}%` }}
+                      // style={{ width: `${100}%` }}
                       ></div>
                     </div>
                   </>
@@ -228,9 +226,8 @@ console.log("data descrtiption>>>",updateAwar)
                   onClick={() => setOpen((prev) => !prev)}
                 >
                   <span
-                    className={`font-medium  ${
-                      state?.category?.name ? "text-gray-700" : "text-gray-400"
-                    }`}
+                    className={`font-medium  ${state?.category?.name ? "text-gray-700" : "text-gray-400"
+                      }`}
                   >
                     {state?.category?.name !== ""
                       ? state?.category?.name
@@ -240,22 +237,19 @@ console.log("data descrtiption>>>",updateAwar)
                   <FaCaretDown className="m-1" />
                 </div>
                 <ul
-                  className={`mt-2 p-2 rounded-md min-w-32 overflow-auto text-[#DEE1E2]  bg-gray-800 shadow-lg absolute z-10 ${
-                    isOpen ? "max-h-60" : "hidden"
-                  } custom-scrollbar`}
+                  className={`mt-2 p-2 rounded-md min-w-32 overflow-auto text-[#DEE1E2]  bg-gray-800 shadow-lg absolute z-10 ${isOpen ? "max-h-60" : "hidden"
+                    } custom-scrollbar`}
                 >
                   {data?.data?.length > 0 ? (
                     data?.data?.map(
                       (category: awarenessCategoryType, i: number) => (
                         <li
                           key={i}
-                          className={`p-2 ${
-                            data.length > 1 ? "mb-2" : ""
-                          } text-sm font-medium rounded-md cursor-pointer flex items-center gap-2 hover:bg-blue-200/60 ${
-                            state?.category?.name === category?.name
+                          className={`p-2 ${data.length > 1 ? "mb-2" : ""
+                            } text-sm font-medium rounded-md cursor-pointer flex items-center gap-2 hover:bg-blue-200/60 ${state?.category?.name === category?.name
                               ? "bg-rose-600"
                               : ""
-                          }`}
+                            }`}
                           onClick={() =>
                             handleChange("category", {
                               name: category?.name,
@@ -287,7 +281,7 @@ console.log("data descrtiption>>>",updateAwar)
                   value={state?.content}
                   OnChangeEditor={(e: string) => handleChange("content", e)}
                 />
-               
+
               </div>
             </div>
 

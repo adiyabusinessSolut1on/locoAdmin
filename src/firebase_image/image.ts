@@ -12,15 +12,10 @@ const uniqueIdentifier = `image_${Date.now()}_${Math.floor(
   Math.random() * 10000
 )}`;
 
-const uploadImage = async (
-  fileName: string,
-  file: File,
-  setProgressStatus: (progress: number | null) => void
-): Promise<string> => {
+const uploadImage = async (fileName: string, file: File, setProgressStatus: (progress: number | null) => void): Promise<string> => {
   try {
     const storageRef = ref(
-      storage,
-      `${fileName.replace(/\s+/g, "")}/${uniqueIdentifier}_${file.name}`
+      storage, `${fileName.replace(/\s+/g, "")}/${uniqueIdentifier}_${file.name}`
     );
     const uploadTask = uploadBytesResumable(storageRef, file);
 
