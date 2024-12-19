@@ -249,7 +249,7 @@ function AddDailyTask() {
                                             <FaCaretDown className="m-1" />
                                         </div>
 
-                                        <ul className={`mt-2 p-2 rounded-md w-32 text-[#DEE1E2] bg-gray-800 shadow-lg absolute z-10 ${openAwareness ? 'max-h-60' : 'hidden'} custom-scrollbar`}>
+                                        <ul className={`mt-2 p-2 rounded-md w-32 text-[#DEE1E2] bg-gray-800 shadow-lg absolute z-10 ${openAwareness ? 'max-h-60 overflow-y-auto' : 'hidden'} custom-scrollbar`}>
                                             {awareness?.map((category: awarenessCategoryType, i: number) => (
                                                 <li key={i} className={`p-2 ${awareness.length > 1 ? 'mb-2' : ''} text-sm font-medium rounded-md cursor-pointer flex items-center gap-2 hover:bg-blue-200/60 ${selectAwareness?.title === category?.title ? 'bg-rose-600' : ''}`} onClick={() => handleAwarenessChange({ title: category?.title, _id: category?._id })}>
                                                     {category?.title}
@@ -285,7 +285,7 @@ function AddDailyTask() {
                                             <FaCaretDown className="m-1" />
                                         </div>
 
-                                        <ul className={`mt-2 p-2 rounded-md w-32 text-[#DEE1E2] bg-gray-800 shadow-lg absolute z-10 ${openBlog ? 'max-h-60' : 'hidden'} custom-scrollbar`}>
+                                        <ul className={`mt-2 p-2 rounded-md w-32 text-[#DEE1E2] bg-gray-800 shadow-lg absolute z-10 ${openBlog ? 'max-h-60 overflow-y-auto' : 'hidden'} custom-scrollbar`}>
                                             {blogs?.data?.map((category: awarenessCategoryType, i: number) => (
                                                 <li key={i} className={`p-2 ${blogs?.data?.length > 1 ? 'mb-2' : ''} text-sm font-medium rounded-md cursor-pointer flex items-center gap-2 hover:bg-blue-200/60 ${selectBlog?.title === category?.title ? 'bg-rose-600' : ''}`} onClick={() => handleBlogChange({ title: category?.title, _id: category?._id })}>
                                                     {category?.title}
@@ -320,7 +320,7 @@ function AddDailyTask() {
                                             <FaCaretDown className="m-1" />
                                         </div>
 
-                                        <ul className={`mt-2 p-2 rounded-md w-32 text-[#DEE1E2] bg-gray-800 shadow-lg absolute z-10 ${openVideo ? 'max-h-60' : 'hidden'} custom-scrollbar`}>
+                                        <ul className={`mt-2 p-2 rounded-md w-32 text-[#DEE1E2] bg-gray-800 shadow-lg absolute z-10 ${openVideo ? 'max-h-60 overflow-y-auto' : 'hidden'} custom-scrollbar`}>
                                             {videos?.map((category: awarenessCategoryType, i: number) => (
                                                 <li key={i} className={`p-2 ${videos?.length > 1 ? 'mb-2' : ''} text-sm font-medium rounded-md cursor-pointer flex items-center gap-2 hover:bg-blue-200/60 ${selectVideo?.title === category?.title ? 'bg-rose-600' : ''}`} onClick={() => handleVidoeChange({ title: category?.title, _id: category?._id })}>
                                                     {category?.title}
@@ -355,7 +355,7 @@ function AddDailyTask() {
                                             <FaCaretDown className="m-1" />
                                         </div>
 
-                                        <ul className={`mt-2 p-2 rounded-md w-32 text-[#DEE1E2] bg-gray-800 shadow-lg absolute z-10 ${openQuiz ? 'max-h-60' : 'hidden'} custom-scrollbar`}>
+                                        <ul className={`mt-2 p-2 rounded-md w-32 text-[#DEE1E2] bg-gray-800 shadow-lg absolute z-10 ${openQuiz ? 'max-h-60 overflow-y-auto' : 'hidden'} custom-scrollbar`}>
                                             {quiz?.map((category: awarenessCategoryType, i: number) => (
                                                 <li key={i} className={`p-2 ${quiz?.length > 1 ? 'mb-2' : ''} text-sm font-medium rounded-md cursor-pointer flex items-center gap-2 hover:bg-blue-200/60 ${selectQuiz?.title === category?.title ? 'bg-rose-600' : ''}`} onClick={() => handleQuizChange({ title: category?.title, _id: category?._id })}>
                                                     {category?.title}
@@ -390,7 +390,7 @@ function AddDailyTask() {
                                             <FaCaretDown className="m-1" />
                                         </div>
 
-                                        <ul className={`mt-2 p-2 rounded-md w-32 text-[#DEE1E2] bg-gray-800 shadow-lg absolute z-10 ${openTest ? 'max-h-60' : 'hidden'} custom-scrollbar`}>
+                                        <ul className={`mt-2 p-2 rounded-md w-32 text-[#DEE1E2] bg-gray-800 shadow-lg absolute z-10 ${openTest ? 'max-h-60 overflow-y-auto' : 'hidden'} custom-scrollbar`}>
                                             {test?.map((category: awarenessCategoryType, i: number) => (
                                                 <li key={i} className={`p-2 ${test?.length > 1 ? 'mb-2' : ''} text-sm font-medium rounded-md cursor-pointer flex items-center gap-2 hover:bg-blue-200/60 ${selectTest?.title === category?.title ? 'bg-rose-600' : ''}`} onClick={() => handleTestChange({ title: category?.title, _id: category?._id })}>
                                                     {category?.title}
