@@ -64,9 +64,11 @@ function AddAppSetting() {
     const handleSubmit = async (evt: any) => {
         evt.preventDefault();
 
-        toast.loading("Checking Details");
+        // console.log("handleSubmit");
+
+        // toast.loading("Checking Details");
         try {
-            toast.loading("Checking Details");
+            // toast.loading("Checking Details");
 
             const response = await updatePost({
                 data: setting,
@@ -74,20 +76,20 @@ function AddAppSetting() {
                 path: id ? `/setting/update/${id}` : "/setting/add",
             });
 
-            console.log(response);
-
             if (response?.data?.success) {
                 toast.dismiss();
                 toast.success(response?.data?.message, { autoClose: 5000, });
                 clearhandler();
             } else {
                 toast.dismiss();
-                toast.error(`Failed to ${id ? "Update Blog" : "Create Blog"} create Blog`);
+                toast.error(`Failed to ${id ? "Update app version" : "Create app version"}`);
             }
         } catch (error) {
+            console.log("error: ", error);
+
             toast.dismiss();
             console.error(`Error ${id ? "Updating Blog" : "Creating Blog"} :`, error);
-            toast.error("An error occurred");
+            toast.error("Failed to add app version");
         }
     }
 
