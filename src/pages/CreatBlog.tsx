@@ -5,7 +5,7 @@ import { useGetDataQuery, useUpdatePostMutation } from "../api";
 import { BlogCategory } from "../types";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import uploadImage from "../firebase_image/image";
+// import uploadImage from "../firebase_image/image";
 import JoditTextEditor from "../components/editorNew"
 
 import { FaBloggerB, FaCaretDown } from "react-icons/fa";
@@ -207,8 +207,8 @@ const CreatBlog = () => {
     }));
   };
 
-  console.log(state.content, "editor");
-  const [progressStatus, setProgressStatus] = useState<number | null>(null);
+
+  // const [progressStatus, setProgressStatus] = useState<number | null>(null);
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target?.files?.[0];
@@ -221,7 +221,7 @@ const CreatBlog = () => {
           selectedFile,
           setProgressStatus
         ); */
-        setImagePrivew(URL.createObjectURL(e.target.files[0]))
+        setImagePrivew(URL.createObjectURL(selectedFile))
         setState({
           ...state,
           thumnail: selectedFile,
@@ -343,17 +343,18 @@ const CreatBlog = () => {
               </div>
               <div className="relative w-full h-full">
                 <input type="file" name="image" onChange={handleImageChange} className="hidden" id="file-upload" />
-                <label htmlFor="file-upload" className={`px-4 py-2 pl-24 relative ${progressStatus ? "pb-2" : ""} w-full text-base bg-blue-100 focus:border-blue-200 border-transparent border rounded-md text-gray-400 cursor-pointer flex items-center justify-between`}>
+                {/* <label htmlFor="file-upload" className={`px-4 py-2 pl-24 relative ${progressStatus ? "pb-2" : ""} w-full text-base bg-blue-100 focus:border-blue-200 border-transparent border rounded-md text-gray-400 cursor-pointer flex items-center justify-between`}> */}
+                <label htmlFor="file-upload" className={`px-4 py-2 pl-24 relative w-full text-base bg-blue-100 focus:border-blue-200 border-transparent border rounded-md text-gray-400 cursor-pointer flex items-center justify-between`}>
                   {state.imageTitle || "Choose a file"}
                   <span className="text-gray-400 text-[15px] absolute top-0 h-full flex items-center left-0 rounded-tl-md rounded-bl-md px-3 font-medium bg-blue-200">Browse</span>
                 </label>
-                {progressStatus !== null && progressStatus !== 0 && (
+                {/* {progressStatus !== null && progressStatus !== 0 && (
                   <>
                     <div className="absolute inset-0 z-10 flex items-end">
                       <div className="h-1 bg-blue-400 rounded-md mx-[1px] mb-[1px]" style={{ width: `${progressStatus}%` }}></div>
                     </div>
                   </>
-                )}
+                )} */}
               </div>
 
               <input value={state.title} type="text" onChange={handleChange} name="title" className="w-full h-10 pl-4 font-medium bg-blue-100 border border-transparent rounded-md outline-none focus:border-blue-200" placeholder="Enter Blog Title" required />

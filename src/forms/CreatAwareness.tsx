@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useGetDataQuery, useUpdatePostMutation } from "../api";
-import uploadImage from "../firebase_image/image";
 import { useNavigate, useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { FaCaretDown } from "react-icons/fa";
@@ -76,13 +75,13 @@ const CreatAwareness = () => {
   }, [isUpdate, isErrorAwar, updateAwar]);
 
   const handleChange = (name: string, value: string | CategoryType) => {
-    setState((prev) => ({
+    setState((prev: any) => ({
       ...prev,
       [name]: value,
     }));
     setOpen(false);
   };
-  const [progressStatus, setProgressStatus] = useState<number | null>(null);
+  // const [progressStatus, setProgressStatus] = useState<number | null>(null);
 
   const [isOpen, setOpen] = useState(false);
 
@@ -170,18 +169,18 @@ const CreatAwareness = () => {
 
               <div className="relative w-full h-full">
                 <input type="file" name="image" onChange={handleImageChange} className="hidden" id="file-upload" />
-                <label htmlFor="file-upload" className={`px-4 py-2 pl-24 relative ${progressStatus ? "pb-2" : ""} w-full text-base bg-blue-100 focus:border-blue-200 border-transparent border rounded-md text-gray-400 cursor-pointer flex items-center justify-between`}>
+                <label htmlFor="file-upload" className={`px-4 py-2 pl-24 relative w-full text-base bg-blue-100 focus:border-blue-200 border-transparent border rounded-md text-gray-400 cursor-pointer flex items-center justify-between`}>
                   <p className={`font-medium ${imgPreview && "text-gray-700"}`}>{imgPreview || "Choose a file"}</p>
 
                   <span className="text-gray-400 text-[15px] absolute top-0 h-full flex items-center left-0 rounded-tl-md rounded-bl-md px-3 font-medium bg-blue-200">Browse</span>
                 </label>
-                {progressStatus !== null && progressStatus !== 0 && (
+                {/* {progressStatus !== null && progressStatus !== 0 && (
                   <>
                     <div className="absolute inset-0 z-10 flex items-end">
                       <div className="h-1 bg-blue-400 rounded-md mx-[1px] mb-[1px]" style={{ width: `${progressStatus}%` }}></div>
                     </div>
                   </>
-                )}
+                )} */}
               </div>
 
               {/* Category Dropdown */}

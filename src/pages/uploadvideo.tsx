@@ -7,12 +7,12 @@ import { VideoCategorys } from "../types";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../components/loader";
-import uploadVideo from "../firebase_video/video";
+// import uploadVideo from "../firebase_video/video";
 import { TiArrowBackOutline } from "react-icons/ti";
 import { MdOutlineOndemandVideo } from "react-icons/md";
 import { FaCaretDown, FaRegImage } from "react-icons/fa";
 import JoditTextEditor from "../components/editorNew"
-import uploadImage from "../firebase_image/image";
+// import uploadImage from "../firebase_image/image";
 interface stateProps {
   title: string;
   slug: string;
@@ -30,7 +30,7 @@ const UploadVideo = () => {
 
   const { data, isError } = useGetDataQuery({ url: `/video/get-video-byid/${id}`, });
 
-  const [progressStatus, setProgressStatus] = useState<number | null>(null);
+  // const [progressStatus, setProgressStatus] = useState<number | null>(null);
 
   const { data: categoryData, isLoading: isLoadingCategory } = useGetDataQuery({ url: "/video/get-category", });
 
@@ -79,9 +79,9 @@ const UploadVideo = () => {
   const HandleChange = (name: string, value: string) => {
     console.log(name, value);
     if (name === "title") {
-      setState((prev) => ({ ...prev, [name]: value, slug: makeSlug(value) }));
+      setState((prev: any) => ({ ...prev, [name]: value, slug: makeSlug(value) }));
     } else {
-      setState((prev) => ({ ...prev, [name]: value }));
+      setState((prev: any) => ({ ...prev, [name]: value }));
     }
   };
 
@@ -91,15 +91,15 @@ const UploadVideo = () => {
     const { name, value } = e.target;
 
     if (name === "title") {
-      setState((prev) => ({ ...prev, [name]: value, slug: makeSlug(value) }));
+      setState((prev: any) => ({ ...prev, [name]: value, slug: makeSlug(value) }));
     } else {
-      setState((prev) => ({ ...prev, [name]: value }));
+      setState((prev: any) => ({ ...prev, [name]: value }));
     }
   };
 
   const selectOption = (field: string, value: string) => {
     console.log(value);
-    setState((prev) => ({
+    setState((prev: any) => ({
       ...prev,
       [field]: value,
     }));
@@ -111,9 +111,9 @@ const UploadVideo = () => {
 
   const [external, setExternal] = useState<string | any>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [progressVideoStatus, setProgressVideoStatus] = useState<number | null>(
+  /* const [progressVideoStatus, setProgressVideoStatus] = useState<number | null>(
     null
-  );
+  ); */
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target?.files?.[0];
     if (file) {
@@ -122,8 +122,8 @@ const UploadVideo = () => {
     }
   };
 
-  console.log("videoPreivew: ", videoPreview);
-  console.log("state.url: ", state.url);
+  // console.log("videoPreivew: ", videoPreview);
+  // console.log("state.url: ", state.url);
 
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -203,7 +203,6 @@ const UploadVideo = () => {
       thumnail: "",
       imageTitle: "",
     });
-
     navigate("/videos");
   };
 
@@ -212,7 +211,7 @@ const UploadVideo = () => {
       e.preventDefault();
       const newTag = e.currentTarget.value.trim();
       if (newTag && !state.tags.includes(newTag)) {
-        setState((prev) => ({
+        setState((prev: any) => ({
           ...prev,
           tags: [...prev.tags, newTag],
         }));
@@ -222,9 +221,9 @@ const UploadVideo = () => {
   };
 
   const handleTagRemove = (tagToRemove: string) => {
-    setState((prev) => ({
+    setState((prev: any) => ({
       ...prev,
-      tags: prev.tags.filter((tag) => tag !== tagToRemove),
+      tags: prev.tags.filter((tag: any) => tag !== tagToRemove),
     }));
   };
 
@@ -272,7 +271,7 @@ const UploadVideo = () => {
               <div className="">
                 <input type="text" onKeyDown={handleTagInput} className="w-full h-10 pl-4 font-medium bg-green-100 border border-transparent rounded-md outline-none focus:border-blue-200" placeholder="Add Tags (press Enter or comma to add)" />
                 <div className="flex flex-wrap gap-2 mt-2">
-                  {state.tags.map((tag, index) => (
+                  {state.tags.map((tag: any, index: number) => (
                     <span key={index} className="flex items-center px-2 py-1 text-sm font-medium text-white bg-blue-600 rounded-full">{tag}
                       <button type="button" className="ml-2 text-xs font-bold" onClick={() => handleTagRemove(tag)}>x</button>
                     </span>
@@ -288,14 +287,13 @@ const UploadVideo = () => {
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   {external ? (
                     <>
-                      {/* <label htmlFor="">URL:</label> */}
                       <input value={state?.url} name="url" onChange={handleChange} className="w-full h-10 pl-4 font-medium bg-green-100 border border-transparent rounded-md outline-none focus:border-blue-200" type="url" placeholder="Video URL" />
                     </>
                   ) : (
                     <div>
                       <label className="ml-1 font-medium text-gray-500 ">Upload Video</label>
                       <input ref={fileInputRef} accept="video/*" onChange={handleFileUpload} className="w-full h-[40px] mt-2 p-1 rounded-[7px] outline-none border border-transparent bg-green-100 focus:border-blue-200" type="file" />
-                      {progressVideoStatus !== null &&
+                      {/* {progressVideoStatus !== null &&
                         progressVideoStatus !== 0 && (
                           <>
                             <div className="inset-0 z-10 flex flex-row items-end gap-2 pt-2">
@@ -303,15 +301,16 @@ const UploadVideo = () => {
                               <div className="h-1 bg-blue-400 rounded-md mx-[1px] mb-[1px]" style={{ width: `${progressVideoStatus}%` }}></div>
                             </div>
                           </>
-                        )}
+                        )} */}
                     </div>
                   )}
-                  {videoPreview ? (
-                    <>{external ? <><ReactPlayer url={state?.url} width="100%" height="200px" controls /></> : <ReactPlayer url={videoPreview} width="100%" height="200px" controls />}</>
+
+                  {videoPreview || state?.url ? (
+                    <ReactPlayer url={external ? state?.url : videoPreview} width="100%" height="200px" controls />
                   ) : (
                     <div className="w-full h-[200px] gap-4 bg-blue-50 flex justify-center items-center text-gray-500 font-semibold text-xl">
                       <MdOutlineOndemandVideo className="w-12 h-12" />
-                      <span className="w-[180px]">Video will play here after uploade</span>
+                      <span className="w-[180px]">Video will play here after upload</span>
                     </div>
                   )}
                 </div>
@@ -319,18 +318,18 @@ const UploadVideo = () => {
               <div className="grid grid-cols-1 col-span-1 gap-4 md:grid-cols-2 md:col-span-2">
                 <div className="relative w-full ">
                   <input type="file" name="image" onChange={handleImageChange} className="hidden" id="file-upload" />
-                  <label htmlFor="file-upload" className={`px-4 py-2 pl-24 relative ${progressStatus ? "pb-2" : ""} w-full text-base bg-green-100 focus:border-blue-200 border-transparent border rounded-md text-gray-400 cursor-pointer flex items-center justify-between`}>
+                  <label htmlFor="file-upload" className={`px-4 py-2 pl-24 relative w-full text-base bg-green-100 focus:border-blue-200 border-transparent border rounded-md text-gray-400 cursor-pointer flex items-center justify-between`}>
                     <p className={`font-medium ${state.imageTitle && "text-gray-700"}`}>{state.imageTitle || "Choose a file"}</p>
 
                     <span className="text-gray-500 text-[15px] absolute top-0 h-full flex items-center left-0 rounded-tl-md rounded-bl-md px-3 font-medium bg-green-200">Browse</span>
                   </label>
-                  {progressStatus !== null && progressStatus !== 0 && (
+                  {/* {progressStatus !== null && progressStatus !== 0 && (
                     <>
                       <div className="absolute left-0 right-0 top-20%  z-10 flex items-end">
                         <div className="h-1 bg-blue-400 rounded-md mx-[1px] mb-[1px]" style={{ width: `${progressStatus}%` }}></div>
                       </div>
                     </>
-                  )}
+                  )} */}
                 </div>
                 <div className="text-white h-[200px] bg-blue-50 rounded-md ">
                   {thumPreview ? <img src={thumPreview} alt={state?.title} className="rounded-[5px] object-contain w-full h-full" /> : state.thumnail ? (

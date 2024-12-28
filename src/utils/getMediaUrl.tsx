@@ -1,5 +1,5 @@
 // Utility function to generate the correct URL
-export const getMediaUrl = (thumbnail: string | undefined, type: string): string | null => {
+export const getMediaUrl = (thumbnail: string | undefined, type: string): string | null | any => {
     if (!thumbnail) return null;
 
     // Check if the thumbnail is already a full URL

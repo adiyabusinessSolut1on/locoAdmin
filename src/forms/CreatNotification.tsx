@@ -4,8 +4,6 @@ import { useGetDataQuery, useUpdatePostMutation } from "../api";
 import { toast } from "react-toastify";
 import { AwarenessType, BlogSTyepes } from "../types";
 import { FaCaretDown } from "react-icons/fa";
-import uploadImage from "../firebase_image/image";
-import axios from "axios";
 
 interface Props {
   setCategoryForm: React.Dispatch<React.SetStateAction<boolean>>;
@@ -34,11 +32,11 @@ const CreatNotification = ({ setCategoryForm }: Props) => {
   // const [uploadFormDataPost] = useUpdatePostMutation();
 
   const [uploadPhoto, setUploadPhoto] = useState<any>()
-  const [progressStatus, setProgressStatus] = useState<boolean | any>(false)
+  // const [progressStatus, setProgressStatus] = useState<boolean | any>(false)
   const [image, setImage] = useState<any>()
 
 
-  console.log("uploadPhoto: ", uploadPhoto);
+  // console.log("uploadPhoto: ", uploadPhoto);
 
 
   const { data } = useGetDataQuery({
@@ -126,7 +124,7 @@ const CreatNotification = ({ setCategoryForm }: Props) => {
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target?.files?.[0]
     if (selectedFile) {
-      setUploadPhoto(URL.createObjectURL(e.target.files[0]))
+      setUploadPhoto(selectedFile)
       setImage(selectedFile)
     }
   };
@@ -163,19 +161,19 @@ const CreatNotification = ({ setCategoryForm }: Props) => {
               {/* handle image */}
               <div className="relative md:col-span-2">
                 <input type="file" name="image" onChange={handleImageChange} className="hidden" id="file-upload" accept="image/*" />
-                <label htmlFor="file-upload" className={`px-4 py-2 pl-24 relative ${progressStatus ? "pb-2" : ""} w-full text-base bg-blue-100 focus:border-blue-200 border-transparent border rounded-md text-gray-400 cursor-pointer flex items-center justify-between z-20`}>
+                <label htmlFor="file-upload" className={`px-4 py-2 pl-24 relative w-full text-base bg-blue-100 focus:border-blue-200 border-transparent border rounded-md text-gray-400 cursor-pointer flex items-center justify-between z-20`}>
                   {uploadPhoto || "Choose a file"}
                   <span className="text-gray-400 text-[15px] absolute top-0 h-full flex items-center left-0 rounded-tl-md rounded-bl-md px-3 font-medium bg-blue-200">Browse</span>
                 </label>
 
-                {progressStatus !== null && progressStatus !== 0 && (
+                {/* {progressStatus !== null && progressStatus !== 0 && (
                   <div className="absolute inset-0 z-10 flex items-end">
                     <div className="h-1 bg-blue-400 rounded-md mx-[1px] mb-[1px]" style={{ width: `${progressStatus}%` }}></div>
                   </div>
                 )}
                 <div className="absolute inset-0 z-10 flex items-end">
                   <div className="h-1 bg-blue-400 rounded-md mx-[1px] mb-[1px]" style={{ width: `${progressStatus}%` }}></div>
-                </div>
+                </div> */}
               </div>
 
               <div className="relative md:col-span-2">

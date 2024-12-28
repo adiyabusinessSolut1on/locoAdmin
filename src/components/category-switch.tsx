@@ -11,7 +11,6 @@ import DeleteICONSVG from "../assets/SVG/deleteICON";
 import EditICONSVG from "../assets/SVG/editICON";
 import { BlogCategory, subSubCategories, subcategory } from "../types";
 import Loader from "./loader";
-import uploadImage from "../firebase_image/image";
 import { getMediaUrl } from "../utils/getMediaUrl";
 
 interface Props {
@@ -94,8 +93,8 @@ const Tab1: React.FC = () => {
     setEditing({ editname: "", editimage: "" });
   };
 
-  const [progressStatus, setProgressStatus] = useState<number | null>(null);
-  const [progressStatus1, setProgressStatus1] = useState<number | null>(null);
+  // const [progressStatus, setProgressStatus] = useState<number | null>(null);
+  // const [progressStatus1, setProgressStatus1] = useState<number | null>(null);
 
   const handleImageCreate = async (e: React.ChangeEvent<HTMLInputElement>) => {
     // console.log("handle Image in Create")
@@ -196,7 +195,7 @@ const Tab1: React.FC = () => {
           <h3 className="text-[18px] font-[600] text-center">Create Main Category</h3>
           <div className="grid gap-3">
             <label className="text-gray-600 font-bold text-[15px]">Main Category</label>
-            <input value={createData?.name} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCreateData((prev) => ({ ...prev, name: e.target.value }))}
+            <input value={createData?.name} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCreateData((prev: any) => ({ ...prev, name: e.target.value }))}
               className="w-full h-8 pl-2 font-medium text-gray-700 bg-blue-100 border border-transparent rounded-md outline-none placeholder:pl-2 focus:border-blue-200 "
               type="text"
               placeholder="Enter Title"
@@ -205,17 +204,17 @@ const Tab1: React.FC = () => {
               {imagePreview && <img src={imagePreview} alt="main Image" className="h-20 w-20" />}
               <div className="relative w-full h-full">
                 <input type="file" name="image" onChange={handleImageCreate} className="hidden" id="file-upload" />
-                <label htmlFor="file-upload" className={`px-4 py-1 pl-24 relative ${progressStatus ? "pb-1" : ""} w-full text-base bg-blue-100 focus:border-blue-200 border-transparent border rounded-md text-gray-400 cursor-pointer flex items-center justify-between`}>
+                <label htmlFor="file-upload" className={`px-4 py-1 pl-24 relative w-full text-base bg-blue-100 focus:border-blue-200 border-transparent border rounded-md text-gray-400 cursor-pointer flex items-center justify-between`}>
                   <p className={`${createData?.image ? "text-gray-700" : "text-gray-400"}`}>{"Choose a file"}</p>
                   <span className="text-gray-400 text-[15px] absolute top-0 h-full flex items-center left-0 rounded-tl-md rounded-bl-md px-3 font-medium bg-blue-200">Browse</span>
                 </label>
-                {progressStatus !== null && progressStatus !== 0 && (
+                {/* {progressStatus !== null && progressStatus !== 0 && (
                   <>
                     <div className="absolute inset-0 z-10 flex items-end">
                       <div className="h-1 bg-blue-400 rounded-md mx-[1px] mb-[1px]" style={{ width: `${progressStatus}%` }}></div>
                     </div>
                   </>
-                )}
+                )} */}
               </div>
             </div>
           </div>
@@ -232,22 +231,22 @@ const Tab1: React.FC = () => {
                 <li key={index} className="flex items-center justify-between gap-3 py-2 mb-2 font-medium text-gray-600 ">
                   {editingId === item._id ? (
                     <div className="grid w-full gap-2">
-                      <input type="text" value={editing?.editname} onChange={(e) => setEditing((prev) => ({ ...prev, editname: e.target.value }))} className="w-full h-8 pl-2 font-medium text-gray-700 bg-blue-100 border border-transparent rounded-md outline-none focus:border-blue-200 " />
+                      <input type="text" value={editing?.editname} onChange={(e) => setEditing((prev: any) => ({ ...prev, editname: e.target.value }))} className="w-full h-8 pl-2 font-medium text-gray-700 bg-blue-100 border border-transparent rounded-md outline-none focus:border-blue-200 " />
                       <div className="flex flex-row gap-3">
                         {editedImgPreview ? <img src={editedImgPreview} className="h-10 w-10" alt="imageg" /> : editing?.editimage && <img src={getMediaUrl(editing?.editimage, "blogCategory")} className="h-10 w-10" alt="imageg" />}
                         <div className="relative w-full h-full">
                           <input type="file" name="image" onChange={handleImageEdit} className="hidden" id="Image-upload" />
-                          <label htmlFor="Image-upload" className={`px-4 py-1 pl-24 relative ${progressStatus1 ? "pb-1" : ""} w-full text-base bg-blue-100 focus:border-blue-200 border-transparent border rounded-md text-gray-400 cursor-pointer flex items-center justify-between`}>
+                          <label htmlFor="Image-upload" className={`px-4 py-1 pl-24 relative w-full text-base bg-blue-100 focus:border-blue-200 border-transparent border rounded-md text-gray-400 cursor-pointer flex items-center justify-between`}>
                             <p className={`${editing?.editimage ? "text-gray-700" : "text-gray-400"}`}>{"Choose a file"}</p>
                             <span className="text-gray-400 text-[15px] absolute top-0 h-full flex items-center left-0 rounded-tl-md rounded-bl-md px-3 font-medium bg-blue-200">Browse</span>
                           </label>
-                          {progressStatus1 !== null && progressStatus1 !== 0 && (
+                          {/* {progressStatus1 !== null && progressStatus1 !== 0 && (
                             <>
                               <div className="absolute inset-0 z-10 flex items-end">
                                 <div className="h-1 bg-blue-400 rounded-md mx-[1px] mb-[1px]" style={{ width: `${progressStatus1}%` }}></div>
                               </div>
                             </>
-                          )}
+                          )} */}
                         </div>
                       </div>
                       <div className="flex justify-end">
