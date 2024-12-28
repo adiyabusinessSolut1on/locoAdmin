@@ -12,9 +12,9 @@ const NewEditor = ({ value, OnChangeEditor }: Props) => {
   const handleUpload = async (file: File) => {
     let url = "";
     if (file.type.startsWith("image/")) {
-      url = await uploadImage("images", file, () => {});
+      url = await uploadImage("images", file, () => { });
     } else if (file.type.startsWith("video/")) {
-      url = await uploadVideo("videos", file, () => {});
+      url = await uploadVideo("videos", file, () => { });
     }
     return url;
   };
@@ -25,7 +25,7 @@ const NewEditor = ({ value, OnChangeEditor }: Props) => {
       theme: "light",
 
       extraButtons: [
-     
+
 
         {
           tooltip: "Insert Video",

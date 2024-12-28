@@ -28,17 +28,16 @@ const UploadVideo = () => {
 
   const [updatePost] = useUpdatePostMutation();
 
-  const { data, isError } = useGetDataQuery({
-    url: `/video/get-video-byid/${id}`,
-  });
+  const { data, isError } = useGetDataQuery({ url: `/video/get-video-byid/${id}`, });
 
   const [progressStatus, setProgressStatus] = useState<number | null>(null);
 
-  const { data: categoryData, isLoading: isLoadingCategory } = useGetDataQuery({
-    url: "/video/get-category",
-  });
+  const { data: categoryData, isLoading: isLoadingCategory } = useGetDataQuery({ url: "/video/get-category", });
 
-  const [state, setState] = useState<stateProps>({
+  const [thumPreview, setThumPreview] = useState<string | any>(null);
+  const [videoPreview, setVideoPreview] = useState<string | any>(null);
+
+  const [state, setState] = useState<stateProps | any>({
     title: "",
     slug: "",
     category: "",
@@ -48,18 +47,15 @@ const UploadVideo = () => {
     thumnail: "",
     imageTitle: "",
   });
+
   const navigate = useNavigate();
+
   const makeSlug = (value: string) => {
     return value.toLowerCase().replace(/\s+/g, "-");
   };
 
   const isUpdate = Object.keys(data || [])?.length !== 0;
-  console.log(
-    data,
-    state,
-    "update value",
-    isUpdate && !isError ? "PUT" : "POST"
-  );
+  // console.log(data,state,"update value",isUpdate && !isError ? "PUT" : "POST");
 
   useEffect(() => {
     if (isUpdate && !isError) {
@@ -71,8 +67,7 @@ const UploadVideo = () => {
         tags: data?.tags,
         description: data?.dectription,
         thumnail: data?.thumnail,
-        imageTitle:
-          data?.thumnail?.slice(72, data?.thumnail?.indexOf("%2F")) || "",
+        imageTitle: data?.thumnail?.slice(72, data?.thumnail?.indexOf("%2F")) || "",
       });
     }
   }, [isUpdate, isError, data]);
@@ -114,7 +109,7 @@ const UploadVideo = () => {
     }));
   };
 
-  const [external, setExternal] = useState(false);
+  const [external, setExternal] = useState<string | any>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [progressVideoStatus, setProgressVideoStatus] = useState<number | null>(
     null
@@ -122,33 +117,23 @@ const UploadVideo = () => {
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target?.files?.[0];
     if (file) {
-      try {
-        const videourl = await uploadVideo(
-          file.name,
-          file,
-          setProgressVideoStatus
-        );
-
-        setState((prev) => ({ ...prev, url: videourl }));
-      } catch (error) {
-        console.error("Error uploading image:", error);
-        toast.error("Error uploading Video");
-      }
+      setVideoPreview(URL.createObjectURL(file))
+      setState({ ...state, url: file })
     }
   };
+
+  console.log("videoPreivew: ", videoPreview);
+  console.log("state.url: ", state.url);
+
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target?.files?.[0];
     if (selectedFile) {
       try {
-        const imageUrl = await uploadImage(
-          selectedFile.name,
-          selectedFile,
-          setProgressStatus
-        );
+        setThumPreview(URL.createObjectURL(selectedFile))
         setState({
           ...state,
-          thumnail: imageUrl,
+          thumnail: selectedFile,
           imageTitle: selectedFile.name,
         });
       } catch (error) {
@@ -160,29 +145,39 @@ const UploadVideo = () => {
 
   const submitHandler = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(state);
+    // console.log(state);
     toast.loading("Checking Details for video");
     try {
-      const payload = {
-        title: state.title,
-        slug: state.slug,
-        category: state.category,
-        url: state.url,
-        tags: state.tags,
-        description: state.description,
-        thumnail: state.thumnail,
-        isYoutube: external
-      };
+      // const payload = {
+      //   title: state.title,
+      //   slug: state.slug,
+      //   category: state.category,
+      //   url: state.url,
+      //   tags: state.tags,
+      //   description: state.description,
+      //   thumnail: state.thumnail,
+      //   isYoutube: external
+      // };https://www.youtube.com/watch?v=HXGeZf_24d4
+
+      const formData = new FormData()
+      formData.append("title", state.title)
+      formData.append("slug", state.slug)
+      formData.append("url", state.url)
+      formData.append("category", state.category)
+      formData.append("tags", state.tags)
+      formData.append("description", state.description)
+      formData.append("thumnail", state.thumnail)
+      formData.append("isYoutube", external)
+
       const response = await updatePost({
-        data: payload,
+        data: formData,
         method: isUpdate && !isError ? "PUT" : "POST",
-
         path: isUpdate && !isError ? `/video/update/${id}` : `/video/upload`,
-      });
+      }).unwrap()
 
-      if (response?.data?.success) {
+      if (response?.success) {
         toast.dismiss();
-        toast.success(response?.data?.message, {
+        toast.success(response?.message, {
           autoClose: 3000,
         });
 
@@ -233,7 +228,6 @@ const UploadVideo = () => {
     }));
   };
 
-  console.log(data, "for category");
   return (
     <div className="w-full md:px-4 md:ml-4 md:pl-0">
       <ToastContainer />
@@ -280,9 +274,7 @@ const UploadVideo = () => {
                 <div className="flex flex-wrap gap-2 mt-2">
                   {state.tags.map((tag, index) => (
                     <span key={index} className="flex items-center px-2 py-1 text-sm font-medium text-white bg-blue-600 rounded-full">{tag}
-                      <button type="button" className="ml-2 text-xs font-bold" onClick={() => handleTagRemove(tag)}>
-                        ×
-                      </button>
+                      <button type="button" className="ml-2 text-xs font-bold" onClick={() => handleTagRemove(tag)}>x</button>
                     </span>
                   ))}
                 </div>
@@ -291,116 +283,62 @@ const UploadVideo = () => {
               <div className="w-full col-span-1 md:col-span-2">
                 <div className="flex w-full gap-2 mb-2">
                   <label htmlFor="" className="mb-1 font-medium text-gray-500">External URL</label>
-                  <input checked={external} onClick={() => setExternal(!external)} className="  rounded-[7px] outline-none border border-transparent bg-green-100 focus:border-blue-200" type="checkbox" />
+                  <input checked={external} onClick={() => { setExternal(!external); setState({ ...state, url: '' }); setVideoPreview('') }} className="  rounded-[7px] outline-none border border-transparent bg-green-100 focus:border-blue-200" type="checkbox" />
                 </div>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   {external ? (
                     <>
                       {/* <label htmlFor="">URL:</label> */}
-                      <input
-                        value={state?.url}
-                        name="url"
-                        onChange={handleChange}
-                        className="w-full h-10 pl-4 font-medium bg-green-100 border border-transparent rounded-md outline-none focus:border-blue-200"
-                        type="url"
-                        placeholder="Video URL"
-                      />
+                      <input value={state?.url} name="url" onChange={handleChange} className="w-full h-10 pl-4 font-medium bg-green-100 border border-transparent rounded-md outline-none focus:border-blue-200" type="url" placeholder="Video URL" />
                     </>
                   ) : (
                     <div>
-                      <label className="ml-1 font-medium text-gray-500 ">
-                        Upload Video
-                      </label>
-                      <input
-                        ref={fileInputRef}
-                        accept="video/*"
-                        onChange={handleFileUpload}
-                        className="w-full h-[40px] mt-2 p-1 rounded-[7px] outline-none border border-transparent bg-green-100 focus:border-blue-200"
-                        type="file"
-                      />
+                      <label className="ml-1 font-medium text-gray-500 ">Upload Video</label>
+                      <input ref={fileInputRef} accept="video/*" onChange={handleFileUpload} className="w-full h-[40px] mt-2 p-1 rounded-[7px] outline-none border border-transparent bg-green-100 focus:border-blue-200" type="file" />
                       {progressVideoStatus !== null &&
                         progressVideoStatus !== 0 && (
                           <>
                             <div className="inset-0 z-10 flex flex-row items-end gap-2 pt-2">
-                              <p className="text-black text-[12px]">
-                                uploading
-                              </p>
-                              <div
-                                className="h-1 bg-blue-400 rounded-md mx-[1px] mb-[1px]"
-                                style={{ width: `${progressVideoStatus}%` }}
-                              ></div>
+                              <p className="text-black text-[12px]">uploading</p>
+                              <div className="h-1 bg-blue-400 rounded-md mx-[1px] mb-[1px]" style={{ width: `${progressVideoStatus}%` }}></div>
                             </div>
                           </>
                         )}
                     </div>
                   )}
-                  {state?.url ? (
-                    <ReactPlayer
-                      url={state?.url}
-                      width="100%"
-                      height="200px"
-                      controls
-                    />
+                  {videoPreview ? (
+                    <>{external ? <><ReactPlayer url={state?.url} width="100%" height="200px" controls /></> : <ReactPlayer url={videoPreview} width="100%" height="200px" controls />}</>
                   ) : (
                     <div className="w-full h-[200px] gap-4 bg-blue-50 flex justify-center items-center text-gray-500 font-semibold text-xl">
                       <MdOutlineOndemandVideo className="w-12 h-12" />
-                      <span className="w-[180px]">
-                        Video will play here after uploade
-                      </span>
+                      <span className="w-[180px]">Video will play here after uploade</span>
                     </div>
                   )}
                 </div>
               </div>
               <div className="grid grid-cols-1 col-span-1 gap-4 md:grid-cols-2 md:col-span-2">
                 <div className="relative w-full ">
-                  <input
-                    type="file"
-                    name="image"
-                    onChange={handleImageChange}
-                    className="hidden"
-                    id="file-upload"
-                  />
-                  <label
-                    htmlFor="file-upload"
-                    className={`px-4 py-2 pl-24 relative ${progressStatus ? "pb-2" : ""
-                      } w-full text-base bg-green-100 focus:border-blue-200 border-transparent border rounded-md text-gray-400 cursor-pointer flex items-center justify-between`}
-                  >
-                    <p
-                      className={`font-medium ${state.imageTitle && "text-gray-700"
-                        }`}
-                    >
-                      {state.imageTitle || "Choose a file"}
-                    </p>
+                  <input type="file" name="image" onChange={handleImageChange} className="hidden" id="file-upload" />
+                  <label htmlFor="file-upload" className={`px-4 py-2 pl-24 relative ${progressStatus ? "pb-2" : ""} w-full text-base bg-green-100 focus:border-blue-200 border-transparent border rounded-md text-gray-400 cursor-pointer flex items-center justify-between`}>
+                    <p className={`font-medium ${state.imageTitle && "text-gray-700"}`}>{state.imageTitle || "Choose a file"}</p>
 
-                    <span className="text-gray-500 text-[15px] absolute top-0 h-full flex items-center left-0 rounded-tl-md rounded-bl-md px-3 font-medium bg-green-200">
-                      Browse
-                    </span>
+                    <span className="text-gray-500 text-[15px] absolute top-0 h-full flex items-center left-0 rounded-tl-md rounded-bl-md px-3 font-medium bg-green-200">Browse</span>
                   </label>
                   {progressStatus !== null && progressStatus !== 0 && (
                     <>
                       <div className="absolute left-0 right-0 top-20%  z-10 flex items-end">
-                        <div
-                          className="h-1 bg-blue-400 rounded-md mx-[1px] mb-[1px]"
-                          style={{ width: `${progressStatus}%` }}
-                        // style={{ width: `${100}%` }}
-                        ></div>
+                        <div className="h-1 bg-blue-400 rounded-md mx-[1px] mb-[1px]" style={{ width: `${progressStatus}%` }}></div>
                       </div>
                     </>
                   )}
                 </div>
                 <div className="text-white h-[200px] bg-blue-50 rounded-md ">
-                  {state.thumnail ? (
-                    <img
-                      src={state?.thumnail}
-                      alt={state?.title}
-                      className="rounded-[5px] object-contain w-full h-full"
-                    />
+                  {thumPreview ? <img src={thumPreview} alt={state?.title} className="rounded-[5px] object-contain w-full h-full" /> : state.thumnail ? (
+                    <img src={state?.thumnail} alt={state?.title} className="rounded-[5px] object-contain w-full h-full" />
                   ) : (
                     <p className="flex items-center justify-center w-full h-full gap-4 p-4 text-sm">
                       <FaRegImage className="w-16 h-12 text-gray-500" />
-                      <span className="text-xl font-medium text-gray-500 w-[180px]">
-                        Here Uploade Image will be shown
-                      </span>
+                      <span className="text-xl font-medium text-gray-500 w-[180px]">Here Uploade Image will be shown</span>
                     </p>
                   )}
                 </div>
@@ -408,20 +346,8 @@ const UploadVideo = () => {
             </div>
 
             <div className="flex">
-              <button
-                className="px-4 py-2 text-white rounded-md bg-[#1f3c88] hover:bg-[#2d56bb] "
-                type="submit"
-              // disabled={isError}
-              >
-                {isUpdate && !isError ? "Update" : "Submit"}
-              </button>
-              <button
-                className="px-4 py-2 ml-8 text-white rounded-md bg-rose-600 hover:bg-rose-700"
-                type="button"
-                onClick={clearhandler}
-              >
-                Cancel
-              </button>
+              <button className="px-4 py-2 text-white rounded-md bg-[#1f3c88] hover:bg-[#2d56bb] " type="submit">{isUpdate && !isError ? "Update" : "Submit"}</button>
+              <button className="px-4 py-2 ml-8 text-white rounded-md bg-rose-600 hover:bg-rose-700" type="button" onClick={clearhandler}>Cancel</button>
             </div>
           </div>
         </div>

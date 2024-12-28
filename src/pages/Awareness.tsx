@@ -9,6 +9,7 @@ import { toast, ToastContainer } from "react-toastify";
 import Pagination from "../components/pagination/Pagination";
 import { IoIosSend } from "react-icons/io";
 import { AwarenessTypes } from "../types";
+import { getMediaUrl } from "../utils/getMediaUrl";
 
 const Awareness = () => {
   const navigate = useNavigate();
@@ -161,7 +162,7 @@ const Awareness = () => {
 
                     <div className="flex items-center justify-center">
                       {awar?.image ? (
-                        <img src={awar?.image} alt="Awareness Image" className="object-cover w-24 h-24 rounded-full " />
+                        <img src={getMediaUrl(awar?.image, "awareness")} alt="Awareness Image" className="object-cover w-24 h-24 rounded-full " />
                       ) : (
                         <span className="text-sm font-bold text-gray-400">No Image</span>
                       )}

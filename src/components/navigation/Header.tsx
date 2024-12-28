@@ -27,7 +27,7 @@ const Header = ({ onToggleSidebarSmall, isOpen }: Props) => {
     // Add your logout logic here
     console.log("Logged out");
     setLogoutModal(true);
-    localStorage.removeItem("admin");
+    // localStorage.removeItem("admin");
     // localStorage.removeItem("user")
     // navigate("/login");
 
@@ -72,6 +72,7 @@ const Header = ({ onToggleSidebarSmall, isOpen }: Props) => {
 
   const confirmLogout = () => {
     localStorage.removeItem("admin");
+    localStorage.removeItem("user");
     navigate("/login");
   };
 
@@ -84,18 +85,10 @@ const Header = ({ onToggleSidebarSmall, isOpen }: Props) => {
         <CreatNotification setCategoryForm={setNotification} />
       )}
 
-      <header
-        className={`fixed top-0 flex items-center justify-between border-b bg-[#FAFAFA] border-gray-200 w-full  ${!isOpen.large
-          ? "md:w-[calc(100vw-15.4rem)]"
-          : "lg:w-[calc(100%-5.4rem)]"
-          } h-20   z-10`}
-      >
+      <header className={`fixed top-0 flex items-center justify-between border-b bg-[#FAFAFA] border-gray-200 w-full  ${!isOpen.large ? "md:w-[calc(100vw-15.4rem)]" : "lg:w-[calc(100%-5.4rem)]"} h-20   z-10`}>
         <div className="grid w-full h-full grid-cols-2 mx-4 md:grid-cols-1 md:mr-6 md:mx-0 ">
           <div className="flex items-center h-full gap-2 px-2 md:hidden">
-            <button
-              onClick={onToggleSidebarSmall}
-              className="flex items-center"
-            >
+            <button onClick={onToggleSidebarSmall}className="flex items-center">
               {!isOpen.small ? (
                 <RxHamburgerMenu className="w-6 h-5 text-gray-600" />
               ) : (
@@ -132,7 +125,7 @@ const Header = ({ onToggleSidebarSmall, isOpen }: Props) => {
               {/* date and month */}
               <div className="pl-2 text-xs md:text-sm ">{dateMonth}</div>
             </div>
-            
+
             {/* user Profile */}
             <div className={`flex items-center  gap-4 p-1  cursor-pointer rounded-md z-4  `} onClick={profilePannelHanlder}>
 

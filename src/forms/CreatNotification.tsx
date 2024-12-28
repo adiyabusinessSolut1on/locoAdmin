@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { AwarenessType, BlogSTyepes } from "../types";
 import { FaCaretDown } from "react-icons/fa";
 import uploadImage from "../firebase_image/image";
+import axios from "axios";
 
 interface Props {
   setCategoryForm: React.Dispatch<React.SetStateAction<boolean>>;
@@ -30,9 +31,15 @@ const CreatNotification = ({ setCategoryForm }: Props) => {
     awarenessId: ""
   });
   const [updatePost] = useUpdatePostMutation();
+  // const [uploadFormDataPost] = useUpdatePostMutation();
 
   const [uploadPhoto, setUploadPhoto] = useState<any>()
   const [progressStatus, setProgressStatus] = useState<boolean | any>(false)
+  const [image, setImage] = useState<any>()
+
+
+  console.log("uploadPhoto: ", uploadPhoto);
+
 
   const { data } = useGetDataQuery({
     url: "/blog/getallblogs",
@@ -75,21 +82,35 @@ const CreatNotification = ({ setCategoryForm }: Props) => {
 
     // console.log(notificationDataForm);
     try {
-      const payload = {
-        blogId: notificationDataForm?.blogId?._id,
-        title: notificationDataForm?.title,
-        message: notificationDataForm?.message,
-        awarenessId: notificationDataForm?.awarenessId,
-        image: uploadPhoto
-      };
+      // const payload = {
+      //   blogId: notificationDataForm?.blogId?._id,
+      //   title: notificationDataForm?.title,
+      //   message: notificationDataForm?.message,
+      //   awarenessId: notificationDataForm?.awarenessId,
+      //   image: uploadPhoto
+      // };
 
-      // console.log(payload);
+      const formData = new FormData()
+      formData.append("title", notificationDataForm?.title)
+      if (notificationDataForm?.blogId?._id) {
+        formData.append("blogId", notificationDataForm?.blogId?._id)
+      }
+      if (notificationDataForm?.message) {
+        formData.append("message", notificationDataForm?.message)
+      }
+      if (notificationDataForm?.awarenessId) {
+        formData.append("awarenessId", notificationDataForm?.awarenessId._id)
+      }
+      if (uploadPhoto) {
+        formData.append("image", image)
+      }
+
+      // console.log("formDate: ", formData);
       toast.loading("Checking Details");
-      const response = await updatePost({ data: payload, method: "POST", path: "/notify", });
-      console.log(response);
-      if (response?.data?.success) {
+      const response = await updatePost({ data: formData, method: "POST", path: "/notify" }).unwrap();
+      if (response?.success) {
         toast.dismiss();
-        toast.success(response?.data?.message, { autoClose: 5000, });
+        toast.success(response?.message, { autoClose: 5000, });
         closeHandler();
       } else {
         toast.dismiss();
@@ -103,31 +124,21 @@ const CreatNotification = ({ setCategoryForm }: Props) => {
   };
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target?.files?.[0];
+    const selectedFile = e.target?.files?.[0]
     if (selectedFile) {
-      try {
-        const imageUrl = await uploadImage(selectedFile.name, selectedFile, setProgressStatus)
-        console.log("imageUrl: ", imageUrl);
-        setUploadPhoto(imageUrl)
-      } catch (error) {
-        console.error("Error uploading image:", error);
-        toast.error("Error uploading image");
-      }
+      setUploadPhoto(URL.createObjectURL(e.target.files[0]))
+      setImage(selectedFile)
     }
   };
 
   const closeHandler = () => {
-    // if (isCategoryForm) {
     setCategoryForm((prev) => !prev);
-    // }
-
     setNotificationDataForm({
       blogId: null,
       title: "",
       message: "",
       awarenessId: null,
     });
-    console.log("notificationDataForm: ", notificationDataForm);
   };
 
 
@@ -148,22 +159,6 @@ const CreatNotification = ({ setCategoryForm }: Props) => {
               <input value={notificationDataForm?.title} type="text" onChange={handleChange} name="title" className={" font-medium outline-none w-full  border h-10 border-transparent bg-blue-100 rounded-md pl-4 focus-within:border-blue-400  "} placeholder={"Enter Title"} required />
               <input value={notificationDataForm?.message} type="text" onChange={handleChange} name="message" className={" font-medium outline-none w-full  border h-10 border-transparent bg-blue-100 rounded-md pl-4 focus-within:border-blue-400  "} placeholder={"Enter Message"} required />
 
-              {/* handle image */}
-              {/* <div className="relative w-full h-full">
-                <input type="file" name="image" onChange={handleImageChange} className="hidden" id="file-upload" />
-                <label htmlFor="file-upload" className={`px-4 py-2 pl-24 relative ${progressStatus ? "pb-2" : ""} w-full text-base bg-blue-100 focus:border-blue-200 border-transparent border rounded-md text-gray-400 cursor-pointer flex items-center justify-between`}>
-                  {uploadImage || "Choose a file"}
-                  <span className="text-gray-400 text-[15px] absolute top-0 h-full flex items-center left-0 rounded-tl-md rounded-bl-md px-3 font-medium bg-blue-200">Browse</span>
-                </label>
-
-                {progressStatus !== null && progressStatus !== 0 && (
-                  <>
-                    <div className="absolute inset-0 z-10 flex items-end">
-                      <div className="h-1 bg-blue-400 rounded-md mx-[1px] mb-[1px]" style={{ width: `${progressStatus}%` }}></div>
-                    </div>
-                  </>
-                )}
-              </div> */}
 
               {/* handle image */}
               <div className="relative md:col-span-2">
@@ -182,9 +177,6 @@ const CreatNotification = ({ setCategoryForm }: Props) => {
                   <div className="h-1 bg-blue-400 rounded-md mx-[1px] mb-[1px]" style={{ width: `${progressStatus}%` }}></div>
                 </div>
               </div>
-
-
-
 
               <div className="relative md:col-span-2">
                 <div className="flex justify-between p-2 pl-4 font-medium text-gray-400 bg-blue-100 border-transparent rounded-md cursor-pointer focus:border-blue-200" onClick={() => setOpen((prev) => !prev)}>

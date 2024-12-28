@@ -135,8 +135,7 @@ const Video = () => {
           </div>
           <div className="flex justify-between mb-4">
             <div className={`flex items-center   `}>
-              <input
-                type="search"
+              <input type="search"
                 placeholder={`Search`}
                 className={` p-2 text-sm md:text-base  sm:px-4 py-1 border-[2px] border-transparent 
            bg-slate-50 focus:border-gray-100

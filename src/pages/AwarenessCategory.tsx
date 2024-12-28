@@ -6,6 +6,7 @@ import { toast, ToastContainer } from "react-toastify";
 import ConfirmDeleteModal from "../components/modal/DeleteModal";
 import Loader from "../components/loader";
 import Pagination from "../components/pagination/Pagination";
+import { getMediaUrl } from "../utils/getMediaUrl";
 
 interface awarenessCategory {
   _id: string;
@@ -168,19 +169,13 @@ const AwarenessCategory = () => {
               </button>
             </div>
           </div>
-          <section
-            className={`w-full overflow-auto   border-2 [&::-webkit-scrollbar]:hidden rounded-lg  shadow-md bg-white`}
-          >
+          <section className={`w-full overflow-auto   border-2 [&::-webkit-scrollbar]:hidden rounded-lg  shadow-md bg-white`}>
             <section className="grid gap-4 p-2 pb-2 min-w-[800px] font-medium border-gray-100 grid-cols-customeCategory md:font-semibold font-mavenPro bg-white">
               <p className="pl-2 text-gray-600 md:text-lg">SrNo.</p>
               {/* <p className="pl-10 text-gray-600 md:text-lg">Logo</p> */}
               <p className="pl-2 text-gray-600 md:text-lg">Image</p>
               {categoryHeading?.map((heading, index) => (
-                <p
-                  key={index}
-                  className={`  text-gray-600 md:text-lg ${index !== 0 ? "justify-self-center" : "ml-6"
-                    }`}
-                >
+                <p key={index} className={`  text-gray-600 md:text-lg ${index !== 0 ? "justify-self-center" : "ml-6"}`}>
                   {heading.charAt(0).toUpperCase() + heading.slice(1)}
                 </p>
               ))}
@@ -196,29 +191,14 @@ const AwarenessCategory = () => {
               ) : data?.data?.length > 0 ? (
                 currentAwarenessCategory?.map(
                   (category: awarenessCategory, i: number) => (
-                    <section
-                      key={i}
-                      className="grid items-center gap-6 py-2 pl-6 pr-4 border-t-2 border-gray-200 grid-cols-customeCategory group hover:bg-gray-50"
-                    >
+                    <section key={i} className="grid items-center gap-6 py-2 pl-6 pr-4 border-t-2 border-gray-200 grid-cols-customeCategory group hover:bg-gray-50"                    >
                       <span>{i + 1}</span>
-                      <img src={category?.image} className="h-20 w-20 rounded-full" alt="ICON" />
-                      <span className="ml-2 text-sm font-semibold text-gray-600 md:text-base">
-                        {category?.name}
-                      </span>
+                      <img src={getMediaUrl(category?.image, "awarenessCategory")} className="h-20 w-20 rounded-full" alt="ICON" />
+                      <span className="ml-2 text-sm font-semibold text-gray-600 md:text-base">{category?.name}</span>
 
                       <div className="flex justify-center gap-4">
-                        <button
-                          className="px-3 text-sm py-2 text-white  rounded-md bg-[#1f3c88] hover:bg-[#2d56bb]"
-                          onClick={() => updateCategory(category)}
-                        >
-                          Edit
-                        </button>
-                        <button
-                          className="px-3 py-2 text-sm text-white rounded-md bg-rose-600 hover:bg-rose-700"
-                          onClick={() => deletCategory(category?._id)}
-                        >
-                          Delete
-                        </button>
+                        <button className="px-3 text-sm py-2 text-white  rounded-md bg-[#1f3c88] hover:bg-[#2d56bb]" onClick={() => updateCategory(category)}>Edit</button>
+                        <button className="px-3 py-2 text-sm text-white rounded-md bg-rose-600 hover:bg-rose-700" onClick={() => deletCategory(category?._id)}                        >Delete                        </button>
                       </div>
                     </section>
                   )

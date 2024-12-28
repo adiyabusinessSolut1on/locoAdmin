@@ -1,9 +1,4 @@
-import {
-  ref,
-  getDownloadURL,
-  uploadBytesResumable,
-  UploadTask,
-} from "firebase/storage";
+import { ref, getDownloadURL, uploadBytesResumable, UploadTask, } from "firebase/storage";
 import { storage } from "../../firebase";
 
 
@@ -11,16 +6,9 @@ const uniqueIdentifier = `video_${Date.now()}_${Math.floor(
   Math.random() * 10000
 )}`;
 
-const uploadVideo = async (
-  fileName: string,
-  file: File,
-  setProgressStatus: (progress: number | null) => void
-): Promise<string> => {
+const uploadVideo = async (fileName: string, file: File, setProgressStatus: (progress: number | null) => void): Promise<string> => {
   try {
-    const storageRef = ref(
-      storage,
-      `${fileName.replace(/\s+/g, "")}/${uniqueIdentifier}_${file.name}`
-    );
+    const storageRef = ref(storage, `${fileName.replace(/\s+/g, "")}/${uniqueIdentifier}_${file.name}`);
 
     const uploadTask: UploadTask = uploadBytesResumable(storageRef, file);
 

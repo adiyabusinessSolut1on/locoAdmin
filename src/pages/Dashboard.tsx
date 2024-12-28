@@ -139,8 +139,8 @@ const Dashboard = () => {
     indexOfLastItemBlog
   );
 
-  console.log(formattedData, groupedData, "update blog");
-  console.log(formatePostData, groupPostData, "update post");
+  // console.log(formattedData, groupedData, "update blog");
+  // console.log(formatePostData, groupPostData, "update post");
   return (
     <>
       {mutulLoading && postLoading && blogLoading && <Loader />}

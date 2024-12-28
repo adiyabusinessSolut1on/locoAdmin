@@ -1,12 +1,9 @@
-import {
-  createApi,
-  fetchBaseQuery,
-} from "@reduxjs/toolkit/query/react";
+import { createApi, fetchBaseQuery, } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../store/store";
 
 export interface NewPost {
   path: string;
-  data: string | number | boolean | Record<string, unknown>;
+  data: string | number | boolean | Record<string, unknown> | any;
 }
 
 export interface Path {
@@ -23,7 +20,8 @@ export const adminAPIS = createApi({
       if (token) {
         headers.set("authorization", `${token}`);
       }
-      headers.set("Content-type", "application/json; charset=UTF-8");
+      // headers.set("Content-type", "application/json; charset=UTF-8");
+      // headers.set("Content-type", "multipart/form-data");
       return headers;
     },
   }),
@@ -33,22 +31,25 @@ export const adminAPIS = createApi({
   endpoints: (builder) => ({
     createPost: builder.mutation({
       query: (newPost: NewPost) => {
-        // const token = localStorage.getItem("user");
-        // console.log(token);
-        console.log(newPost);
         return {
           url: newPost.path,
           method: "POST",
           body: newPost.data,
           // headers: {
-          //   Authorization: `${token}`,
+          //   // Authorization: `${token}`,
+          //   "Content-Type": "multipart/form-data"
           // },
         };
       },
       invalidatesTags: ["Post"],
     }),
+
     updatePost: builder.mutation({
+
       query: (newPost) => {
+        // console.log("======================= newPost =================");
+        // console.log("newPost: ", newPost);
+
         const tokenn = localStorage.getItem("user");
         return {
           url: newPost.path,
@@ -60,6 +61,17 @@ export const adminAPIS = createApi({
         };
       },
       invalidatesTags: ["Post"],
+    }),
+
+    uploadFormDataPost: builder.mutation({
+      query: (formData) => ({
+        url: formData.path,
+        method: formData.method || "PUT",
+        body: formData,
+        headers: {
+          Authorization: `${formData.token}`,
+        }
+      }),
     }),
     getData: builder.query({
       query: (path) => {
