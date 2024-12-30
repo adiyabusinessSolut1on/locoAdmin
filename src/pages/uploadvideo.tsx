@@ -12,6 +12,7 @@ import { TiArrowBackOutline } from "react-icons/ti";
 import { MdOutlineOndemandVideo } from "react-icons/md";
 import { FaCaretDown, FaRegImage } from "react-icons/fa";
 import JoditTextEditor from "../components/editorNew"
+import { getMediaUrl } from "../utils/getMediaUrl";
 // import uploadImage from "../firebase_image/image";
 interface stateProps {
   title: string;
@@ -36,6 +37,7 @@ const UploadVideo = () => {
 
   const [thumPreview, setThumPreview] = useState<string | any>(null);
   const [videoPreview, setVideoPreview] = useState<string | any>(null);
+  const [external, setExternal] = useState<string | any>(false);
 
   const [state, setState] = useState<stateProps | any>({
     title: "",
@@ -55,7 +57,6 @@ const UploadVideo = () => {
   };
 
   const isUpdate = Object.keys(data || [])?.length !== 0;
-  // console.log(data,state,"update value",isUpdate && !isError ? "PUT" : "POST");
 
   useEffect(() => {
     if (isUpdate && !isError) {
@@ -63,12 +64,14 @@ const UploadVideo = () => {
         title: data?.title,
         slug: data?.slug,
         category: data?.category,
-        url: data?.url,
+        url: data?.isYoutube && data?.url,
         tags: data?.tags,
         description: data?.dectription,
-        thumnail: data?.thumnail,
-        imageTitle: data?.thumnail?.slice(72, data?.thumnail?.indexOf("%2F")) || "",
+        thumnail: getMediaUrl(data?.thumnail, "uploadThumbnail"),
+        imageTitle: data?.thumnail
       });
+      setExternal(data?.isYoutube)
+      setVideoPreview(!data?.isYoutube && getMediaUrl(data?.url, "uploadVideo"))
     }
   }, [isUpdate, isError, data]);
 
@@ -109,7 +112,6 @@ const UploadVideo = () => {
     }));
   };
 
-  const [external, setExternal] = useState<string | any>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   /* const [progressVideoStatus, setProgressVideoStatus] = useState<number | null>(
     null
@@ -121,9 +123,6 @@ const UploadVideo = () => {
       setState({ ...state, url: file })
     }
   };
-
-  // console.log("videoPreivew: ", videoPreview);
-  // console.log("state.url: ", state.url);
 
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -145,23 +144,15 @@ const UploadVideo = () => {
 
   const submitHandler = async (e: React.FormEvent) => {
     e.preventDefault();
-    // console.log(state);
+
     toast.loading("Checking Details for video");
     try {
-      // const payload = {
-      //   title: state.title,
-      //   slug: state.slug,
-      //   category: state.category,
-      //   url: state.url,
-      //   tags: state.tags,
-      //   description: state.description,
-      //   thumnail: state.thumnail,
-      //   isYoutube: external
-      // };https://www.youtube.com/watch?v=HXGeZf_24d4
 
       const formData = new FormData()
       formData.append("title", state.title)
-      formData.append("slug", state.slug)
+      state.tags.lengt > 0 && state.tags.forEach((element: string) => {
+        formData.append("slug", element);
+      });
       formData.append("url", state.url)
       formData.append("category", state.category)
       formData.append("tags", state.tags)
@@ -186,9 +177,11 @@ const UploadVideo = () => {
         toast.dismiss();
         toast.error("Failed to Uploade Video");
       }
-    } catch (error) {
+    } catch (error: any) {
       toast.dismiss();
-      toast.error("An error occurred");
+      console.log("error: ", error);
+
+      toast.error(error?.data?.message);
     }
   };
 
@@ -315,6 +308,7 @@ const UploadVideo = () => {
                   )}
                 </div>
               </div>
+
               <div className="grid grid-cols-1 col-span-1 gap-4 md:grid-cols-2 md:col-span-2">
                 <div className="relative w-full ">
                   <input type="file" name="image" onChange={handleImageChange} className="hidden" id="file-upload" />
@@ -323,13 +317,6 @@ const UploadVideo = () => {
 
                     <span className="text-gray-500 text-[15px] absolute top-0 h-full flex items-center left-0 rounded-tl-md rounded-bl-md px-3 font-medium bg-green-200">Browse</span>
                   </label>
-                  {/* {progressStatus !== null && progressStatus !== 0 && (
-                    <>
-                      <div className="absolute left-0 right-0 top-20%  z-10 flex items-end">
-                        <div className="h-1 bg-blue-400 rounded-md mx-[1px] mb-[1px]" style={{ width: `${progressStatus}%` }}></div>
-                      </div>
-                    </>
-                  )} */}
                 </div>
                 <div className="text-white h-[200px] bg-blue-50 rounded-md ">
                   {thumPreview ? <img src={thumPreview} alt={state?.title} className="rounded-[5px] object-contain w-full h-full" /> : state.thumnail ? (

@@ -7,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 // import uploadFile from "../firebase_file/file";
 import { TiArrowBackOutline } from "react-icons/ti";
 import Loader from "../components/loader";
+import { getMediaUrl } from "../utils/getMediaUrl";
 
 interface Props {
   title: string;
@@ -48,7 +49,7 @@ const CreatDocuments = () => {
     if (isUpdate && !isError) {
       console.log("updatd");
       setValue({
-        link: data?.link || "",
+        link: getMediaUrl(data?.link, "importantLink") || "",
         donwloadable: data?.donwloadable || "",
         title: data?.title || "",
       });
@@ -175,7 +176,7 @@ const CreatDocuments = () => {
             </div>
 
             <div className="flex">
-              <button className="px-4 py-2 text-white rounded-md bg-[#1f3c88] hover:bg-[#2d56bb] disabled:bg-gray-700 " type="submit" disabled={isExternal ? !value?.link : !(value?.image && value?.title)}>
+              <button className="px-4 py-2 text-white rounded-md bg-[#1f3c88] hover:bg-[#2d56bb] disabled:bg-gray-700 " type="submit" /* disabled={!value?.link || !value?.image || !value?.title} */>
                 {isUpdate ? "Update" : "Submit"}
                 {/* Save */}
               </button>

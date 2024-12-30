@@ -11,6 +11,7 @@ import { IoIosSend } from "react-icons/io";
 import { toast, ToastContainer } from "react-toastify";
 import VideoModal from "../components/modal/VideoModal";
 import ConfirmDeleteModal from "../components/modal/DeleteModal";
+import { getMediaUrl } from "../utils/getMediaUrl";
 
 const Video = () => {
   const navigate = useNavigate();
@@ -88,11 +89,15 @@ const Video = () => {
     toast.loading("checking Details");
 
     deletPost({ url: `/video/delete/${isModalOpen.id}`, }).then((res) => {
+      console.log("response: ", res);
+
       if (res.data.success) {
         toast.dismiss();
         toast.success(`${res.data.message}`);
       }
-    }).catch(() => {
+    }).catch((error: any) => {
+      console.log("error: ", error);
+
       toast.dismiss();
       toast.error("Not successfull to delete");
     });
@@ -117,6 +122,7 @@ const Video = () => {
       url: "",
     }));
   };
+
   return (
     <>
       {isLoading && <Loader />}
@@ -135,89 +141,47 @@ const Video = () => {
           </div>
           <div className="flex justify-between mb-4">
             <div className={`flex items-center   `}>
-              <input type="search"
-                placeholder={`Search`}
-                className={` p-2 text-sm md:text-base  sm:px-4 py-1 border-[2px] border-transparent 
-           bg-slate-50 focus:border-gray-100
-        shadow-inner rounded-[0.26rem] outline-none `}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onFocus={() => setCurrentPage(1)}
-              />
+              <input type="search" placeholder={`Search`} className={` p-2 text-sm md:text-base  sm:px-4 py-1 border-[2px] border-transparent bg-slate-50 focus:border-gray-100 shadow-inner rounded-[0.26rem] outline-none `} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} onFocus={() => setCurrentPage(1)} />
             </div>
             <div className="relative flex items-center self-end ">
-              <button
-                className={` px-2 py-1 
-                   bg-[#1f3c88] hover:bg-[#2d56bb]  text-[#DEE1E2] font-semibold
-              }    rounded shadow-xl md:px-4 md:py-2  sm:self-center`}
-              >
+              <button className={` px-2 py-1 bg-[#1f3c88] hover:bg-[#2d56bb]  text-[#DEE1E2] font-semibold rounded shadow-xl md:px-4 md:py-2  sm:self-center`}>
                 <Link to={"/videos/upload-video"}>
                   <span className="hidden md:inline-block">Upload Video</span>
-
                   <IoIosSend className="w-6 h-6 md:hidden" />
                 </Link>
               </button>
             </div>
           </div>
-          <section
-            className={`w-full overflow-auto   border-2 [&::-webkit-scrollbar]:hidden rounded-lg border-gray-200 shadow-md bg-white`}
-          >
+          <section className={`w-full overflow-auto   border-2 [&::-webkit-scrollbar]:hidden rounded-lg border-gray-200 shadow-md bg-white`}>
             <section className="grid grid-cols-customVideo pb-2 p-2  gap-4   min-w-[1260px] font-medium md:font-semibold bg-white font-mavenPro">
               <p className="pl-2 md:text-lg">SrNo.</p>
 
               {listHeadingOfVideo.map((heading, index) => (
-                <p
-                  key={index}
-                  className={`   md:text-lg ${index !== 0 ? "justify-self-center" : "ml-20"
-                    }`}
-                >
-                  {heading.charAt(0).toUpperCase() + heading.slice(1)}
-                </p>
+                <p key={index} className={`   md:text-lg ${index !== 0 ? "justify-self-center" : "ml-20"}`}>{heading.charAt(0).toUpperCase() + heading.slice(1)}</p>
               ))}
             </section>
             <div className=" h-[380px] overflow-y-auto [&::-webkit-scrollbar]:hidden min-w-[1260px] bg-gray-50">
               {isLoading ? (
                 <p>Loading...</p>
               ) : isError ? (
-                <p className="flex items-center justify-center w-full h-full font-medium text-center text-rose-800">
-                  Check Internet connection or Contact to Admin
-                </p>
+                <p className="flex items-center justify-center w-full h-full font-medium text-center text-rose-800">Check Internet connection or Contact to Admin                </p>
               ) : (
                 currentVideos?.map((video: videosTypes, i: number) => (
-                  <section
-                    key={i}
-                    className="grid items-center gap-6 py-2 pl-6 pr-4 border-t-2 border-gray-200 grid-cols-customVideo group hover:bg-gray-50"
-                  >
+                  <section key={i} className="grid items-center gap-6 py-2 pl-6 pr-4 border-t-2 border-gray-200 grid-cols-customVideo group hover:bg-gray-50">
                     <span>{i + 1}</span>
 
-                    <span
-                      className={`  font-semibold text-center  rounded-full  `}
-                    >
-                      {video?.title}
-                    </span>
+                    <span className={`font-semibold text-center rounded-full`}>{video?.title}</span>
 
-                    <span className="text-sm font-semibold text-center break-words break-all text-ellipsis">
-                      {video?.category}
-                    </span>
+                    <span className="text-sm font-semibold text-center break-words break-all text-ellipsis">{video?.category}</span>
 
                     <div className="flex items-center justify-center">
                       {video?.thumnail ? (
-                        <img
-                          src={video?.thumnail}
-                          alt="video Image"
-                          className="object-contain w-24 h-24 rounded-lg"
-                        />
+                        <img src={getMediaUrl(video?.thumnail, "uploadThumbnail")} alt="video Image" className="object-contain w-24 h-24 rounded-lg" />
                       ) : (
-                        <span className="text-sm font-bold text-gray-400">
-                          No Image
-                        </span>
+                        <span className="text-sm font-bold text-gray-400">No Image</span>
                       )}
                     </div>
-                    <span
-                      className="flex justify-center ml-2 text-sm font-semibold cursor-pointer hover:underline hover:text-sky-400"
-                      typeof="button"
-                      onClick={() => handlingVideo(video?.url)}
-                    >
+                    <span className="flex justify-center ml-2 text-sm font-semibold cursor-pointer hover:underline hover:text-sky-400" typeof="button" onClick={() => handlingVideo(getMediaUrl(video?.url, "uploadVideo"))}>
                       {video?.url ? "View Video" : "--"}
                     </span>
                     {/* <span className="flex justify-center text-sm font-semibold ">
@@ -231,35 +195,30 @@ const Video = () => {
                         "--"
                       )}
                     </span> */}
-                    <span className="flex justify-center text-sm font-semibold ">
-                      {video?.createdAt
-                        ? new Date(video.createdAt).toLocaleDateString()
-                        : ""}
-                    </span>
+                    <span className="flex justify-center text-sm font-semibold ">{video?.createdAt ? new Date(video.createdAt).toLocaleDateString() : ""}</span>
 
                     <span className="flex justify-center text-sm font-semibold ">
-                      {video?.tags.length > 0
-                        ? video?.tags.map((tag: string) => (
-                          <ul>
-                            <li>{tag},</li>
+                      {video?.tags.length > 0 ? (
+                        video?.tags.map((tag: string, index: number) => (
+                          <ul key={index}>
+                            <li>
+                              {tag}
+                              {index !== video.tags.length - 1 && ","}
+                            </li>
                           </ul>
                         ))
-                        : "--"}
+                      ) : (
+                        "--"
+                      )}
+
                     </span>
 
                     <div className="grid justify-center gap-2">
-                      <button
-                        className="px-3 py-2 text-sm font-semibold text-white rounded-md bg-[#1f3c88] hover:bg-[#2d56bb]"
-                        onClick={() => updatevideo(video)}
-                      >
-                        {/* Edit */}
+                      <button className="px-3 py-2 text-sm font-semibold text-white rounded-md bg-[#1f3c88] hover:bg-[#2d56bb]" onClick={() => updatevideo(video)}>
                         <EditICONSVG height={18} width={18} fill={"white"} />
                       </button>
-                      <button
-                        className="px-3 py-2 text-sm font-semibold text-white rounded-md bg-rose-600 hover:bg-rose-700"
-                        onClick={() => deletvideo(video._id)}
-                      >
-                        {/* Delete */}
+
+                      <button className="px-3 py-2 text-sm font-semibold text-white rounded-md bg-rose-600 hover:bg-rose-700" onClick={() => deletvideo(video._id)}>
                         <DeleteICONSVG height={18} width={18} fill={"white"} />
                       </button>
                     </div>
@@ -269,12 +228,7 @@ const Video = () => {
             </div>
           </section>
 
-          <Pagination<videosTypes>
-            currentPage={currentPage}
-            apiData={filteredData}
-            itemsPerPage={itemsPerPage}
-            handleClick={handleClick}
-          />
+          <Pagination<videosTypes> currentPage={currentPage} apiData={filteredData} itemsPerPage={itemsPerPage} handleClick={handleClick} />
         </section>
       </section>
     </>
