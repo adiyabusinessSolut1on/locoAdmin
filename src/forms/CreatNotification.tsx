@@ -123,6 +123,8 @@ const CreatNotification = ({ setCategoryForm }: Props) => {
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target?.files?.[0]
+    // console.log("selected file: ", e.target?.files[0]);
+
     if (selectedFile) {
       setUploadPhoto(selectedFile)
       setImage(selectedFile)
@@ -160,9 +162,9 @@ const CreatNotification = ({ setCategoryForm }: Props) => {
 
               {/* handle image */}
               <div className="relative md:col-span-2">
-                <input type="file" name="image" onChange={handleImageChange} className="hidden" id="file-upload" accept="image/*" />
+                <input type="file" name="Icon" onChange={handleImageChange} className="hidden" id="file-upload" accept="image/*" />
                 <label htmlFor="file-upload" className={`px-4 py-2 pl-24 relative w-full text-base bg-blue-100 focus:border-blue-200 border-transparent border rounded-md text-gray-400 cursor-pointer flex items-center justify-between z-20`}>
-                  {uploadPhoto || "Choose a file"}
+                  {uploadPhoto && uploadPhoto.name || "Choose a file"}
                   <span className="text-gray-400 text-[15px] absolute top-0 h-full flex items-center left-0 rounded-tl-md rounded-bl-md px-3 font-medium bg-blue-200">Browse</span>
                 </label>
 
@@ -178,9 +180,7 @@ const CreatNotification = ({ setCategoryForm }: Props) => {
 
               <div className="relative md:col-span-2">
                 <div className="flex justify-between p-2 pl-4 font-medium text-gray-400 bg-blue-100 border-transparent rounded-md cursor-pointer focus:border-blue-200" onClick={() => setOpen((prev) => !prev)}>
-                  <p className={`${notificationDataForm.blogId !== null ? "text-gray-700" : ""}`}>
-                    {notificationDataForm.blogId !== null ? notificationDataForm.blogId?.name : "Select Blog"}
-                  </p>
+                  <p className={`${notificationDataForm.blogId !== null ? "text-gray-700" : ""}`}>{notificationDataForm.blogId !== null ? notificationDataForm.blogId?.name : "Select Blog"}</p>
                   <FaCaretDown className="m-1" />
                 </div>
 

@@ -5,7 +5,7 @@ import { toast, ToastContainer } from "react-toastify";
 import TextEditor from "../components/textEditor";
 import { FaCaretDown } from "react-icons/fa";
 import { TestQuestionsType } from "../types";
-import uploadImage from "../firebase_image/image";
+// import uploadImage from "../firebase_image/image";
 import DeleteICONSVG from "../assets/SVG/deleteICON";
 
 interface Props {
@@ -18,14 +18,14 @@ interface Props {
   },
 
 }
-interface StateProps {
+/* interface StateProps {
   name: string
   image: string[];
   imageSrc: File[];
   options: string[];
   result: string;
   content: string;
-}
+} */
 
 const TestQuestion = ({ isQuestionForm, close }: Props) => {
 
@@ -156,7 +156,7 @@ const TestQuestion = ({ isQuestionForm, close }: Props) => {
   };
 
   const handleEditorChange = (name: string, value: string) => {
-    settestData((prev) => ({
+    settestData((prev: any) => ({
       ...prev,
       [name]: value,
     }));
@@ -164,7 +164,7 @@ const TestQuestion = ({ isQuestionForm, close }: Props) => {
 
   const selectOption = (field: string, value: string) => {
     console.log(value);
-    settestData((prev) => ({
+    settestData((prev: any) => ({
       ...prev,
       [field]: value,
     }));
@@ -179,7 +179,7 @@ const TestQuestion = ({ isQuestionForm, close }: Props) => {
       e.preventDefault();
       const newOption = e.currentTarget.value.trim();
       if (newOption && !testData.options.includes(newOption)) {
-        settestData((prev) => ({
+        settestData((prev: any) => ({
           ...prev,
           options: [...prev.options, newOption],
         }));
@@ -189,9 +189,9 @@ const TestQuestion = ({ isQuestionForm, close }: Props) => {
   };
 
   const handleQuestionRemove = (optionToRemove: string) => {
-    settestData((prev) => ({
+    settestData((prev: any) => ({
       ...prev,
-      options: prev.options.filter((option) => option !== optionToRemove),
+      options: prev.options.filter((option: any) => option !== optionToRemove),
     }));
   };
 
@@ -210,9 +210,9 @@ const TestQuestion = ({ isQuestionForm, close }: Props) => {
   // const [progressStatus, setProgressStatus] = useState<number | null>(null);
 
   const handleDeleteImage = (index: number) => {
-    settestData((prevState) => ({
+    settestData((prevState: any) => ({
       ...prevState,
-      image: prevState?.image.filter((_, i) => i !== index),
+      image: prevState?.image.filter((_: any, i: any) => i !== index),
     }));
   };
   /* const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -298,7 +298,7 @@ const TestQuestion = ({ isQuestionForm, close }: Props) => {
                 <div className="grid grid-cols-1 col-span-1 gap-2 md:gap-4 md:grid-cols-2 md:col-span-2">
                   <input type="text" onKeyDown={handleQuestionInput} className="w-full h-10 pl-4 font-medium bg-green-100 border border-transparent rounded-md outline-none focus:border-blue-200" placeholder="Add Options (press Enter or comma to add)" />
                   <div className="flex flex-wrap gap-2 mt-2">
-                    {testData?.options.map((tag, index) => (
+                    {testData?.options.map((tag: any, index: any) => (
                       <span key={index} className="flex items-center px-2 py-1 text-sm font-medium text-white bg-green-600 rounded-full">
                         {tag}
                         <button type="button" className="ml-2 text-xs font-bold" onClick={() => handleQuestionRemove(tag)}>x</button>
@@ -316,7 +316,7 @@ const TestQuestion = ({ isQuestionForm, close }: Props) => {
 
                   <ul className={`mt-2 p-2 rounded-md w-64 text-[#DEE1E2] bg-gray-800 shadow-lg absolute z-10 ${isOpen.result ? "max-h-60" : "hidden"} custom-scrollbar`}>
                     {testData.options.length !== 0 ? (
-                      testData.options?.map((option, i) => (
+                      testData.options?.map((option: any, i: any) => (
                         <li key={i} className={`p-2 mb-2 text-sm text-[#DEE1E2]  rounded-md cursor-pointer hover:bg-blue-200/60 ${testData.result === option ? "bg-rose-600" : ""}`} onClick={() => selectOption("result", option)}>
                           <span>{option}</span>
                         </li>
