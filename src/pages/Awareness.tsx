@@ -89,10 +89,7 @@ const Awareness = () => {
       {isLoading && <Loader />}
       <ToastContainer />
       {isModalOpen.condition && (
-        <ConfirmDeleteModal
-          onClose={handleCloseModal}
-          onConfirm={handleConfirmDelete}
-        />
+        <ConfirmDeleteModal onClose={handleCloseModal} onConfirm={handleConfirmDelete} />
       )}
 
       <section className={`  md:pl-0 p-4 h-full  w-full rounded-md   mx-auto [&::-webkit-scrollbar]:hidden `}>
@@ -102,28 +99,12 @@ const Awareness = () => {
           </div>
           <div className="flex justify-between mb-4">
             <div className={`flex items-center   `}>
-              <input
-                type="search"
-                placeholder={`Search`}
-                className={` p-2 text-sm md:text-base  sm:px-4 py-1 border-[2px] border-transparent 
-                   bg-slate-50 focus:border-gray-100
-                shadow-inner rounded-[0.26rem] outline-none `}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onFocus={() => setCurrentPage(1)}
-              />
+              <input type="search" placeholder={`Search`} className={` p-2 text-sm md:text-base  sm:px-4 py-1 border-[2px] border-transparent bg-slate-50 focus:border-gray-100shadow-inner rounded-[0.26rem] outline-none `} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} onFocus={() => setCurrentPage(1)} />
             </div>
             <div className="relative flex items-center self-end ">
-              <button
-                className={` px-2 py-1 
-                           bg-[#1f3c88] hover:bg-[#2d56bb]  text-[#DEE1E2] font-semibold
-                      }    rounded shadow-xl md:px-4 md:py-2  sm:self-center`}
-              >
+              <button className={` px-2 py-1 bg-[#1f3c88] hover:bg-[#2d56bb]  text-[#DEE1E2] font-semibold}    rounded shadow-xl md:px-4 md:py-2  sm:self-center`}>
                 <Link to={"/awareness/creat-awareness"}>
-                  <span className="hidden md:inline-block">
-                    Creat Awareness
-                  </span>
-
+                  <span className="hidden md:inline-block">Creat Awareness</span>
                   <IoIosSend className="w-6 h-6 md:hidden" />
                 </Link>
               </button>
@@ -134,7 +115,7 @@ const Awareness = () => {
               <p className="pl-2 md:text-lg">SrNo.</p>
 
               {listHeadingAwarness?.map((heading: string, index: number) => (
-                <p key={index} className={`   md:text-lg ${index !== 0 ? "justify-self-center" : "ml-20"}`}>{heading.charAt(0).toUpperCase() + heading.slice(1)}</p>
+                <p key={index} className={`md:text-lg ${index !== 0 ? "justify-self-center" : "ml-20"}`}>{heading.charAt(0).toUpperCase() + heading.slice(1)}</p>
               ))}
             </section>
 
@@ -142,17 +123,15 @@ const Awareness = () => {
               {isLoading ? (
                 <p>Loading...</p>
               ) : isError ? (
-                <p className="flex items-center justify-center w-full h-full font-medium text-center text-rose-800">
-                  Check Internet connection or Contact to Admin
-                </p>
+                <p className="flex items-center justify-center w-full h-full font-medium text-center text-rose-800">Check Internet connection or Contact to Admin</p>
               ) : filteredData?.length > 0 ? (
                 currentAwareness?.map((awar: AwarenessTypes, i: number) => (
                   <section key={i} className="grid items-center gap-6 py-2 pl-6 pr-4 border-t-2 border-gray-200 grid-cols-customAwarness group hover:bg-gray-50">
                     <span>{i + 1}</span>
 
-                    <span className={`font-semibold text-center  rounded-full  `}>{awar?.title ? awar?.title : "---"}</span>
-                    <span className={`font-semibold text-center  rounded-full  `}>{awar?.category ? awar?.category?.name : "--"}</span>
-                    <span className={`font-semibold text-center  rounded-full  `}>{awar?.createdAt ? new Date(awar?.createdAt?.split("T")[0]).toLocaleDateString() : ""}</span>
+                    <span className={`font-semibold text-center rounded-full`}>{awar?.title ? awar?.title : "---"}</span>
+                    <span className={`font-semibold text-center rounded-full`}>{awar?.category ? awar?.category?.name : "--"}</span>
+                    <span className={`font-semibold text-center rounded-full`}>{awar?.createdAt ? new Date(awar?.createdAt?.split("T")[0]).toLocaleDateString() : ""}</span>
 
                     <div className="flex items-center justify-center">
                       {awar?.image ? (

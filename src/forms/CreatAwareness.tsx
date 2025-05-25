@@ -27,15 +27,11 @@ const CreatAwareness = () => {
   const [updatePost] = useUpdatePostMutation();
 
   const { id } = useParams();
-  const { data: updateAwar, isError: isErrorAwar } = useGetDataQuery({
-    url: `/awareness/${id}`,
-  });
+  const { data: updateAwar, isError: isErrorAwar } = useGetDataQuery({ url: `/awareness/${id}`, });
 
   const isUpdate = Object.keys(updateAwar || [])?.length !== 0;
 
-  const { data } = useGetDataQuery({
-    url: "/awareness/category",
-  });
+  const { data } = useGetDataQuery({ url: "/awareness/category", });
 
   const [imgPreview, setImgPreview] = useState<any>()
   const [state, setState] = useState<StateProps | any>({
@@ -54,12 +50,13 @@ const CreatAwareness = () => {
     content: updateAwar?.description || "",
   });
 
+
   useEffect(() => {
     if (isUpdate && !isErrorAwar) {
       setState({
         category: {
-          name: updateAwar?.category,
-          id: "",
+          name: updateAwar?.category?.name,
+          id: updateAwar?.category?._id,
         },
         title: updateAwar?.title,
         imageSrc: updateAwar?.image?.substring(
@@ -100,12 +97,6 @@ const CreatAwareness = () => {
     toast.loading("Checking Details");
 
     try {
-      // const payload = {
-      //   title: state?.title,
-      //   image: state?.thumnail,
-      //   category: state.category.name,
-      //   description: state?.content,
-      // };
 
       const formData = new FormData()
       formData.append("title", state.title)
@@ -115,15 +106,12 @@ const CreatAwareness = () => {
       const response = await updatePost({
         data: formData,
         method: isUpdate && !isErrorAwar ? "PUT" : "POST",
-        path:
-          isUpdate && !isErrorAwar ? `/awareness/${id}` : "/awareness/create",
+        path: isUpdate && !isErrorAwar ? `/awareness/${id}` : "/awareness/create",
       }).unwrap()
       // console.log(response);
       if (response?.success) {
         toast.dismiss();
-        toast.success(response?.message, {
-          autoClose: 5000,
-        });
+        toast.success(response?.message, { autoClose: 5000, });
         clearhandler();
       } else {
         toast.dismiss();
@@ -144,7 +132,6 @@ const CreatAwareness = () => {
         id: "",
       },
       title: "",
-
       thumnail: "",
       imageSrc: "",
       content: "",
@@ -190,23 +177,13 @@ const CreatAwareness = () => {
                 <div className="flex justify-between p-2 pl-4 font-medium text-gray-400 bg-blue-100 border-transparent rounded-md cursor-pointer focus:border-blue-200" onClick={() => setOpen((prev) => !prev)}>
                   <span className={`font-medium  ${state?.category?.name ? "text-gray-700" : "text-gray-400"}`}>
                     {state?.category?.name !== "" ? state?.category?.name : "Select Category"}</span>
-
                   <FaCaretDown className="m-1" />
                 </div>
                 <ul className={`mt-2 p-2 rounded-md min-w-32 overflow-auto text-[#DEE1E2]  bg-gray-800 shadow-lg absolute z-10 ${isOpen ? "max-h-60" : "hidden"} custom-scrollbar`}>
                   {data?.data?.length > 0 ? (
                     data?.data?.map(
                       (category: awarenessCategoryType, i: number) => (
-                        <li key={i} className={`p-2 ${data.length > 1 ? "mb-2" : ""} text-sm font-medium rounded-md cursor-pointer flex items-center gap-2 hover:bg-blue-200/60 ${state?.category?.name === category?.name ? "bg-rose-600" : ""}`}
-                          onClick={() =>
-                            handleChange("category", {
-                              name: category?.name,
-                              id: category?._id,
-                            })
-                          }
-                        >
-                          {category?.name}
-                        </li>
+                        <li key={i} className={`p-2 ${data.length > 1 ? "mb-2" : ""} text-sm font-medium rounded-md cursor-pointer flex items-center gap-2 hover:bg-blue-200/60 ${state?.category?.name === category?.name ? "bg-rose-600" : ""}`} onClick={() => handleChange("category", { name: category?.name, id: category?._id, })}>{category?.name}</li>
                       )
                     )
                   ) : (
