@@ -32,7 +32,7 @@ const CreatQuiz = ({ isQuizForm, setQuizForm }: Props) => {
     title: data?.title ? data?.title : "",
     category: data?.category ? data?.category : "",
     instructions: data?.instructions ? data?.instructions : "",
-    
+
   });
 
   useEffect(() => {
@@ -42,7 +42,7 @@ const CreatQuiz = ({ isQuizForm, setQuizForm }: Props) => {
         title: data?.title ? data?.title : "",
         category: data?.category ? data?.category : "",
         instructions: data?.instructions ? data?.instructions : "",
-     
+
       }));
     }
   }, [isUpdate, isError, data]);
@@ -56,7 +56,7 @@ const CreatQuiz = ({ isQuizForm, setQuizForm }: Props) => {
         e?.target?.type === "checkbox" ? e?.target?.checked : e?.target?.value,
     }));
   };
-  const { data:quizcategory } = useGetDataQuery({
+  const { data: quizcategory } = useGetDataQuery({
     url: "/quiztest/category",
   });
   const navigate = useNavigate();
@@ -67,7 +67,7 @@ const CreatQuiz = ({ isQuizForm, setQuizForm }: Props) => {
       const payload = {
         title: quizDataForm?.title,
         instructions: quizDataForm?.instructions,
-        category:quizDataForm?.category
+        category: quizDataForm?.category
       };
 
       const response = await updatePost({
@@ -77,8 +77,8 @@ const CreatQuiz = ({ isQuizForm, setQuizForm }: Props) => {
       });
       console.log(response);
       if (response?.data?.success) {
-        if(isQuizForm.creat) navigate(`/quiz/${response?.data?.data?._id}`);
-      
+        if (isQuizForm.creat) navigate(`/quiz/${response?.data?.data?._id}`);
+
         toast.dismiss();
         toast.success(response?.data?.message, {
           autoClose: 5000,
@@ -97,8 +97,7 @@ const CreatQuiz = ({ isQuizForm, setQuizForm }: Props) => {
         error
       );
       toast.error(
-        `Error ${
-          isQuizForm.creat ? "Creating Quiz" : "Updating Quiz"
+        `Error ${isQuizForm.creat ? "Creating Quiz" : "Updating Quiz"
         } : ${error}`
       );
     }
@@ -166,7 +165,7 @@ const CreatQuiz = ({ isQuizForm, setQuizForm }: Props) => {
             </div>
             <div className="h-[calc(100vh-12rem)] w-full overflow-y-auto  [&::-webkit-scrollbar]:hidden font-mavenPro">
               <div className="grid gap-2 py-4 md:gap-4 ">
-              <label className="font-medium text-[18px]">Quiz Title:</label>
+                <label className="font-medium text-[18px]">Quiz Title:</label>
                 <input
                   value={quizDataForm?.title}
                   type="text"
@@ -189,43 +188,39 @@ const CreatQuiz = ({ isQuizForm, setQuizForm }: Props) => {
                     }
                   >
                     <p
-                      className={`${
-                        quizDataForm?.category !== "" && "text-gray-800"
-                      }`}
+                      className={`${quizDataForm?.category !== "" && "text-gray-800"
+                        }`}
                     >
                       {quizDataForm?.category !== ""
                         ? quizDataForm?.category
                         : "Select Category"}
                     </p>
                     <FaCaretDown
-                      className={`m-1 transition-all duration-300 ${
-                        isOpen.category ? "rotate-180 text-blue-400" : ""
-                      }`}
+                      className={`m-1 transition-all duration-300 ${isOpen.category ? "rotate-180 text-blue-400" : ""
+                        }`}
                     />
                   </div>
                   <ul
-                    className={`mt-2 p-2 rounded-md w-32 text-white bg-gray-800 shadow-lg absolute z-10 ${
-                      isOpen.category ? "max-h-60 max-w-50 overflow-auto" : "hidden"
-                    } custom-scrollbar`}
+                    className={`mt-2 p-2 rounded-md w-32 text-white bg-gray-800 shadow-lg absolute z-10 ${isOpen.category ? "max-h-60 max-w-50 overflow-auto" : "hidden"
+                      } custom-scrollbar`}
                   >
-                    {quizcategory?.length>0?
-                    quizcategory?.map(
-                      (caetory: QuizAndTestCategoryType, i: number) => (
-                        <li
-                          key={i}
-                          className={`p-2 mb-2 text-sm rounded-md cursor-pointer hover:bg-blue-200/60 ${
-                            quizDataForm.category === caetory?.name
-                              ? "bg-rose-400"
-                              : ""
-                          }`}
-                          onClick={() =>
-                            selectOption("category", caetory?.name)
-                          }
-                        >
-                          <span>{caetory?.name}</span>
-                        </li>
-                      )
-                    ):"No Category Found"}
+                    {quizcategory?.length > 0 ?
+                      quizcategory?.map(
+                        (caetory: QuizAndTestCategoryType, i: number) => (
+                          <li
+                            key={i}
+                            className={`p-2 mb-2 text-sm rounded-md cursor-pointer hover:bg-blue-200/60 ${quizDataForm.category === caetory?.name
+                                ? "bg-rose-400"
+                                : ""
+                              }`}
+                            onClick={() =>
+                              selectOption("category", caetory?.name)
+                            }
+                          >
+                            <span>{caetory?.name}</span>
+                          </li>
+                        )
+                      ) : "No Category Found"}
                   </ul>
                 </div>
                 {/* <input
@@ -240,16 +235,16 @@ const CreatQuiz = ({ isQuizForm, setQuizForm }: Props) => {
                 required
               /> */}
                 <div className="">
-                <label className="font-medium text-[18px]">Quiz Instruction! :</label>
-                <JoditTextEditor
-                  value={quizDataForm?.instructions}
-                  OnChangeEditor={(e: string) =>
-                    handleEditorChange("instructions", e)
-                  }
-                />
-                  
+                  <label className="font-medium text-[18px]">Quiz Instruction! :</label>
+                  <JoditTextEditor
+                    value={quizDataForm?.instructions}
+                    OnChangeEditor={(e: string) =>
+                      handleEditorChange("instructions", e)
+                    }
+                  />
+
                 </div>
-              
+
               </div>
 
               <div className="flex ">

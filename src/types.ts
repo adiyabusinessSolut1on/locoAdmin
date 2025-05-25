@@ -108,7 +108,7 @@ export interface DailyTask {
 }
 export interface AwarenessTypes {
   _id: string;
-  category: string;
+  category: any;
   createdAt: string;
   description: string;
   image: string;
@@ -167,7 +167,7 @@ export interface SponsorCompanytypes {
 export interface TestQuestionsType {
   _id: string;
   name: string,
-  image:string[],
+  image: string[],
   options: string[];
   predicted_result: string;
   actualresult: string;

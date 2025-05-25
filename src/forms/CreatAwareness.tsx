@@ -94,9 +94,11 @@ const CreatAwareness = () => {
   };
 
   const navigate = useNavigate();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     toast.loading("Checking Details");
+
     try {
       // const payload = {
       //   title: state?.title,
@@ -108,7 +110,7 @@ const CreatAwareness = () => {
       const formData = new FormData()
       formData.append("title", state.title)
       formData.append("image", state.thumnail)
-      formData.append("category", state.category.name)
+      formData.append("category", state.category.id)
       formData.append("description", state.content)
       const response = await updatePost({
         data: formData,

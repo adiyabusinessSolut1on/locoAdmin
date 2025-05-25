@@ -60,19 +60,19 @@ const ImportantDocuments = () => {
   const handleConfirmDelete = () => {
     // Handle the delete action here
     toast.loading("checking Details");
-    deletPost({ url: `/important_link/${isModalOpen.id}`, }).then((res) => {
-      // console.log("data: ", res);
-
-      // if (res.data.success) {
-      toast.dismiss();
-      toast.success(res.data.message);
-      // }
-    }).catch((error: any) => {
-      console.log("error: ", error);
-
-      toast.dismiss();
-      toast.error("Not successfull to delete");
-    });
+    deletPost({
+      url: `/important_link/${isModalOpen.id}`,
+    })
+      .then((res) => {
+        if (res.data.success) {
+          toast.dismiss();
+          toast.success(`${res.data.message}`);
+        }
+      })
+      .catch(() => {
+        toast.dismiss();
+        toast.error("Not successfull to delete");
+      });
     setModalOpen({
       condition: false,
       id: "",

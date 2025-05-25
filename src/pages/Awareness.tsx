@@ -95,16 +95,10 @@ const Awareness = () => {
         />
       )}
 
-      <section
-        className={`  md:pl-0 p-4 h-full  w-full rounded-md   mx-auto [&::-webkit-scrollbar]:hidden `}
-      >
-        <section
-          className={` md:p-8 p-6 h-full border-gray-200 rounded-md  max-w-full w-full `}
-        >
+      <section className={`  md:pl-0 p-4 h-full  w-full rounded-md   mx-auto [&::-webkit-scrollbar]:hidden `}>
+        <section className={` md:p-8 p-6 h-full border-gray-200 rounded-md  max-w-full w-full `}>
           <div className="flex items-center mb-2 md:mb-6">
-            <h1 className=" text-[28px] font-bold md:text-4xl text-gray-600 font-mavenPro">
-              Awareness
-            </h1>
+            <h1 className=" text-[28px] font-bold md:text-4xl text-gray-600 font-mavenPro">Awareness</h1>
           </div>
           <div className="flex justify-between mb-4">
             <div className={`flex items-center   `}>
@@ -157,7 +151,7 @@ const Awareness = () => {
                     <span>{i + 1}</span>
 
                     <span className={`font-semibold text-center  rounded-full  `}>{awar?.title ? awar?.title : "---"}</span>
-                    <span className={`font-semibold text-center  rounded-full  `}>{awar?.category ? awar?.category : "--"}</span>
+                    <span className={`font-semibold text-center  rounded-full  `}>{awar?.category ? awar?.category?.name : "--"}</span>
                     <span className={`font-semibold text-center  rounded-full  `}>{awar?.createdAt ? new Date(awar?.createdAt?.split("T")[0]).toLocaleDateString() : ""}</span>
 
                     <div className="flex items-center justify-center">

@@ -30,6 +30,7 @@ const TestProfile = () => {
     url: `/test/${id}`,
   });
 
+  console.log(data, "pagination");
 
   const [isQuestionForm, setQuestionForm] = useState<stateProps>({
     condition: false,
@@ -107,6 +108,7 @@ const TestProfile = () => {
   };
 
   const deletHandler = (id: string) => {
+    console.log(id, "from handler");
     setModalOpen((prev) => ({
       ...prev,
       condition: !prev.condition,
@@ -127,22 +129,20 @@ const TestProfile = () => {
     // Handle the delete action here
     toast.loading("checking Details");
 
-    deletPost({ url: `/test/question/${isModalOpen.id}`, }).then((res) => {
-      console.log("test res: ", res?.data);
-
-      // if (res.data.success) {
-      // toast.dismiss();
-      // toast.success(res?.data?.message);
-      // }
-      // console.log(res);
-      toast.dismiss();
-      toast.success(res.data.message);
-    }).catch((error: any) => {
-      console.log("error on handleConfirmDelete test: ", error);
-
-      toast.dismiss();
-      toast.error("Not successfull to delete");
-    });
+    deletPost({
+      url: `/test/question/${isModalOpen.id}`,
+    })
+      .then((res) => {
+        if (res.data.success) {
+          toast.dismiss();
+          toast.success(`${res.data.message}`);
+        }
+        console.log(res);
+      })
+      .catch(() => {
+        toast.dismiss();
+        toast.error("Not successfull to delete");
+      });
     setModalOpen({
       condition: false,
       id: "",
@@ -196,8 +196,15 @@ const TestProfile = () => {
 
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2 ">
                   <p className="text-sm font-semibold md:text-base">
-                    <span className="pr-2 text-sm text-red-400">Instructions:</span>
-                    <div dangerouslySetInnerHTML={{ __html: data?.instructions, }} />
+                  <span className="pr-2 text-sm text-red-400">
+                      Instructions:
+                    </span>
+                    <div
+                           
+                            dangerouslySetInnerHTML={{
+                              __html: data?.instructions,
+                            }}
+                          />
                   </p>
                 </div>
               </div>
@@ -213,9 +220,9 @@ const TestProfile = () => {
                     className={` p-2 text-sm md:text-base  sm:px-4 py-1 border-[2px] border-transparent 
                  bg-slate-50 focus:border-gray-100
               shadow-inner rounded-[0.26rem] outline-none `}
-                  // value={searchQuery}
-                  // onChange={(e) => setSearchQuery(e.target.value)}
-                  // onFocus={() => setCurrentPage(1)}
+                    // value={searchQuery}
+                    // onChange={(e) => setSearchQuery(e.target.value)}
+                    // onFocus={() => setCurrentPage(1)}
                   />
                 </div>
                 <div className="relative flex items-center self-end ">
@@ -245,8 +252,9 @@ const TestProfile = () => {
                   {listHeadingProducts.map((heading, index) => (
                     <p
                       key={index}
-                      className={`   md:text-lg ${index == 3 ? "justify-self-center" : "ml-16"
-                        }`}
+                      className={`   md:text-lg ${
+                        index == 3 ? "justify-self-center" : "ml-16"
+                      }`}
                     >
                       {heading.charAt(0).toUpperCase() + heading.slice(1)}
                     </p>

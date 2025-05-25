@@ -21,10 +21,11 @@ const Sidebar = () => {
           <div
             key={index}
             onClick={() => router(item.path)}
-            className={` ${item?.path === pathName
+            className={` ${
+              item?.path === pathName
                 ? "bg-blue-900 text-white active"
                 : "text-black hover:bg-gray-100"
-              } menu-item flex items-center p-2 mb-2 rounded-md   cursor-pointer`}
+            } menu-item flex items-center p-2 mb-2 rounded-md   cursor-pointer`}
           >
             <span className="mr-2 icon">{item?.icon}</span>
             <span className="text ">{item?.name}</span>
@@ -112,11 +113,6 @@ const sidebarData: SidebarItem[] = [
   {
     name: "Finance",
     path: "/finance",
-    icon: "",
-  },
-  {
-    name: "Banner",
-    path: "/banner",
     icon: "",
   },
 ];

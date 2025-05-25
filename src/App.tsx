@@ -39,8 +39,6 @@ import Report from "./pages/Report";
 import AddAppSetting from "./pages/AddAppSetting";
 import UpdateSetting from "./pages/UpdateSetting";
 import AddDailyTask from "./pages/AddDailyTask";
-import Banner from "./pages/Banner";
-import AddBanner from "./pages/AddBanner";
 
 function App() {
   const token = localStorage.getItem("user");
@@ -215,18 +213,6 @@ function App() {
             {
               path: "report",
               element: <Report />,
-            },
-            {
-              path: "banner",
-              element: <Banner />,
-            },
-            {
-              path: "banner/add",
-              element: <AddBanner />,
-            },
-            {
-              path: "banner/update/:id",
-              element: <AddBanner />,
             },
           ],
         },
