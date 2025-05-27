@@ -71,7 +71,7 @@ const Banner = () => {
     const handleConfirmDelete = () => {
         // Handle the delete action here
         toast.loading("checking Details");
-        deletPost({ url: `/banner/${isModalOpen.id}`, }).then((res) => {
+        deletPost({ url: `/banner/${isModalOpen.id}`, }).then((res: any) => {
             if (res.data.success) {
                 toast.dismiss();
                 toast.success(`${res.data.message}`);

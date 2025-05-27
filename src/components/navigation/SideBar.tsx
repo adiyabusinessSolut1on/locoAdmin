@@ -19,6 +19,7 @@ import DailytaskICON from "../../assets/SVG/dailytaskICON";
 import PostDetails from "../../assets/SVG/postDetails";
 import IconReportTwentyFour from "../../assets/SVG/IconReportTwentyFour";
 import IconSettingsOutline from "../../assets/SVG/IconSettingsOutline";
+import BannerIcon from "../../assets/SVG/BannerIcon";
 
 interface SidebarItem {
   name: string;
@@ -108,6 +109,11 @@ const sidebarData: SidebarItem[] = [
     name: "App Update Settings",
     path: "/update",
     icon: IconSettingsOutline,
+  },
+  {
+    name: "Banner",
+    path: "/banner",
+    icon: BannerIcon,
   },
 
   // {
