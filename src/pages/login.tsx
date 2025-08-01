@@ -15,6 +15,7 @@ interface LoginData {
   role: string;
   otp?:number
 }
+
 const Login = () => {
   const navigate = useNavigate();
   const [createPost] = useCreatePostMutation() as UseCreatePostMutationType;
@@ -28,6 +29,7 @@ const Login = () => {
   const [isOtps,setIsotp]=useState(false)
   const [isVisible, setVisible] = useState(false);
   const dispatch = useDispatch();
+  
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setLoginData((prevData) => ({
@@ -35,15 +37,17 @@ const Login = () => {
       [name]: value,
     }));
   };
-const backLogin=()=>{
-  setLoginData({
-    email: "",
-    password: "",
-    role: "admin",
-    otp:undefined
-  })
-  setIsotp(false)
-}
+
+  const backLogin=()=>{
+    setLoginData({
+      email: "",
+      password: "",
+      role: "admin",
+      otp:undefined
+    })
+    setIsotp(false)
+  }
+
   const verifyOtp = (e: React.FormEvent) => {
     e.preventDefault();
     createPost({
@@ -53,7 +57,6 @@ const backLogin=()=>{
       .then((res) => {
         console.log(res);
         if (res?.data?.success&&res?.data?.token) {
-         
           localStorage.setItem("user", res?.data?.token);
           dispatch(setUserToken(res?.data?.token));
           toast.success(res?.data?.message, {
@@ -63,13 +66,14 @@ const backLogin=()=>{
             navigate("/");
           }, 2000);
         } else {
-          toast.error("Some eror occure check your cridential");
+          toast.error("Some error occurred check your credentials");
         }
       })
       .catch(() => {
         toast.error(`Data is wrong`);
       });
   };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     createPost({
@@ -79,17 +83,26 @@ const backLogin=()=>{
       .then((res) => {
         console.log(res);
         if (res?.data?.success) {
-          setIsotp(res?.data?.success)
-          // localStorage.setItem("user", res?.data?.token);
-          // dispatch(setUserToken(res?.data?.token));
-          toast.success(res?.data?.message, {
-            autoClose: 3000,
-          });
-          // setTimeout(() => {
-          //   navigate("/");
-          // }, 2000);
+          // Check if this is admin login (direct login without OTP)
+          if (res?.data?.isAdmin && res?.data?.token) {
+            localStorage.setItem("user", res?.data?.token);
+            dispatch(setUserToken(res?.data?.token));
+            toast.success(res?.data?.message, {
+              autoClose: 3000,
+            });
+            setTimeout(() => {
+              navigate("/");
+            }, 2000);
+          } 
+          // For regular users, show OTP input
+          else if (res?.data?.requiresOTP) {
+            setIsotp(true);
+            toast.success(res?.data?.message, {
+              autoClose: 3000,
+            });
+          }
         } else {
-          toast.error("Some eror occure check your cridential");
+          toast.error("Some error occurred check your credentials");
         }
       })
       .catch(() => {
@@ -106,13 +119,11 @@ const backLogin=()=>{
           <h4 className="text-[24px] md:text-3xl lg:text-4xl font-bold pb-2 text-gray-600">
             Enter OTP
           </h4>
-         
         </div>
         <form
           className="flex flex-col items-center justify-center w-full py-4 lg:p-8"
           onSubmit={verifyOtp}
         >
-         
           <div className="relative w-full mb-4 lg:mb-6">
             <FiLock className="absolute w-5 h-5 text-gray-400 top-[10px] left-2" />
             <input
@@ -141,7 +152,6 @@ const backLogin=()=>{
           </div>
 
           <div className="grid w-full pb-2">
-            
             <button
               type="submit"
               className="px-4 py-2 text-white bg-[#1F3C88] border rounded-md disabled:bg-gray-600 hover:bg-[#1f5e88]"
@@ -150,7 +160,6 @@ const backLogin=()=>{
             </button>
           </div>
           <div className="mt-2 text-sm ">
-            
             <div
               onClick={backLogin}
               className="cursor-pointer ml-2 text-blue-500 font-medium  border-b border-transparent   hover:text-blue-600 transition-all duration-500  w-[fit-content]"
@@ -227,15 +236,6 @@ const backLogin=()=>{
               Login
             </button>
           </div>
-          {/* <div className="mt-2 text-sm ">
-            <span className="text-gray-700">Don't have account ?</span>
-            <Link
-              to={"/login/register"}
-              className="ml-2 text-blue-500 font-medium  border-b border-transparent   hover:text-blue-600 transition-all duration-500  w-[fit-content]"
-            >
-              Create a Account
-            </Link>
-          </div> */}
         </form>
       </div>} 
      
